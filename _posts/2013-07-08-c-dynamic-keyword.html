@@ -1,0 +1,48 @@
+---
+layout: post
+title: C# dynamic keyword
+date: 2013-07-08 10:03:23.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_33a28374117396bcf5623448f0baf521: "{{unknown}}"
+  _oembed_8b516581d43b0102a359290b1c38fdef: "{{unknown}}"
+  _oembed_a09a681d2b0899d4927fa6e60e222b7d: "{{unknown}}"
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-08
+    00:03:23";}
+  _oembed_ad013cd503b2dfc2f012b81ed40f5404: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/08/c-dynamic-keyword/"
+---
+<p>.NET 4.0(vs2010) introduced the dynamic feature to support better integration of dynamic language such as Python, Ruby etc.<br />
+Example)<br />
+Without dynamic feature.<br />
+[sourcecode language="c"]<br />
+object calc = GetCalculator();<br />
+Type calcType = calc.GetType();<br />
+object res = calcType.InvokeMember(&quot;Add&quot;,<br />
+    BindingFlags.InvokeMethod, null,<br />
+    new object[] { 10, 20 });<br />
+int sum = Convert.ToInt32(res);<br />
+[/sourcecode]<br />
+With dynamic feature.<br />
+[sourcecode language="c"]<br />
+dynamic calc = GetCalculator();<br />
+int sum = calc.Add(10, 20);<br />
+[/sourcecode]</p>
+<p>You can find more information from the following URL.<br />
+http://dlr.codeplex.com/</p>

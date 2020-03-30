@@ -1,0 +1,39 @@
+---
+layout: post
+title: Java - Java 8 Comparator to replace Guava compound comparing
+date: 2018-01-20 21:11:39.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '13844015930'
+  timeline_notification: '1516504300'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/01/20/java-java-8-comparator-to-replace-guava-compound-comparing/"
+---
+<p>Guava example<br />
+[code lang="c"]<br />
+Collection.sort(list,<br />
+    Ordering.from((Comparator&lt;Item&gt;) Comparator.comparingInt(item -&gt; item.getId()))<br />
+    .compound(Comparator.comparing(Item::getName)))<br />
+[/code]</p>
+<p>Java 8 example<br />
+[code lang="c"]<br />
+Comparator&lt;Item&gt; compoundComparator<br />
+      = Comparator.comparingInt(Item::getId)<br />
+        .thenComparing(Item::getName);</p>
+<p>Collection.sort(list, compoundComparator)<br />
+[/code]</p>

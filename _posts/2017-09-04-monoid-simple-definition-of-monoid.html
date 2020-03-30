@@ -1,0 +1,52 @@
+---
+layout: post
+title: Monoid - Simple definition of Monoid
+date: 2017-09-04 07:07:51.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Functional Programming
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '8922095693'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/09/04/monoid-simple-definition-of-monoid/"
+---
+<p>1. Closure: Two same type pair operation results a new result with same type.<br />
+2. Associative: Doesn't matter or operation order wit a pair.<br />
+3. Identity: There is an identity can always result the original value.</p>
+<p>Integer plus:<br />
+[code lang="c"]<br />
+1 + 2 = 3<br />
+(1 + 2) + 3 = 1 + (2 + 3)<br />
+1 + 0 = 1<br />
+0 + 1 = 1<br />
+[/code]</p>
+<p>String concatenation:<br />
+[code lang="c"]<br />
+&quot;1&quot; + &quot;2&quot; = &quot;12&quot;<br />
+&quot;1&quot; + (&quot;2&quot; + &quot;3&quot;) = (&quot;1&quot; + &quot;2&quot;) + &quot;3&quot;<br />
+&quot;&quot; + &quot;1&quot; = &quot;1&quot;<br />
+&quot;1&quot; + &quot;&quot; = &quot;1&quot;<br />
+[/code]</p>
+<p>Importance of Monoids:<br />
+Once it is identified that provided data is Monoid, it can be parallelized very easily.<br />
+For instance, we can calculate the number of total sold items in a day from million items.</p>
+<p>Map/Reduce<br />
+[code lang="c"]<br />
+List.reduce(+)<br />
+[/code]</p>
+<p>Log file aggregation:<br />
+From a giant log file, we can aggregate useful data such as what is the average request on Monday, Tuesday, ..., Sunday because String is Monoid.<br />
+It is important to know that Metric data should be Monoid.</p>

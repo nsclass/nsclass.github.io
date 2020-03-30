@@ -1,0 +1,33 @@
+---
+layout: post
+title: C++11 - transporting C++ exceptions between threads
+date: 2014-01-27 21:55:33.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_e2970eeba1cffb15846159c6dbab5ca0: "{{unknown}}"
+  _oembed_855cf7cb7bc18975822c309809332fca: "{{unknown}}"
+  _oembed_1f74e2ef955bd6c3fdc75de46d3b0000: "{{unknown}}"
+  _oembed_ff787645ea2dda29528fa58f600c1245: "{{unknown}}"
+  _oembed_59b521601d25d56d7b293539e7578e70: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/01/27/c11-transporting-c-exceptions-between-threads/"
+---
+<p>C++11 introduced std::exception_ptr. The main purpose of this class is to allow to tranport C++ exceptions to different threads.</p>
+<p>in 2012 C++ and Beyond Seminar, Andrei showed the Expected type for function return value. Internally this class is utilizing std::exception_ptr to transport exceptions.</p>
+<p>You can find some examples for Windows from the following links.<br />
+http://msdn.microsoft.com/en-us/library/dd293602.aspx</p>

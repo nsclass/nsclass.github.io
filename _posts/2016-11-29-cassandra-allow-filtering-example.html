@@ -1,0 +1,42 @@
+---
+layout: post
+title: Cassandra - Allow Filtering example
+date: 2016-11-29 13:08:10.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- cassandra
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '29412433531'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/11/29/cassandra-allow-filtering-example/"
+---
+<p>[code lang="c"]<br />
+create table User(<br />
+    email text,<br />
+    name text,<br />
+    desc text,<br />
+    user_id uuid<br />
+    PRIMARY KEY((email), name, user_id)<br />
+) WITH CLUSTERING ORDER BY (name DESC, user_id ASC);<br />
+[/code]</p>
+<p>Allow Filtering can only work with the clustering key.</p>
+<p>[code lang="c"]<br />
+select * from user where name = 'Test' allow filtering;<br />
+[/code]</p>
+<p>Some useful cassandra commands<br />
+[code lang="c"]<br />
+/&gt;list users limit 3;<br />
+[/code]</p>

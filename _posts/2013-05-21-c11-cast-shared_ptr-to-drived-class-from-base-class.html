@@ -1,0 +1,35 @@
+---
+layout: post
+title: C++11 - casting from base class shared_ptr to drived class shared_ptr
+date: 2013-05-21 11:01:25.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-05-21
+    01:11:28";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/05/21/c11-cast-shared_ptr-to-drived-class-from-base-class/"
+---
+<p>[sourcecode language="c"]<br />
+class BaseClass : public std::enable_shared_from_this&lt;BaseClass&gt;<br />
+{<br />
+  template &lt;typename Derived&gt;<br />
+  std::shared_ptr&lt;Derived&gt; GetDerived(){<br />
+     return std::dynamic_pointer_cast&lt;Derived&gt;(shared_from_this());<br />
+  }<br />
+}<br />
+[/sourcecode]</p>

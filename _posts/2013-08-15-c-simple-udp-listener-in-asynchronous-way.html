@@ -1,0 +1,62 @@
+---
+layout: post
+title: C# - Simple UDP listener in asynchronous way
+date: 2013-08-15 08:16:55.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-08-14
+    22:16:55";}
+  geo_public: '0'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/08/15/c-simple-udp-listener-in-asynchronous-way/"
+---
+<p>[code lang="c"]<br />
+private Socket udpSock;<br />
+private byte[] buffer;<br />
+public void Starter(){<br />
+    //Setup the socket and message buffer<br />
+    udpSock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);<br />
+    udpSock.Bind(new IPEndPoint(IPAddress.Any, 12345));<br />
+    buffer = new byte[1024];</p>
+<p>    //Start listening for a new message.<br />
+    EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);<br />
+    udpSock.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, udpSock);<br />
+}</p>
+<p>private void DoReceiveFrom(IAsyncResult iar){<br />
+    try{<br />
+        //Get the received message.<br />
+        Socket recvSock = (Socket)iar.AsyncState;<br />
+        EndPoint clientEP = new IPEndPoint(IPAddress.Any, 0);<br />
+        int msgLen = recvSock.EndReceiveFrom(iar, ref clientEP);<br />
+        byte[] localMsg = new byte[msgLen];<br />
+        Array.Copy(buffer, localMsg, msgLen);</p>
+<p>        //Start listening for a new message.<br />
+        EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0);<br />
+        udpSock.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, udpSock);</p>
+<p>        //Handle the received message<br />
+        Console.WriteLine(&quot;Recieved {0} bytes from {1}:{2}&quot;,<br />
+                          msgLen,<br />
+                          ((IPEndPoint)clientEP).Address,<br />
+                          ((IPEndPoint)clientEP).Port);<br />
+        //Do other, more interesting, things with the received message.<br />
+    } catch (ObjectDisposedException){<br />
+        //expected termination exception on a closed socket.<br />
+        // ...I'm open to suggestions on a better way of doing this.<br />
+    }<br />
+}<br />
+[/code]</p>

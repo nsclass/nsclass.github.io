@@ -1,0 +1,57 @@
+---
+layout: post
+title: C++11 - a good example of using std::function
+date: 2013-03-06 11:10:30.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-03-06
+    00:11:30";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/06/stdfunction-useful-example/"
+---
+<p>[sourcecode language="c"]<br />
+struct Wanderer<br />
+{<br />
+    explicit Wanderer(std::vector&lt;std::function&gt;&amp; update_loop)<br />
+    {<br />
+        update_loop.emplace_back([this](float dt) { update(dt); });<br />
+    }<br />
+    void update(float dt);<br />
+};</p>
+<p>struct Diver<br />
+{<br />
+    explicit Diver(std::vector&lt;std::function&gt;&amp; update_loop)<br />
+    {<br />
+        update_loop.emplace_back([this](float dt) { update(dt); });<br />
+    }<br />
+    void update(float dt);<br />
+};</p>
+<p>int main()<br />
+{<br />
+    std::vector&lt;std::function&gt; update_loop;<br />
+    Wanderer wanderer{update_loop};<br />
+    Diver diver{update_loop};</p>
+<p>    while (true)<br />
+    {<br />
+        for (auto &amp; function : update_loop)<br />
+        {<br />
+            function(0.016f);<br />
+        }<br />
+    }<br />
+}<br />
+[/sourcecode]</p>

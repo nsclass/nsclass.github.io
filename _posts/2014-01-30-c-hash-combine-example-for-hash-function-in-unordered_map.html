@@ -1,0 +1,63 @@
+---
+layout: post
+title: C++ - Hash combine example for hash function in unordered_map
+date: 2014-01-30 08:32:16.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/01/30/c-hash-combine-example-for-hash-function-in-unordered_map/"
+---
+<p>[code lang="c"]<br />
+template &lt;class T&gt;<br />
+inline void hash_combine(std::size_t &amp; seed, const T &amp; v)<br />
+{<br />
+  std::hash&lt;T&gt; hasher;<br />
+  seed ^= hasher(v) + 0x9e3779b9 + (seed &lt;&lt; 6) + (seed &gt;&gt; 2);<br />
+}<br />
+[/code]</p>
+<p>[code lang="c"]<br />
+class Item<br />
+{<br />
+public:<br />
+    std::string name;<br />
+    int age;<br />
+    int code;</p>
+<p>    Item(std::string n, int age, int code)<br />
+	: name(std::move(n)), age(age), code(code)<br />
+    {<br />
+    }</p>
+<p>    bool operator == (Item const&amp; item) const<br />
+    {<br />
+	return name == item.name &amp;&amp;<br />
+		age == item.age &amp;&amp;<br />
+		code == item.code;<br />
+    }<br />
+};</p>
+<p>struct ItemHasher<br />
+{<br />
+    std::size_t operator()(Item const&amp; item) const<br />
+    {<br />
+	std::size_t seed = 0;<br />
+	hash_combine(seed, item.name);<br />
+	hash_combine(seed, item.age);<br />
+	hash_combine(seed, item.code);<br />
+	return seed;<br />
+    }<br />
+};</p>
+<p>std::unordered_map&lt;Item, std::string, ItemHasher&gt; testHash;<br />
+[/code]</p>

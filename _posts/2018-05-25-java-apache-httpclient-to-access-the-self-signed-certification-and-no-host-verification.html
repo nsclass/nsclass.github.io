@@ -1,0 +1,76 @@
+---
+layout: post
+title: Java - Apache HttpClient to access the self signed certification and no host
+  verification
+date: 2018-05-25 12:50:18.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '18255041951'
+  timeline_notification: '1527270619'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/05/25/java-apache-httpclient-to-access-the-self-signed-certification-and-no-host-verification/"
+---
+<p>Below code comes from https://memorynotfound.com/ignore-certificate-errors-apache-httpclient/</p>
+<p>[code lang="java"]<br />
+package com.memorynotfound.httpclient;</p>
+<p>import org.apache.http.client.methods.HttpGet;<br />
+import org.apache.http.conn.ssl.*;<br />
+import org.apache.http.impl.client.CloseableHttpClient;<br />
+import org.apache.http.impl.client.HttpClients;<br />
+import org.apache.http.ssl.SSLContextBuilder;<br />
+import javax.net.ssl.*;<br />
+import java.io.IOException;<br />
+import java.security.KeyManagementException;<br />
+import java.security.KeyStoreException;<br />
+import java.security.NoSuchAlgorithmException;</p>
+<p>/**<br />
+ * This example demonstrates how to ignore certificate errors.<br />
+ * These errors include self signed certificate errors and hostname verification errors.<br />
+ */<br />
+public class HttpClientAcceptSelfSignedCertificate {</p>
+<p>    public static void main(String... args)  {</p>
+<p>        try (CloseableHttpClient httpclient = createAcceptSelfSignedCertificateClient()) {<br />
+            HttpGet httpget = new HttpGet(&quot;https://example.com&quot;);<br />
+            System.out.println(&quot;Executing request &quot; + httpget.getRequestLine());</p>
+<p>            httpclient.execute(httpget);<br />
+            System.out.println(&quot;----------------------------------------&quot;);<br />
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException | IOException e) {<br />
+            throw new RuntimeException(e);<br />
+        }<br />
+    }</p>
+<p>    private static CloseableHttpClient createAcceptSelfSignedCertificateClient()<br />
+            throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {</p>
+<p>        // use the TrustSelfSignedStrategy to allow Self Signed Certificates<br />
+        SSLContext sslContext = SSLContextBuilder<br />
+                .create()<br />
+                .loadTrustMaterial(new TrustSelfSignedStrategy())<br />
+                .build();</p>
+<p>        // we can optionally disable hostname verification.<br />
+        // if you don't want to further weaken the security, you don't have to include this.<br />
+        HostnameVerifier allowAllHosts = new NoopHostnameVerifier();</p>
+<p>        // create an SSL Socket Factory to use the SSLContext with the trust self signed certificate strategy<br />
+        // and allow all hosts verifier.<br />
+        SSLConnectionSocketFactory connectionFactory = new SSLConnectionSocketFactory(sslContext, allowAllHosts);</p>
+<p>        // finally create the HttpClient using HttpClient factory methods and assign the ssl socket factory<br />
+        return HttpClients<br />
+                .custom()<br />
+                .setSSLSocketFactory(connectionFactory)<br />
+                .build();<br />
+    }<br />
+}<br />
+[/code]</p>

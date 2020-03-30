@@ -1,0 +1,47 @@
+---
+layout: post
+title: Build boost 1.43 for iPhone SDK 4.0
+date: 2010-06-29 10:22:50.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- iPhone
+tags: []
+meta:
+  _edit_last: '14827209'
+  _wp_old_slug: ''
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";s:1:"0";s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2010-06-29
+    10:58:00";}
+  _oembed_842c41e7745bb5530db0c1177e2bed88: "{{unknown}}"
+  _oembed_f846374d980d6a935cae9749c888a8bb: "{{unknown}}"
+  _oembed_c7ff87a3fd39435002167994866e74db: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2010/06/29/build-boost-1-43-for-iphone-sdk-4-0/"
+---
+<p>1. modify user.config.jam in tools/build/v2 directory<br />
+[sourcecode language="cpp"]<br />
+using darwin : 4.2.1~iphone<br />
+: /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/g++ -arch armv7<br />
+: &lt;striper&gt;<br />
+: &lt;architecture&gt;arm &lt;target-os&gt;iphone<br />
+;</p>
+<p>using darwin : 4.2.1~iphonesim<br />
+: /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/g++<br />
+: &lt;striper&gt;<br />
+: &lt;architecture&gt;x86 &lt;target-os&gt;iphone<br />
+;<br />
+[/sourcecode]</p>
+<p>2. compile<br />
+[sourcecode language="cpp"]<br />
+./bootstrap.sh<br />
+./bjam --prefix=${HOME}/usr/boost-1.43/iphone toolset=darwin architecture=arm target-os=iphone macosx-version=iphone-4.0 define=_LITTLE_ENDIAN link=static install<br />
+./bjam --prefix=${HOME}/usr/boost-1.43/iphoneSimulator toolset=darwin architecture=x86 target-os=iphone macosx-version=iphonesim-4.0 link=static install&lt;/pre&gt;<br />
+[/sourcecode]</p>

@@ -1,0 +1,54 @@
+---
+layout: post
+title: C# - Rx framework to create Observable from EventHandler
+date: 2014-02-06 11:39:06.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/02/06/c-rx-framework-to-create-observable-from-eventhandler/"
+---
+<p>The following code shows how to create IObserable object from EventHandler delegator.</p>
+<p>[code lang="c"]<br />
+public CustomEventArg : EventArg<br />
+{<br />
+    public int Value { get; set; }<br />
+}</p>
+<p>public class CustomOtherClass<br />
+{<br />
+    public event EventHandler&lt;CustomEventArg&gt; OnCustEvent;<br />
+}</p>
+<p>public class Test<br />
+{<br />
+    private IObservable&lt;CustomEventArg&gt; m_obEvent;</p>
+<p>    private CustomOtherClass m_other = new CustomOtherClass();</p>
+<p>    public IObservable&lt;CustomEventArg&gt; ObserverCustomEvent { get { return m_obEvent; } }</p>
+<p>    Test()<br />
+    {<br />
+        m_obEvent = Obserable.FromEvent&lt;EventHandler&lt;CustomEventArg&gt;, CustomEventArg&gt;(h =&gt;<br />
+            {<br />
+                EventHandler&lt;CustomEventArg&gt; handler = (sender, e) =&gt;<br />
+                {<br />
+                     h(e);<br />
+                }<br />
+                return handler;<br />
+            },<br />
+            f =&gt; m_other.OnCustomEvent += f,<br />
+            f =&gt; m_other.OnCustomEvent -= f);<br />
+    }<br />
+}<br />
+[/code]</p>

@@ -1,0 +1,36 @@
+---
+layout: post
+title: Docker - difference RUN, CMD and ETRYPOINT
+date: 2018-08-26 07:48:15.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- docker
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '24780250177'
+  timeline_notification: '1535287697'
+  _oembed_555a8952449fb96e36028268a4575ef6: "{{unknown}}"
+  _oembed_986168fbfe98a68670e76f4980f415ca: "{{unknown}}"
+  _oembed_c7355fcb4ef672d68250981c29a5ddeb: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/08/26/docker-difference-run-cmd-and-etrypoint/"
+---
+<p>1. CMD vs ENTRYPOINT<br />
+The ENTRYPOINT specifies a command that will always be executed when the container starts. The CMD specifies arguments that will be fed to the ENTRYPOINT. But without ENTRYPOINT, CMD can execute the command as well.</p>
+<p>2. RUN vs CMD<br />
+RUN - command triggers while we build the docker image.<br />
+CMD - command triggers while we launch the created docker image.</p>
+<p>More details.<br />
+http://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint/</p>

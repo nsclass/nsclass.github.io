@@ -1,0 +1,490 @@
+---
+layout: post
+title: Undo and Redo the "Easy" Way
+date: 2008-05-20 11:02:06.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+tags: []
+meta:
+  spaces_8e963f1d044baa6ea177d10f0c6ccc02_permalink: http://cid-f610c86c6d82b8a2.users.api.live.net/Users(-715851972732602206)/Blogs('F610C86C6D82B8A2!116')/Entries('F610C86C6D82B8A2!196')?authkey=bau8ZqLz*pg%24
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2008/05/20/undo-and-redo-the-easy-way/"
+---
+<div id="msgcns!F610C86C6D82B8A2!196" class="bvMsg">
+<div><a href="http://www.codeproject.com/KB/cpp/transactions.aspx">http://www.codeproject.com/KB/cpp/transactions.aspx</a></div>
+<div> </div>
+<div>
+<table cellspacing="0" cellpadding="0" border="0">
+<tbody>
+<tr valign="top">
+<td colspan="2">
+<table cellspacing="0" cellpadding="0" border="0">
+<tbody>
+<tr>
+<td><a href="http://nsclass.spaces.live.com/"></a>
+</td>
+<td align="right" width="100%">
+</td>
+</tr>
+<tr>
+<td colspan="2">
+</td>
+</tr>
+<tr>
+<td colspan="2" /></tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td valign="top" colspan="2"><a></a></p>
+<table cellspacing="0" cellpadding="3" width="100%" border="0">
+<tbody>
+<tr valign="top">
+<td><a href="http://nsclass.spaces.live.com/script/Content/Chapter.aspx?chptId=5"><u><font color="#0000ff">Languages</font></u></a> » <a href="http://nsclass.spaces.live.com/KB/cpp/"><u><font color="#0000ff">C / C++ Language</font></u></a> » <a href="http://nsclass.spaces.live.com/KB/cpp/index.aspx?#C / C++ Language - General"><u><font color="#0000ff">General</font></u></a> <span>    Intermediate</span> <span></span></p>
+<h1><span>Undo and Redo the &quot;Easy&quot; Way</span></h1>
+<p><b>By <a href="http://nsclass.spaces.live.com/script/Articles/MemberArticles.aspx?amid=49251"><u><font color="#0000ff">compiler</font></u></a></b></p>
+<p><span>This article introduces a simple approach to in-memory transactions that can be used to implement Undo and Redo. The technique uses SEH and Virtual Memory and requires only STL and Win32.</span>
+</td>
+<td style="width:210px;"><span>VC6, VC7, VC7.1, C++Windows, NT4, Win2K, WinXP, STL, VS.NET2003, VS, Dev</span></p>
+<p><span style="padding-right:2ex;">Posted</span>: <b>3 Oct 2002</b><br /><span style="padding-right:.5ex;">Updated</span>: <b>20 Jun 2004</b> <br /><span style="padding-right:3.2ex;">Views</span>: <b>113,984</b>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<table width="100%">
+<tbody>
+<tr>
+<td>
+</td>
+<td style="white-space:nowrap;" align="right"></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<tr valign="top">
+<td style="width:867px;height:300px;" valign="top"><span></span></p>
+<div>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+<tbody>
+<tr valign="top">
+<td valign="top">
+<table>
+<tbody></tbody>
+</table>
+</td>
+<td style="width:100px;white-space:nowrap;text-align:right;">
+<table>
+<tbody>
+<tr>
+<td>
+<table>
+<tbody>
+<tr>
+<td style="white-space:nowrap;" align="right"><span>43 votes for this Article.</span>
+</td>
+<td>
+<table cellspacing="0" cellpadding="0" border="1">
+<tbody>
+<tr>
+<td width="20" bgcolor="white" height="7"><img height="7" src="http://nsclass.spaces.live.com/script/Ratings/Images/red.gif" width="20" align="center" border="0" />
+</td>
+<td width="20" bgcolor="white" height="7"><img height="7" src="http://nsclass.spaces.live.com/script/Ratings/Images/red.gif" width="20" align="center" border="0" />
+</td>
+<td width="20" bgcolor="white" height="7"><img height="7" src="http://nsclass.spaces.live.com/script/Ratings/Images/red.gif" width="20" align="center" border="0" />
+</td>
+<td width="20" bgcolor="white" height="7"><img height="7" src="http://nsclass.spaces.live.com/script/Ratings/Images/red.gif" width="20" align="center" border="0" />
+</td>
+<td width="20" bgcolor="white" height="7"><img height="7" src="http://nsclass.spaces.live.com/script/Ratings/Images/red.gif" width="11" align="center" border="0" /></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td align="right" colspan="2"><a title="Calculated as rating x Log10(# votes)" href="http://nsclass.spaces.live.com/script/Articles/TopArticles.aspx?ta_so=1"><u><font color="#0000ff">Popularity: 7.41</font></u></a> <span></span><span>Rating: <b>4.53</b> out of 5</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</td>
+<td>
+<div>
+<table>
+<tbody>
+<tr>
+<td><img title="3 votes, 8.8%" height="2" alt="3 votes, 8.8%" src="http://nsclass.spaces.live.com/script/Ratings/Images/pollcol.gif" width="10" border="0" /><br />1
+</td>
+<td><img title="0 votes, 0.0%" height="1" alt="0 votes, 0.0%" src="http://nsclass.spaces.live.com/script/Ratings/Images//Images/t.gif" width="10" border="0" /><br />2
+</td>
+<td><img title="1 vote, 2.9%" height="1" alt="1 vote, 2.9%" src="http://nsclass.spaces.live.com/script/Ratings/Images//Images/t.gif" width="10" border="0" /><br />3
+</td>
+<td><img title="1 vote, 2.9%" height="1" alt="1 vote, 2.9%" src="http://nsclass.spaces.live.com/script/Ratings/Images//Images/t.gif" width="10" border="0" /><br />4
+</td>
+<td><img title="29 votes, 85.3%" height="20" alt="29 votes, 85.3%" src="http://nsclass.spaces.live.com/script/Ratings/Images/pollcol.gif" width="10" border="0" /><br />5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</td>
+</tr>
+</div>
+<p><span><br />
+</span>
+<div>
+<ul>
+<li><a href="http://nsclass.spaces.live.com/mmm2008-05-08_20.17/transactions/Transactions_src.zip"><u><font color="#0000ff">Download source - 51 Kb</font></u></a>
+</li>
+<li><a href="http://nsclass.spaces.live.com/mmm2008-05-08_20.17/transactions/Transactions_demo.zip"><font color="#0000ff"><u>Download demo project - 59 Kb </u></font></a>
+</li>
+<li><a href="http://nsclass.spaces.live.com/mmm2008-05-08_20.17/transactions/Transactions_mfc_demo.zip"><font color="#0000ff"><u>Download MFC SDI demo project - 87 Kb </u></font></a>
+</li>
+<li><a href="http://nsclass.spaces.live.com/mmm2008-05-08_20.17/transactions/Transactions_mfc_mdi_demo.zip"><font color="#0000ff"><u>Download MFC MDI demo project - 114 Kb </u></font></a>
+</li>
+<li><a href="http://nsclass.spaces.live.com/mmm2008-05-08_20.17/transactions/Transactions_complete.zip"><u><font color="#0000ff">Download all the above plus binaries - 593 KB</font></u></a></li>
+</ul>
+<p><u><font color="#0000ff"></font></u> </p>
+<h2>Introduction</h2>
+<p>This article reviews some other CodeProject articles on implementing Undo/Redo and introduces a new approach using structured exception handling and virtual memory protection. The approach is small, very high performance and features a good enforcement policy (it's easy to use correctly, and hard to use incorrectly). The working principles may be somewhat difficult to understand, but the advantages it offers in speed and reduced programming effort overwhelm the disadvantages.</p>
+<p>Since implementing Undo/Redo functionality (aka. transactions) is rarely an easy thing to do, and can become very difficult as an application grows in complexity, it is rarely done well. Applications that support add-ins (third-party extensions) have a particularly bad time of it. Too often the functionality is limited, buggy, and onerous for developers to support.</p>
+<p>There are a handful of other articles on CodeProject discussing Undo/Redo, and suggesting implementation strategies. This article introduces one more approach – one that may save you a lot of coding and result in higher-performance applications.</p>
+<h2>Previous work</h2>
+<p>Yingle Jia’s article <a href="http://www.codeproject.com/cpp/undoredo_cpp.asp"><u><font color="#0000ff">A Basic Undo/Redo Framework for C++</font></u></a> employs a straightforward procedural approach. Jia proposes a <code>Command</code> class with semantic <code>Execute</code> and <code>UnExecute</code> methods. The responsibility to implement these methods in a manner appropriate for the application falls on client developers. For example, to properly handle memory management Jia suggests a reference counting implementation, that keeps objects in memory after they have been semantically “deleted”. Implementing <code>Execute</code> and <code>Unexecute</code> can be non-trivial. For example, to avoid redundant duplication, the developer must be careful to capture only the minimally sufficient information (only what changed). This is what I call semantic, or procedural undo.</p>
+<p>Keith Rule’s <a href="http://www.codeproject.com/docview/undo.asp"><u><font color="#810081">Simple and Easy Undo/Redo</font></u></a> certainly lives up to its title. Rule makes use of lists of <code>CMemFile</code> objects to capture serialized versions of the document, before each undoable action. Any state in the undo history can be recovered by reading the contents of the appropriate <code>CMemFile</code>, assuming the <code>CDocument</code> has implemented serialization. Rule’s use of Mix-ins makes integration of his code very easy for existing MFC applications. This is what I call state-capture.</p>
+<p>Jen Nilsson’s <a href="http://www.codeproject.com/atl/undomgr.asp"><u><font color="#0000ff">Undo Manager</font></u></a> provides an interesting look at integrating with the OLE framework for undo/redo using ATL. The OLE framework is conceptually similar to Jia’s procedural approach, but adds cross application undo semantics (e.g. for OLE embeddings).</p>
+<p>Tom Morris provides an interesting tutorial on implementing Undo/Redo through state-capture in <a href="http://www.codeproject.com/docview/undoredo_demo.asp"><u><font color="#810081">Implementing Undo / Redo - The DocVars Method</font></u></a>. His approach is conceptually similar to Rule's, but focuses on internal document data structures rather than the document itself. The primary advantage of Morris' approach is that the document is able to contain and persist a sequence of document states, which allows undo and redo operations to span editing sessions. That is, it becomes possible to undo the last operation performed, before closing a document, after the document had been reopened (potentially by someone other than the original editor). A nice feature, indeed. I call this persistent undo.</p>
+<h2>Motivation</h2>
+<p>All of the above articles assume the use of one class library or another (MFC, ATL, STL, etc.), and Nilsson also depends on runtime support for OLE. Each requires modifications to the application's data representation classes (the document itself or discreet objects within the document), and/or operations. I was interested in an approach that could be used in pure Win32 code bases and did not require the modification of any interanl data structures or data manipulation code.</p>
+<p>Another drawback of Jia and Nilsson is requiring objects to remain in memory after semantic removal, thus adding constraints on behavior as well as added memory overhead (it’s assumed that “deleted” objects should not interact with other objects in memory or continue processing events, for example). It can be very hard to ensure these rules are followed in all but trivial applications.</p>
+<p>Rule places fewer constraints on behavior (other than serialization) but duplicates entire serialized documents repeatedly, thus trading simplicity for performance and memory overhead. Morris' approach features similar memory overhead due to duplication of document data.</p>
+<p>In addition to constraints placed on the developer, the scalability of the procedural and serialization based approaches is questionable. Certainly, Rule cannot continue to operate when document size exceeds 50% of available memory (compression of backup <code>CMemFiles</code> improves the situation somewhat). Jia and Nilsson don’t duplicate as much data (assuming an efficient implementation), but the reference counting approach does result in objects remaining in memory after having been “deleted” and may require additional logic to “disconnect” those objects from other data structures. Morris requires a duplicate set of document data to be created before each edit, thus adding to memory and processing overhead.</p>
+<p>It is important to consider the &quot;enforcement policy&quot; of each of these techniques. That is, how many ways are there to inadvertly break the system and introduce bugs? All of the above techniques require some faith that developers have been educated in the proper use of the system and understand its use and limitations. I've found that a stretch of reason, regardless of best intentions.</p>
+<p>Finally, in cases where an application uses data elements from outside libraries it may not be possible to implement the above techniques without some difficulty. For example, a graph analysis toolkit may include data objects that reference each other via pointers. Since it is unlikely that these classes will be based on MFC, they won’t support Rule’s serialization based approach. Likewise, adding the semantic behavior required by Jia and Nilsson may be unattainable. Hence, it is imperative that a general-purpose undo framework NOT require modification to existing data object classes.</p>
+<p>Finally, portability of MFC and COM based solutions is questionable.</p>
+<h2>Summary of the new approach</h2>
+<p>The state of a program at any given moment is strictly defined by the state of the sequence of digital memory representing that application – obvious, eh? It's humbling to remember that the code we create does nothing more than twiddle bits on a chip somewhere. However, this observation also presents us with an opportunity: If we could detect the changes made to our applications’ memory, and record them, then we’d have a good chance of reversing and replaying them at our whim.</p>
+<p>That is the basic premise of this system – to detect changes to memory and record them at the binary level, then reverse them and play them back as required to restore a given state of the application.</p>
+<p>This approach has several advantages, which should become apparent after reading through the code:</p>
+<ol>
+<li>The <b>decoupling of data objects from the undo/redo implementation</b> . No changes to objects that will participate in transactions are required. No extra code is required to capture object state. No extra code is required in object manipulation functions.
+</li>
+<li><b>Very low memory overhead.</b> By recording compressed changes in memory state this approach captures a minimum of information.
+</li>
+<li><b>Very high runtime performance.</b>
+<ol>
+<li>Undo and Redo operations are implemented by sequentail binary operations on memory. These operations are very low effort, can be accelerated in many new processors (e.g. MMX), and can be parallelized at the page level.
+</li>
+<li>Transaction effort (capturing and replaying) scales predominantly with the amount of data changed, not the size of the data as a whole. </li>
+</ol>
+</li>
+</ol>
+<li><b>Real transactions.</b> The transactions are atomic, consistent, occur in isolation and are durable (giving some leeway to the fact this approach runs only in memory).
+<li><b>Data safety.</b> Because application data is write-protected outside of transactions, any attempt to change the data outside transaction will result in an exception. This makes it very easy to identify code that is “misbehaving” and correct it. Even outside a transaction, however, data access is allowed unimpeded.
+<li><b>Simple API.</b> There are only a handful or methods in the API, most with zero or one parameter. </li>
+</li>
+</li>
+<p>Some drawbacks include:</p>
+<ol>
+<li><b>Narrow focus.</b> This technique won’t provide a complete undo/redo framework for most applications (but for many, it will). Because many operations don’t involve memory across processes and media (creating a new window, file or registry entry for example) it will be necessary to wrap this code with a system such as Jia’s that handles non-memory based operations with procedural methods.
+</li>
+<li><b>Opaqueness.</b> The direct manipulation of object representations without execution of object code is a foreign concept to most developers and may be difficult to fully grasp. It sometimes leads to interesting and challenging bugs. </li>
+</ol>
+<h2>Implementation</h2>
+<p>Wow. Just past the introduction and this article is already too long. I will try to be brief, but there is a lot to be explained here. My goal for this article was an implementation with minimal dependencies on outside code libraries, but in practice I found STL very useful. I chose to spurn MFC, WTL and ATL but make use of STL for expediency and code readability. The result is a very simple system that can be used with MFC and ATL projects as well as pure Win32 code bases.</p>
+<p>It is also portable to POSIX platforms with extended SIG_INFO structures containing data pointers for read/write violations (e.g. Linux 2.4+ kernel). Most platforms support this since it is generally needed to do copy-on-write for dynamically loaded shared objects (DLLs).</p>
+<h3>SEH: Just in Time Write Detection</h3>
+<p>Windows includes a facility to detect attempts to change memory and respond to them via Structured Exception Handling (SEH). The <code>_try &#123;&#125; _except() &#123;&#125;</code> block allows us to catch exceptions and pass them through a filter we supply:</p>
+<pre><span>int</span> ExceptionFilter(LPEXCEPTION_POINTERS e);
+
+<span>int</span> main()
+&#123;
+    <span>int</span> retval = <span>0</span>;
+    <span>__try</span> &#123;
+            retval = DoWork();
+    &#125; <span>__except</span>(ExceptionFilter(GetExceptionInformation())) &#123;
+            printf(<span>&quot;</span><span>Opps, we have a problem...\n&quot;</span>);
+    &#125;;
+
+    <span>return</span> retval;
+&#125;
+</pre>
+<p>Using this facility, we can detect when a memory protection fault occurs, and what memory was in question:</p>
+<pre><span>int</span> ExceptionFilter(LPEXCEPTION_POINTERS e)
+&#123;
+    <span>//</span><span> we are only interested in access violations (memory faults)
+</span>    <span>if</span> (e-<span>&gt;</span>ExceptionRecord-<span>&gt;</span>ExceptionCode != EXCEPTION_ACCESS_VIOLATION)
+        <span>return</span> EXCEPTION_CONTINUE_SEARCH;
+
+    <span>//</span><span> the exception information includes the type of access (read
+</span>    <span>//</span><span> or write), and the address of the fault
+</span>    <span>bool</span> writing = (e-<span>&gt;</span>ExceptionRecord-<span>&gt;</span>ExceptionInformation[<span>0</span>] != <span>0</span>);
+    <span>void</span>* addr = (<span>void</span>*)e-<span>&gt;</span>ExceptionRecord-<span>&gt;</span>ExceptionInformation[<span>1</span>];
+
+    <span>//</span><span> TODO: okay, now what?
+</span>         
+    <span>return</span> EXCEPTION_CONTINUE_EXECUTION;
+&#125;
+</pre>
+<p>The exception filter may return one of three values:</p>
+<ul>
+<li><code>EXCEPTION_CONTINUE_SEARCH</code> indicates that the filter has taken no action on the exception, and that propagation should continue to other handlers (in the case of nested <code><span>try</span></code> statements).
+</li>
+<li><code>EXCEPTION_CONTINUE_EXECUTION</code> indicates that the filter has taken action to resolve the exception, and that execution should continue at the point of the exception.
+</li>
+<li>An option we don’t use here. </li>
+</ul>
+<p>This is great, but we generally aren’t involved in deciding what memory our application can read and write. For obvious reasons, the OS generally takes care of that for us. If we allocate a chunk of memory using <code><span>new</span></code> or <code>malloc</code>, it is automatically read and write enabled and our filter will never get called. Thankfully, Windows’ virtual memory functions provide a way for us to explicitly control the permissions of memory we allocate.</p>
+<h2>Virtual Memory: Page Protection and Management</h2>
+<p>Win32 virtual memory functions can allocate, protect and de-allocate blocks of addresses in the virtual memory space. See MSDN for more information on <code>VirtualAlloc</code>, <code>VirtualProtect</code> and <code>VirtualFree</code>.</p>
+<p>We can allocate memory via <code>VirtualAlloc</code> and then set the protection to <code>PAGE_READONLY</code> using <code>VirtualProtect</code>. Any attempt to write to that memory will generate an access violation that will be passed to our exception filter. In <code>ExceptionFilter</code>, we can check to see address is on a page we manage, and if so do the following:</p>
+<ol>
+<li>Make a copy of the page
+</li>
+<li>Set the protection of the copy to <code>PAGE_READONLY</code>
+</li>
+<li>Set the protection of the original to <code>PAGE_READWRITE</code>
+</li>
+<li>Return <code>EXCEPTION_CONTINUE_EXECUTION</code> </li>
+</ol>
+<p>Returning <code>EXCEPTION_CONTINUE_EXECUTION</code> from the filter allows the code performing the memory access to continue to operate as if nothing has happened. Meanwhile, we made a copy of the page to save its state before any changes. This technique is often called “copy on write”, and you can read more about it <a href="http://www.google.com/search?hl=en&amp;ie=UTF-8&amp;oe=UTF-8&amp;q=copy+on+write" target="_blank"><u><font color="#0000ff">elsewhere on the web</font></u></a>.</p>
+<p>To track which pages we manage, we need some simple data structures:</p>
+<pre><span>typedef</span> std::vector<span>&lt;</span><span>void</span>*<span>&gt;</span> Pages;
+<span>typedef</span> std::map<span>&lt;</span><span>void</span>*, <span>void</span>*<span>&gt;</span> PageMap;
+
+<span>static</span> Pages pages;
+<span>static</span> PageMap backups;</pre>
+<p>Each time we allocate a page, we add it to <code>pages</code>. Each backup we make is added to <code>backups</code> with a pointer to the original page as the key. With these structures in place, the implementation of the exception filter starts to take form:</p>
+<pre><span>int</span> ExceptionFilter(LPEXCEPTION_POINTERS e)
+&#123;    
+    <span>if</span> (e-<span>&gt;</span>ExceptionRecord-<span>&gt;</span>ExceptionCode != EXCEPTION_ACCESS_VIOLATION)
+        <span>return</span> EXCEPTION_CONTINUE_SEARCH;
+
+    <span>bool</span> writing = (e-<span>&gt;</span>ExceptionRecord-<span>&gt;</span>ExceptionInformation[<span>0</span>] != <span>0</span>);
+    <span>void</span>* addr = (<span>void</span>*)e-<span>&gt;</span>ExceptionRecord-<span>&gt;</span>ExceptionInformation[<span>1</span>];
+    <span>void</span>* page = (<span>void</span>*)((<span>unsigned</span> <span>long</span>)addr &amp; ~(PAGE_SIZE - <span>1</span>));
+
+    Pages::iterator i = std::find(pages.begin(), pages.end(), page);
+    <span>if</span> (i == pages.end())
+        <span>return</span> EXCEPTION_CONTINUE_SEARCH;
+
+    <span>void</span>* backup = ::VirtualAlloc(<span>0</span>, PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE);
+    memcpy(backup, page, PAGE_SIZE);
+    backups[page] = backup;
+
+    DWORD old = <span>0</span>;
+    BOOL ok = FALSE;
+    ok = ::VirtualProtect(backup, PAGE_SIZE, PAGE_READONLY, &amp;old);
+    <span>if</span> (ok == FALSE)
+        <span>return</span> EXCEPTION_CONTINUE_SEARCH;
+
+    ok = ::VirtualProtect(page, PAGE_SIZE, PAGE_READWRITE, &amp;old);
+    <span>if</span> (ok == FALSE)
+        <span>return</span> EXCEPTION_CONTINUE_SEARCH;
+
+    <span>return</span> EXCEPTION_CONTINUE_EXECUTION;
+&#125;</pre>
+<p>Excellent!</p>
+<p>However, we still have a problem: Windows’ virtual memory functions only deal with page-sized chunks (4096 bytes). To make things useful in the general case, we need a memory manger that operates on chunks of memory from <code>VirtualAlloc</code>. Fortunately, that problem has been solved before. The source code includes a <i>very</i> simple memory manager that can slice arbitrarily sized allocations from chunks of virtual memory. See the API functions <code>Allocate</code> and <code>Deallocate</code>. If you need a more industrial strength solution, see <a href="http://groups.google.com/groups?hl=en&amp;lr=lang_en&amp;ie=UTF-8&amp;oe=UTF-8&amp;safe=off&amp;q=fast+memory+allocation+algorithm&amp;btnG=Google+Search" target="_blank"><u><font color="#0000ff">google</font></u></a>. Punt.</p>
+<h2>Houston, we have Undo</h2>
+<p>Now we can detect changes to memory and make copies of only the memory being changed. This is great stuff, eh? Say we have a gazillion bytes allocated but will only be changing a few in any given transaction. Using this technique, we only have to copy the pages where the changes are made, and the code that makes the changes doesn’t even need to know we’re doing it.</p>
+<p>To reverse the changes we need only copy the backup pages over the top of the target pages. Very cool, eh? Unfortunately, at this point we can’t Redo the Undo since we aren’t keeping a copy of the page <i>after</i> the changes. Hmmm. Another drawback with this technique is that we copy the entire page, even when a subset of the page is changed. This is a bit wasteful. To do better we could compress the backup, but we can do better than that using some XOR tricks and get Redo too.</p>
+<h2>XOR Tricks: Recording Changes and Redo</h2>
+<p>Rather than go into a discussion of XOR and its many uses, I’ll refer you to Daniel Turini’s excellent <a href="http://www.codeproject.com/useritems/raidfile.asp"><u><font color="#0000ff">article </font></u></a>on the subject.</p>
+<p>Using XOR we can find the differences between the original page and the copy of the page. Some vary fast code can XOR the page and it’s backup and rewrite the results to the backup:</p>
+<pre><span>//</span><span> psuedo-code. A real-world implementation should use SMID
+</span><span>for</span> (<span>unsigned</span> <span>short</span> j = <span>0</span>; j <span>&lt;</span> PAGE_SIZE; ++j) &#123;
+    <span>const</span> <span>BYTE</span> a = backup[j];
+    <span>const</span> <span>BYTE</span> b = page[j];
+    backup[j] = (a ^ b);
+&#125;</pre>
+<p>Any byte that hasn’t changed will come back zero from the XOR operation. Bytes that have changed will be non-zero. That doesn’t look like a space saving except for the fact that pages with sparse changes will have lots of zeros and compress very, very well. In addition, and as Daniel notes, by storing the XOR we can always get to the “other” memory state from the “before” or “after” state – hence, we now can redo what we undo. Sweet!</p>
+<h2>RLE: Delta Compression</h2>
+<p>Once we decide that changes should be kept (see <code>CommitTransaction</code>), we can calculate the XOR deltas, compress them, and hold onto them while discarding the backup page. This technique reduces the memory overhead of the system considerably.</p>
+<p>To demonstrate the concept of compressing the delta (the XOR of the page and the backup) I implemented a very simple Run Length Encoding (RLE) algorithm. The code simply looks for long runs of duplicate bytes and encodes them as a count and the byte. So, for example, a run of 100 “0”s is compressed down to 2 bytes. Compression on random data is poor, however, and in production you’d want to use something like zlib to get better worst-case performance.</p>
+<p>The details of the RLE compression are separated out in <i>Compress.h</i> and <i>Compress.cpp</i> . If you can provide an implementation that fits into these two files nicely (and is speedy) I’ll add it to this article and give you credit here. It's an interesting problem, since we know that the block to be compressed will always be <code>PAGE_SIZE</code> bytes.</p>
+<h2>STL Integration, MFC dangers</h2>
+<p>The designers of STL (bless their hearts) decided to include the ability to control the memory allocation done by containers (list, vector, map, etc.). This is very cool. It allows us to write an allocator that uses our memory manager to put STL containers on transacted pages. Translation: We can do transactions that involve manipulations of STL containers and objects.</p>
+<p>See <i>Allocator.h</i> for the not-so-gory details of the allocator, and <i>MemTest.cpp</i> for a demonstration.</p>
+<p>It would be cool to do the same on MFC classes, but that is generally a bad idea. MFC classes often do non-memory based things. Classes derived from <code>CObject</code> or <code>CCommandTarget</code> could be transacted using this technique, but be careful to avoid holding pointers to non-transacted objects in transacted objects and vise-versa. The pointers could become invalid after an undo or redo.</p>
+<h2>The Demo App(s)</h2>
+<p>There are three demo applications included with this article. The first is a bare-bones console app that tests much of the functionality of the engine. Since it is well commented, I’ll just refer you to the directory <i>MemTest</i> rather than include 200+ duplicate lines in this document.</p>
+<p>The second demo app, <i>DrawIt</i> is more interesting, since it integrates this undo approach with a simple MFC-based application. The application does simple drawing (vector based) of shapes. It processes mouse down, move and up messages and interactively creates random shapes based on the input. Two toolbar commands automate the creation of large numbers of shapes by:</p>
+<ol>
+<li>Opening 1000 transactions with each adding a single random shape in a random location.
+</li>
+<li>Opening a single transaction and adding a 1000 random shapes in a random locations. </li>
+</ol>
+<p>I did this to show the difference between lots of small transactions and few large transactions. Both cases work very well. The transaction overhead in both cases is small compared to the time to manipulate the lists and render the items.</p>
+<p>A perhaps subtle point in the demo is that the code for creating objects is provided in an external DLL (<i>DrawFunc.dll</i>) that has zero knowledge of the transaction mechanisms in the host application. That makes it very, very simple for a replacement DLL to be implemented for customization or extensibility purposes. It's worth looking at the subproject, and the sketch object in particular, to note just how simple life can be for add-in providers.</p>
+<p>Another interesting aspect of the demo application is the long transaction support. You can open a transaction, make lots of changes to the document by adding items interactively or using the abuse commands, and then commit or cancel the changes as one large chunk. If the changes are committed, they will undo and redo as one unit. If the changes are cancelled, the document will return to the previous state (including the intact redo stack) as if none of the changes had happened -- nice, eh?</p>
+<p>This second demo application was generated using appwizard. I then added small modifications to <code>CDrawItApp::InitInstace</code>, <code>Run</code>, <code>ExitInstance</code>, <code>OnUndo</code> and <code>OnRedo</code>. Those modifications are general purpose and generally applicable to MFC apps using Transactions. Some other modifications can be found in <i>CDrawItView.h</i>,<i>.cpp</i> and <i>CDrawItDoc.h</i>, <i>.cpp</i>. Those modifications are specific to this application, and you should replace them with your own code.</p>
+<p>The third final demo, <i>DrawItMDI</i>, demonstrates using the multi-space functionality of Transactions to build an MDI application that maintains individual undo/redo streams for each document. It also implements exception filtering to capture crashes and do reporting.</p>
+<p>These demos show the flexibility of the framework, and I hope they will encourage you to try some new ideas yourself. Please recognize that the demo applications make use of code from other projects at CodeProject, and elsewhere. Thanks to Hans Dietrich, Bruce Dawson and Jonathan de Halleux.</p>
+<h2>API</h2>
+<p>There are only a handful of methods in the API, and one of them should be used only once per application. That leaves us with about seven things to remember, which is about the right number.</p>
+<h3>SPACEID CreateSpace(size_t initial_size)</h3>
+<p>Create a transacted heap from which allocations can be requested. A transaction must be opened on the space before it can be used.</p>
+<h3>Result Destroy(SPACEID sid)</h3>
+<p>Destroy a previously created space, freeing all memory associated with it. Keep in mind that destructors will not be called for any objects remaining in the space. Future allocation requests on the space will result in undefined behavior.</p>
+<h3>
+</h3>
+<h3>Result DestroyAll()</h3>
+<p>Destroy all previously created spaces, freeing all memory associated with them. Keep in mind that destructors will not be called for any objects remaining in the spaces. Future allocation requests on the existing spaces will result in undefined behavior.</p>
+<h3>Result Clear(SPACEID sid)</h3>
+<p>Free all memory associated with a space. Keep in mind that destructors will not be called for any objects remaining in the space. Future allocation requests on the space are allowed.</p>
+<h3>
+</h3>
+<h3>Result ClearAll()</h3>
+<p>Free all memory associated with all spaces. Keep in mind that destructors will not be called for any objects remaining in the spaces. Future allocation requests on the spaces are allowed.</p>
+<h3>int ExceptionFilter(LPEXCEPTION_POINTERS* e)</h3>
+<p>This method provides the major point of integration with the target application’s code. In order to catch memory access violations, you must put a <code>_try &#123;&#125; _except() &#123;&#125;</code> block using this exception filter, above all modifications to managed memory (allocated by <code>Allocate</code>) in the call stack. The logical place to put the try block is in <code>main()</code>, <code>WinMain()</code> or around the application’s main message loop.</p>
+<h3>Result OpenTransaction(SPACEID sid)</h3>
+<p>Call this method to open a new transaction. Any open transaction must be closed (committed or cancelled) before another transaction can be started. Outside of a transaction, an attempt to write to protected memory will result in an unhanded exception.</p>
+<h3>Result CancelTransaction(SPACEID sid)</h3>
+<p>Call this method if you’d like to close a transaction without committing any changes. As a result of this call, all changes to memory since the start of the transaction, will be reversed and the transaction will be removed from the undo list. The transaction will not be available for undo.</p>
+<p>Transactions on the redo stack will still be available for redo. It’s like it never happened. Imagine trying to do this with a procedural undo framework. Cool, eh?</p>
+<h3>Result CommitTransaction(SPACEID sid)</h3>
+<p>Call this method to commit changes made since the last call to <code>OpenTransaction</code> and to add the transaction to the undo list. Changes made during the transaction are preserved. If there are transactions on the redo stack, they will be dumped and any pages they contain will be added to the free list.</p>
+<h3>TXNID GetLastTransactionId(SPACEID sid)</h3>
+<p>This method returns an identifier of the last previously committed transaction. Use this method in conjunction with <code>Undo</code>/<code>Redo</code> to roll the application state to a specific point in its history. This method should be useful, if you need to wrap MM with a procedural framework, since it uniquely identifies each transaction.</p>
+<h3>TXNID GetNextTransactionId(SPACEID sid)</h3>
+<p>This method returns an identifier of the next transaction in the redo stack. Use this method in conjunction with <code>Undo</code>/<code>Redo</code> to roll the application state to a specific point in its history. This method should be useful, if you need to wrap MM with a procedural framework, since it uniquely identifies each transaction.</p>
+<h3>TXNID GetOpenTransactionId(SPACEID sid)</h3>
+<p>This method returns an identifier of the currently open transaction. Use this method in to determine if <code>Undo</code>/<code>Redo</code> are available, or if a transaction is already in progress. This method should be useful, if you need to wrap MM with a procedural framework, since it uniquely identifies each transaction.</p>
+<h3>Result Undo(SPACEID sid)</h3>
+<p>Call this method to reverse the changes made in the last transaction.</p>
+<h3>Result Redo(SPACEID sid)</h3>
+<p>Call this method to re-reverse the changes made in the last undo.</p>
+<h3>Result TruncateUndo(SPACEID sid)</h3>
+<p>Drops all transactions in the Undo stack. This is useful, for example, to avoid allowing the user to undo over document or application initialization.</p>
+<h3>Result TruncateRedo(SPACEID sid)</h3>
+<p>Drops all transactions in the Redo stack. This happens automatically when a Transaction is committed while the Redo stack is not empty (think about it). I can't think of why you'd want to do this at the application level.</p>
+<h3>void* Allocate(size_t size, SPACEID sid)</h3>
+<p>Allocate <code>size</code> bytes of transacted memory in the specified space. All objects that should be transacted must be allocated with this method. To simplify creating C++ objects in transacted memory you might try one of the following:</p>
+<ol>
+<li>
+<p>Get a correctly sized piece of memory with <code>Allocate</code>, then use <a href="http://www.google.com/search?hl=en&amp;lr=lang_en&amp;ie=UTF-8&amp;oe=UTF-8&amp;safe=off&amp;q=placement+new" target="_blank"><u><font color="#0000ff">placement new</font></u></a> to put an instance of your class in that memory. E.g:</p>
+<pre>Foo* foo = <span>new</span>(Mm::Allocate(<span>sizeof</span>(Foo), mySpaceId)) Foo();</pre></p>
+</li>
+<li>Override <code><span>operator</span> <span>new</span></code>() on the class with an implementation that uses <code>Allocate</code> to grab memory. This is method is recommended. E.g.:
+<pre><span>class</span> Foo &#123;
+  <span>void</span>* <span>operator</span> <span>new</span>(size_t size) &#123; <span>return</span> Mm::Allocate(size, mySpaceId); &#125;
+&#125;;</pre></p>
+</li>
+<li>
+<p>Create a custom allocation method (see <code>MyNew</code> and <code>MyDelete</code> in <i>MemTest.cpp</i>). Also recommended.</p>
+</li>
+</ol>
+<h3>void* Allocate(void* hint, size_t size)</h3>
+<p>If the appropriate space id is inconvenient to access, a hint can be provided to the allocation API. When a hint is provided, Transactions will attempt to find the space in which the hint address resides. If it is successful, an allocation will be made in that space. If not, allocation will fail. Obviously, using a hint instead of a space id adds some performance overhead.</p>
+<h3>void Deallocate(void* p)</h3>
+<p>Free the block <code>p</code> allocated with <code>Allocate()</code>. Since no the space is not indicated in the parameter list, the method needs to check if the address was originally allocated by Transactions, and if so in which space. This obviously makes the method slower, so prefer the below form:</p>
+<h3>void Deallocate(void* p, SPACEID sid)</h3>
+<p>This is the preferred deallocation method, but beware that no attempt is made to double-check the space id. If it is wrong, the deallocation will simply fail. This is the faster of the three deallocation signatures.</p>
+<h3>void Deallocate(void* p, size_t size)</h3>
+<p>Mainly used by Mm::Allocator, not much reason to use it otherwise.</p>
+<h3>void* Reallocate(void* p, size_t size)</h3>
+<p>Attempts to reallocate the space at p to a new size. If the new size is smaller than the existing allocation it will always work. If the requested size is larger than the existing size, it may (in fact probably will) fail. Don't pass null p since it is needed to determine which space to use.</p>
+<h3>void* Reallocate(void* p, size_t size, SPACEID sid)</h3>
+<p>Same ass above, but null p is okay since the space is specified. This is the faster of the two forms.</p>
+<h2>Conclusion</h2>
+<p>I hope that this article has given you some insight into yet another way to do undo/redo. The method presented here has some significant advantages, but can be difficult to understand and debug. Among the advantages are:</p>
+<ul>
+<li>Low memory overhead
+</li>
+<li>High performance and scalable
+</li>
+<li>Easy to use</li>
+</ul>
+<p>On a final note, and just to twist your mind, consider that this technique is fast enough to allow you to “Peek back in time.” That is, if it is useful to know where an object was, what color it was, or what value it had in a previous transaction, you can easily modify this code to do that. Hmm. That could be useful.</p>
+<p>Enjoy!</p>
+<h2>Version History</h2>
+<ul>
+<li><b>UPDATE June 18, 2004</b>:
+<ul>
+<li>Added support for multiple, individually transacted &quot;spaces&quot; (aka. heaps)
+</li>
+<li>Many bug fixes, ported to VC7.1
+</li>
+<li>More readable code
+</li>
+<li>MDI Sample Applicationn</li>
+</ul>
+</li>
+</ul>
+<li>Version 1.3 posted Jan. 7, 2003 to CodeProject
+<li>Version 1.2 posted Dec. 17, 2002 to CodeProject
+<ul>
+<li>Added commentary based on Tom Morris' tutorial. </li>
+</ul>
+<li>Version 1.1 posted Oct. 7, 2002 to CodeProject
+<ul>
+<li>New API method <code>Mm::Clear()</code> dumps all VM and resets undo and redo stack
+</li>
+<li>New demo DrawIt added to show MFC integration.
+</li>
+<li>Removed reference to Result.h that caused build problems. </li>
+</ul>
+</li>
+<li>Version 1.0 posted Oct. 4, 2002 to CodeProject </li>
+</li>
+</li>
+</div>
+<div></div>
+<h2>License</h2>
+<div>
+<p>This article has no explicit license attached to it but may contain usage terms in the article text or the download files themselves. If in doubt please contact the author via the discussion board below.</p>
+<p>A list of licenses authors might use can be found <a href="http://nsclass.spaces.live.com/info/Licenses.aspx"><u><font color="#0000ff">here</font></u></a></p>
+</div>
+<h2>About the Author</h2>
+<table cellspacing="5" cellpadding="0" width="100%" border="0">
+<tbody>
+<tr valign="top">
+<td style="width:155px;" valign="top"><b><a href="http://nsclass.spaces.live.com/script/Membership/Profiles.aspx?mid=49251"><u><font color="#0000ff">compiler</font></u></a></b></p>
+<p><u><font color="#0000ff"></font></u><br /><span></span>
+</td>
+<td>A compiler warns of bogasity, ignore it at your peril. Unless you've done the compiler's job yourself, don't criticize it.</p>
+<table>
+<tbody>
+<tr>
+<td>Location:
+</td>
+<td width="100%"><span><img height="11" alt="United States" src="http://nsclass.spaces.live.com/script/Geo/Images/US.gif" width="16" /> United States</span></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<div style="overflow:hidden;white-space:nowrap;text-align:center;padding:10px;"></div>
+</div>
+<tr>
+<td align="middle" colspan="2"></td>
+</tr>

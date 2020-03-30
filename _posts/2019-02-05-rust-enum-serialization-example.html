@@ -1,0 +1,64 @@
+---
+layout: post
+title: Rust - Enum serialization example
+date: 2019-02-05 11:17:14.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Rust
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '27312176006'
+  timeline_notification: '1549387034'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/02/05/rust-enum-serialization-example/"
+---
+<p>[code lang="c"]</p>
+<p>use serde::ser::{ Serialize, Serializer };<br />
+use serde::de::{ Deserialize, Deserializer };</p>
+<p>pub enum EnumTestType {<br />
+    Type1,<br />
+    Type2,<br />
+    UNKNOWN,<br />
+}</p>
+<p>impl EnumTestType {<br />
+    pub fn value(&amp;self) -&gt; &amp;'static str {<br />
+        match *self {<br />
+            EnumTestType::Type1 =&gt; &quot;T1&quot;,<br />
+            EnumTestType::Type2 =&gt; &quot;T2&quot;,<br />
+            EnumTestType::UNKNOWN =&gt; &quot;?&quot;,<br />
+        }<br />
+    }<br />
+}</p>
+<p>impl Serialize for EnumTestType {<br />
+    fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;<br />
+        where S: Serializer,<br />
+    {<br />
+        serializer.serialize_str(self.value())<br />
+    }<br />
+}</p>
+<p>impl &lt;'a&gt; Deserialize&lt;'a&gt; for EnumTestType {<br />
+    fn deserialize&lt;D&gt;(deserializer: D) -&gt; Result&lt;Self, D::Error&gt;<br />
+        where D: Deserializer&lt;'a&gt;,<br />
+    {<br />
+        let s = String::deserialize(deserializer)?;<br />
+        let result = match s.as_str() {<br />
+            &quot;D&quot; =&gt; EnumTestType::Type1,<br />
+            &quot;I&quot; =&gt; EnumTestType::Type2,<br />
+            _ =&gt; EnumTestType::UNKNOWN,<br />
+        };</p>
+<p>        Ok(result)<br />
+    }<br />
+}</p>
+<p>[/code]</p>

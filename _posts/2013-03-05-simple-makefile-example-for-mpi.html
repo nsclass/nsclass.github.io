@@ -1,0 +1,39 @@
+---
+layout: post
+title: Simple Makefile example for MPI
+date: 2013-03-05 21:43:56.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/05/simple-makefile-example-for-mpi/"
+---
+<p>[sourcecode language="c"]<br />
+CC=mpicxx<br />
+CFLAGS=-c -Wall<br />
+LDFLAGS=<br />
+SOURCES=test.cpp<br />
+OBJECTS=$(SOURCES:.cpp=.o)<br />
+EXECUTABLE=test</p>
+<p>all: $(SOURCES) $(EXECUTABLE)</p>
+<p>$(EXECUTABLE): $(OBJECTS)<br />
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@</p>
+<p>.cpp.o:<br />
+	$(CC) $(CFLAGS) $&amp;lt; -o $@</p>
+<p>clean:<br />
+	rm -rf *.o $(EXECUTABLE)<br />
+[/sourcecode]</p>

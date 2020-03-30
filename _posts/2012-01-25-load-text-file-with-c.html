@@ -1,0 +1,55 @@
+---
+layout: post
+title: Load a text file with C++
+date: 2012-01-25 10:10:19.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";s:1:"0";s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2012-01-24
+    23:14:29";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2012/01/25/load-text-file-with-c/"
+---
+<p>[sourcecode language="cpp"]<br />
+std::wstring fromAscii(const char* str)<br />
+{<br />
+	std::wstring sOutput;<br />
+	int inputLength = (int)strlen(str);<br />
+	if(inputLength)<br />
+	{<br />
+		inputLength++; // allow for null terminator<br />
+		wchar_t* buf = new wchar_t[inputLength];<br />
+		MultiByteToWideChar(CP_ACP, 0, str, inputLength, buf, inputLength);<br />
+		sOutput += buf;<br />
+		delete[] buf;<br />
+	}<br />
+	return sOutput;<br />
+}</p>
+<p>bool LoadTextFile(std::wstring const&amp; path, std::wstring&amp; text)<br />
+{<br />
+    try<br />
+    {<br />
+        std::ifstream ifs(path);<br />
+        std::string str((std::istreambuf_iterator(ifs)), std::istreambuf_iterator());</p>
+<p>        text = fromAscii(str.c_str());<br />
+        return true;<br />
+   }<br />
+   catch(...)<br />
+   {<br />
+   }</p>
+<p>    return false;<br />
+}<br />
+[/sourcecode]</p>

@@ -1,0 +1,39 @@
+---
+layout: post
+title: C++11 - Standard way to convert number to string
+date: 2014-04-16 09:05:58.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags:
+- C++11
+meta:
+  _publicize_pending: '1'
+  _edit_last: '14827209'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/04/16/c11-standard-way-to-convert-number-to-string-via-versus/"
+---
+<p>[code lang="c"]<br />
+include&lt;string&gt;<br />
+using std;</p>
+<p>    std::to_string<br />
+    std::to_wstring</p>
+<p>    stoi: converts a string to a signed integer<br />
+    stol: converts a string to a signed long<br />
+    stoll: converts a string to a signed long long<br />
+    stoul: converts a string to an unsigned long<br />
+    stoull: converts a string to an unsigned long long<br />
+    stof: converts a string to a float<br />
+    stod: converts a string to a double<br />
+    stold: converts a string to a long double<br />
+[/code]</p>

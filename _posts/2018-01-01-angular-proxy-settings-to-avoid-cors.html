@@ -1,0 +1,38 @@
+---
+layout: post
+title: Angular - Proxy settings to avoid CORS
+date: 2018-01-01 13:21:28.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- angular
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '13099645351'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/01/01/angular-proxy-settings-to-avoid-cors/"
+---
+<p>Create a proxy.config.json<br />
+[code lang="c"]<br />
+{<br />
+  &quot;/api&quot;: {<br />
+    &quot;target&quot;: &quot;http://localhost:8080&quot;,<br />
+    &quot;secure&quot;: false<br />
+  }<br />
+}<br />
+[/code]</p>
+<p>run ng serve with a configuration file.<br />
+[code lang="c"]<br />
+ng serve --proxy-config proxy.config.json<br />
+[/code]</p>

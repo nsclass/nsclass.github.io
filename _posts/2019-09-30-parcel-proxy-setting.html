@@ -1,0 +1,46 @@
+---
+layout: post
+title: Parcel - Proxy setting
+date: 2019-09-30 19:50:43.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- parcel
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _oembed_421695bf0dad851fb02a49b2cb470061: "{{unknown}}"
+  geo_public: '0'
+  _publicize_job_id: '35855430090'
+  timeline_notification: '1569891045'
+  _oembed_091ca8b6a5c333ba4720e71b55423b81: "{{unknown}}"
+  _oembed_4651d08cc921735243f58a75beaea78b: "{{unknown}}"
+  _oembed_5102c051d1487bc5b0d5094e08dcf28a: "{{unknown}}"
+  _oembed_4610601ccdf130ee8aa3bacd1fc237bf: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/09/30/parcel-proxy-setting/"
+---
+<p>In 'package.json', you can defined the proxy table.<br />
+[code lang="c"]<br />
+{<br />
+  &quot;proxy&quot;: {<br />
+    &quot;/api&quot;: {<br />
+      &quot;target&quot;: &quot;http://localhost:8000&quot;<br />
+    },<br />
+    &quot;/authorization/login&quot;: {<br />
+      &quot;target&quot;: &quot;https://example.com/login&quot;,<br />
+      &quot;secure&quot;: true<br />
+    }<br />
+  }<br />
+}<br />
+[/code]</p>
+<p>https://github.com/parcel-bundler/parcel/pull/3281</p>

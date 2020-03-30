@@ -1,0 +1,66 @@
+---
+layout: post
+title: C# WPF - mouse over animation with opacity
+date: 2013-09-02 15:42:04.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-09-02
+    05:42:04";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/09/02/c-wpf-mouse-over-animation-with-opacity/"
+---
+<p>Resource XML.<br />
+[code lang="c"]<br />
+&lt;Windows.Resources&gt;<br />
+        &lt;Style x:Key=&quot;FadeOutButton&quot; TargetType=&quot;{x:Type Button}&quot;&gt;<br />
+            &lt;Setter Property=&quot;Template&quot;&gt;<br />
+                &lt;Setter.Value&gt;<br />
+                    &lt;ControlTemplate TargetType=&quot;Button&quot;&gt;<br />
+                        &lt;Border Background=&quot;Transparent&quot;&gt;<br />
+                            &lt;ContentPresenter/&gt;<br />
+                        &lt;/Border&gt;<br />
+                    &lt;/ControlTemplate&gt;<br />
+                &lt;/Setter.Value&gt;<br />
+            &lt;/Setter&gt;<br />
+            &lt;Style.Triggers&gt;<br />
+                &lt;EventTrigger RoutedEvent=&quot;Control.MouseEnter&quot;&gt;<br />
+                    &lt;BeginStoryboard&gt;<br />
+                        &lt;Storyboard &gt;<br />
+                            &lt;DoubleAnimation Duration=&quot;0:0:0.2&quot; To=&quot;1&quot; Storyboard.TargetProperty=&quot;Opacity&quot;/&gt;<br />
+                        &lt;/Storyboard&gt;<br />
+                    &lt;/BeginStoryboard&gt;<br />
+                &lt;/EventTrigger&gt;<br />
+                &lt;EventTrigger RoutedEvent=&quot;Control.MouseLeave&quot;&gt;<br />
+                    &lt;BeginStoryboard&gt;<br />
+                        &lt;Storyboard &gt;<br />
+                            &lt;DoubleAnimation Duration=&quot;0:0:0.2&quot; To=&quot;0.4&quot; Storyboard.TargetProperty=&quot;Opacity&quot;/&gt;<br />
+                        &lt;/Storyboard&gt;<br />
+                    &lt;/BeginStoryboard&gt;<br />
+                &lt;/EventTrigger&gt;<br />
+            &lt;/Style.Triggers&gt;<br />
+        &lt;/Style&gt;<br />
+&lt;/Windows.Resources&gt;<br />
+[/code]</p>
+<p>Button XML.<br />
+[code lang="c"]<br />
+    &lt;Button Style=&quot;{StaticResource FadeOutButton}&quot;<br />
+                   Name=&quot;Test&quot;<br />
+                   Opacity=&quot;0.4&quot;&gt;<br />
+                        &lt;Image Stretch=&quot;None&quot; Source=&quot;{StaticResource LoginImage}&quot; FocusVisualStyle=&quot;{x:Null}&quot; /&gt;<br />
+    &lt;/Button&gt;<br />
+[/code]</p>

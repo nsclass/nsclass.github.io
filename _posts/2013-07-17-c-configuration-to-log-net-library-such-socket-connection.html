@@ -1,0 +1,63 @@
+---
+layout: post
+title: C# configuration to log .NET library such socket connection
+date: 2013-07-17 08:47:16.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-16
+    22:48:53";}
+  geo_public: '0'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/17/c-configuration-to-log-net-library-such-socket-connection/"
+---
+<p>If you create a file named [application].exe.config with the following contents in directory having your application, it can make logs on any socket connection and mail operations.</p>
+<p>[code lang="c"]<br />
+&lt;configuration&gt;<br />
+    &lt;system.diagnostics&gt;<br />
+        &lt;sources&gt;<br />
+            &lt;source name=&quot;System.Net&quot;&gt;<br />
+                &lt;listeners&gt;<br />
+                    &lt;add name=&quot;System.Net&quot;/&gt;<br />
+                &lt;/listeners&gt;<br />
+            &lt;/source&gt;<br />
+            &lt;source name=&quot;System.Net.Sockets&quot;&gt;<br />
+                &lt;listeners&gt;<br />
+                    &lt;add name=&quot;System.Net&quot;/&gt;<br />
+                &lt;/listeners&gt;<br />
+            &lt;/source&gt;<br />
+	   &lt;source name=&quot;System.Net.Mail&quot;&gt;<br />
+	       &lt;listeners&gt;<br />
+	           &lt;add name=&quot;System.Net&quot;/&gt;<br />
+	       &lt;/listeners&gt;<br />
+	   &lt;/source&gt;<br />
+        &lt;/sources&gt;<br />
+        &lt;switches&gt;<br />
+            &lt;add name=&quot;System.Net&quot; value=&quot;Verbose&quot; /&gt;<br />
+            &lt;add name=&quot;System.Net.Sockets&quot; value=&quot;Verbose&quot; /&gt;<br />
+            &lt;add name=&quot;System.Net.Mail&quot; value=&quot;Verbose&quot; /&gt;<br />
+        &lt;/switches&gt;<br />
+        &lt;sharedListeners&gt;<br />
+            &lt;add name=&quot;System.Net&quot;<br />
+                type=&quot;System.Diagnostics.TextWriterTraceListener&quot;<br />
+                initializeData=&quot;Application.log&quot;<br />
+                /&gt;<br />
+        &lt;/sharedListeners&gt;<br />
+        &lt;trace autoflush=&quot;true&quot; /&gt;<br />
+    &lt;/system.diagnostics&gt;<br />
+&lt;/configuration&gt;<br />
+[/code]</p>

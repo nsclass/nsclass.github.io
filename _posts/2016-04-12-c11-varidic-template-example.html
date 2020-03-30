@@ -1,0 +1,53 @@
+---
+layout: post
+title: C++11 - Variadic template example
+date: 2016-04-12 08:33:03.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '21691288188'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/04/12/c11-varidic-template-example/"
+---
+<p>[code lang="c"]<br />
+#include &lt;iostream&gt;<br />
+#include &lt;sstream&gt;<br />
+#include &lt;vector&gt;</p>
+<p>std::vector&lt;std::string&gt; to_string()<br />
+{<br />
+	return{};<br />
+}</p>
+<p>template &lt;typename ARG1, typename ... ARGS&gt;<br />
+std::vector&lt;std::string&gt; to_string(ARG1 arg, ARGS... args)<br />
+{<br />
+	std::vector&lt;std::string&gt; result;</p>
+<p>	std::stringstream str;<br />
+	str &lt;&lt; arg;</p>
+<p>	result.push_back(str.str());</p>
+<p>	auto others = to_string(args...);</p>
+<p>	result.insert(result.end(), others.begin(), others.end());</p>
+<p>	return result;<br />
+}</p>
+<p>int main()<br />
+{<br />
+	auto res = to_string(1, &quot;test&quot;);</p>
+<p>	for (auto&amp; item : res) {<br />
+		std::cout &lt;&lt; item &lt;&lt; std::endl;<br />
+	}<br />
+    return 0;<br />
+}<br />
+[/code]</p>

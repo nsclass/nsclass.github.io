@@ -1,0 +1,36 @@
+---
+layout: post
+title: C# WPF - INotifyPropertyChanged vs DependencyObject
+date: 2013-09-06 15:55:00.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_ab6c10c7e2f09ea1421bd0ad8028eda7: "{{unknown}}"
+  _oembed_64b8beea8f8d1b8ae023979d4a4c6c91: "{{unknown}}"
+  _oembed_22021b1102cac983cb5370c652abf6fe: "{{unknown}}"
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-09-06
+    05:55:00";}
+  _oembed_de87184c6acc5f6199edfe5a6c43c7c0: "{{unknown}}"
+  _oembed_35e2e3026b76cb452c428afd23b399f7: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/09/06/c-wpf-inotifypropertychanged-vs-dependencyobject/"
+---
+<p>In WPF for binding model data to UI you can choose DependencyObject or INotifyPropertyChanged with POCO.</p>
+<p>I normally selected INotifyPropertyChanged with POCO because of code readability and easy to understand.<br />
+Now I have found a useful article about this topic. You can see the details from the following link.</p>
+<p>http://kentb.blogspot.com.au/2009/03/view-models-pocos-versus.html</p>
+<p>One important thing is that DependencyObject has a relationship with thread affinity. I think that this is big weakness of DependencyObject even though it can bring a little bit of performance benefits.</p>

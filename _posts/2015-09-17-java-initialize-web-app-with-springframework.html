@@ -1,0 +1,58 @@
+---
+layout: post
+title: Java - Initializing the Web App with Springframework
+date: 2015-09-17 15:06:14.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- springframework
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '14868891199'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/09/17/java-initialize-web-app-with-springframework/"
+---
+<p>In order to initialize the Web application with Springframework, it is required to detect when context has been initialized. You can achieve it by defining a subclass with deriving ApplicationListener</p>
+<p>[code lang="c"]<br />
+public class ApplicationListenerBean implements<br />
+		ApplicationListener&lt;ContextRefreshedEvent&gt; {<br />
+	@Override<br />
+	public void onApplicationEvent(ContextRefreshedEvent contextEvent) {<br />
+             // add initialization code<br />
+	}<br />
+}<br />
+[/code]</p>
+<p>Then it is required to define this class in application context xml file as shown below example<br />
+[code lang="c"]<br />
+	&lt;bean id=&quot;applicationContextListener&quot; class=&quot;com.demo.app.ApplicationListenerBean&quot;&gt;<br />
+	&lt;/bean&gt;<br />
+[/code]</p>
+<p>If you would like to capture the ApplicationContext in Springframework, you can achieve by subclassing ApplicationContextAware<br />
+[code lang="c"]<br />
+public class ApplicationContextProvider implements ApplicationContextAware {<br />
+	private static ApplicationContext ctx = null;</p>
+<p>	@Override<br />
+	public void setApplicationContext(ApplicationContext ctx)<br />
+			throws BeansException {<br />
+		this.ctx = ctx;<br />
+	}<br />
+	public static ApplicationContext getApplicationContext()<br />
+			throws BeansException {<br />
+		return ctx;<br />
+	}<br />
+}</p>
+<p>// in xml<br />
+	&lt;bean id=&quot;applicationContextProvider&quot; class=&quot;com.demo.app.ApplicationContextProvider&quot;/&gt;<br />
+[/code]</p>

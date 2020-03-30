@@ -1,0 +1,49 @@
+---
+layout: post
+title: Maven - Log4j setting for maven with Springframework
+date: 2015-08-12 08:55:27.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- maven
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '13636179071'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/08/12/maven-log4j-setting-for-maven-with-springframework/"
+---
+<p>In order to enable log4j settings in maven compilation, log4j.properties file should be in the test/resources directory.</p>
+<p>Sample unit test class<br />
+[code lang="c"]<br />
+@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration(locations = &quot;classpath*:config/test-applicationContext.xml&quot;)<br />
+public class SimpleTestExampleTest extends AbstractJUnit4SpringContextTests {<br />
+    @Before<br />
+    public void setUp() throws Exception {<br />
+        logger.debug(&quot;Executing before&quot;);<br />
+    }<br />
+}<br />
+[/code]</p>
+<p>Sample log4j.properties file<br />
+[code lang="c"]<br />
+log4j.rootLogger=ERROR, A1</p>
+<p># A1 is set to be a ConsoleAppender.<br />
+log4j.appender.A1=org.apache.log4j.ConsoleAppender</p>
+<p># A1 uses PatternLayout.<br />
+log4j.appender.A1.layout=org.apache.log4j.PatternLayout<br />
+log4j.appender.A1.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n</p>
+<p># An alternative logging format:<br />
+# log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n<br />
+[/code]</p>

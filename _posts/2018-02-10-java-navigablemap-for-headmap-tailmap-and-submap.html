@@ -1,0 +1,90 @@
+---
+layout: post
+title: Java -  headMap, tailMap and subMap in NavigableMap
+date: 2018-02-10 20:45:06.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '14620043621'
+  timeline_notification: '1518317107'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/02/10/java-navigablemap-for-headmap-tailmap-and-submap/"
+---
+<p>NavigableMap collection on Java provide methods to return the view of Map on sorted order of key. The most common methods are headMap, tailMap and subMap.</p>
+<p>headMap example.<br />
+[code]<br />
+        NavigableMap&lt;String, String&gt; navigableMap = new TreeMap&lt;&gt;();</p>
+<p>        navigableMap.put(&quot;1&quot;, &quot;1&quot;);<br />
+        navigableMap.put(&quot;2&quot;, &quot;2&quot;);<br />
+        navigableMap.put(&quot;3&quot;, &quot;3&quot;);<br />
+        navigableMap.put(&quot;4&quot;, &quot;4&quot;);</p>
+<p>        SortedMap&lt;String, String&gt; resultViewMap = navigableMap.headMap(&quot;3&quot;);</p>
+<p>        resultViewMap.entrySet().stream().forEach(entry -&gt;<br />
+                System.out.println(String.format(&quot;key: %s, value: %s&quot;, entry.getKey(), entry.getValue())));<br />
+[/code]</p>
+<p>output<br />
+[code]<br />
+key: 1, value: 1<br />
+key: 2, value: 2<br />
+[/code]</p>
+<p>If inclusive is true on calling headMap("3", true), it will be<br />
+[code]<br />
+key: 1, value: 1<br />
+key: 2, value: 2<br />
+key: 3, value: 3<br />
+[/code]</p>
+<p>tailMap example.<br />
+[code]<br />
+        NavigableMap&lt;String, String&gt; navigableMap = new TreeMap&lt;&gt;();</p>
+<p>        navigableMap.put(&quot;1&quot;, &quot;1&quot;);<br />
+        navigableMap.put(&quot;2&quot;, &quot;2&quot;);<br />
+        navigableMap.put(&quot;3&quot;, &quot;3&quot;);<br />
+        navigableMap.put(&quot;4&quot;, &quot;4&quot;);</p>
+<p>        SortedMap&lt;String, String&gt; resultViewMap = navigableMap.tailMap(&quot;3&quot;);</p>
+<p>        resultViewMap.entrySet().stream().forEach(entry -&gt;<br />
+                System.out.println(String.format(&quot;key: %s, value: %s&quot;, entry.getKey(), entry.getValue())));<br />
+[/code]</p>
+<p>output<br />
+[code]<br />
+key: 3, value: 3<br />
+key: 4, value: 4<br />
+[/code]</p>
+<p>By default, inclusive is true on calling tailMap("3", true).</p>
+<p>subMap example<br />
+[code]<br />
+        NavigableMap&lt;String, String&gt; navigableMap = new TreeMap&lt;&gt;();</p>
+<p>        navigableMap.put(&quot;1&quot;, &quot;1&quot;);<br />
+        navigableMap.put(&quot;2&quot;, &quot;2&quot;);<br />
+        navigableMap.put(&quot;3&quot;, &quot;3&quot;);<br />
+        navigableMap.put(&quot;4&quot;, &quot;4&quot;);</p>
+<p>        SortedMap&lt;String, String&gt; resultViewMap = navigableMap.subMap(&quot;2&quot;, &quot;4&quot;);</p>
+<p>        resultViewMap.entrySet().stream().forEach(entry -&gt;<br />
+                System.out.println(String.format(&quot;key: %s, value: %s&quot;, entry.getKey(), entry.getValue())));<br />
+[/code]</p>
+<p>output<br />
+[code]<br />
+key: 2, value: 2<br />
+key: 3, value: 3<br />
+[/code]</p>
+<p>By default, inclusive is true for fromKey, and inclusive is false for toKey on calling subMap("2", true, "4", false)</p>
+<p>There are more available methods in NavigableMap<br />
+[code]<br />
+descendingKeySet() and descendingMap()</p>
+<p>ceilingKey(), floorKey(), higherKey() and lowerKey()</p>
+<p>celingEntry(), floorEntry(), higherEntry(), lowerEntry()</p>
+<p>pollFirstEntry() and pollLastEntry()<br />
+[/code]  </p>

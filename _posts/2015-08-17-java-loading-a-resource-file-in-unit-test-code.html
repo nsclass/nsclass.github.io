@@ -1,0 +1,51 @@
+---
+layout: post
+title: Java - loading a resource file in unit test code
+date: 2015-08-17 10:31:53.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- java
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '13798243093'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/08/17/java-loading-a-resource-file-in-unit-test-code/"
+---
+<p>[code lang="c"]<br />
+    String xml = getResourceString(&quot;/test_files/TestProperties.xml&quot;);</p>
+<p>    private String getResourceString(String resourcePath) {</p>
+<p>        InputStream inputStream = null;<br />
+        try {<br />
+            URL url = getClass().getResource(resourcePath);<br />
+            File file = new File(url.toURI());<br />
+            boolean exist = file.exists();<br />
+            org.junit.Assert.assertTrue(exist);</p>
+<p>            inputStream = this.getClass().getResourceAsStream(resourcePath);<br />
+            String xmlResult = IOUtils.toString(inputStream, &quot;UTF-8&quot;);</p>
+<p>            return xmlResult;</p>
+<p>        } catch (Exception e) {<br />
+            logger.error(e.getMessage(), e);<br />
+        } finally {<br />
+            try {<br />
+                if (inputStream != null)<br />
+                    inputStream.close();<br />
+            } catch (Exception ex) {<br />
+                logger.error(ex.getMessage(), ex);<br />
+            }<br />
+        }</p>
+<p>        return null;<br />
+    }<br />
+[/code]</p>

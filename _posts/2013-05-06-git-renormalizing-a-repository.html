@@ -1,0 +1,34 @@
+---
+layout: post
+title: Git - renormalizing a repository
+date: 2013-05-06 09:06:14.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Git
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-05-05
+    23:07:25";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/05/06/git-renormalizing-a-repository/"
+---
+<p>[sourcecode language="c"]<br />
+git rm --cached -r .# Remove everything from the index.</p>
+<p>git reset --hard# Write both the index and working directory from git's database.</p>
+<p>git add .# Prepare to make a commit by staging all the files that will get normalized.<br />
+# This is your chance to inspect which files were never normalized. You should<br />
+# get lots of messages like: &quot;warning: CRLF will be replaced by LF in file.&quot;</p>
+<p>git commit -m &quot;Normalize line endings&quot;# Commit<br />
+[/sourcecode]</p>

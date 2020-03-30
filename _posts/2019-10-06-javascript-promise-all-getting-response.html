@@ -1,0 +1,37 @@
+---
+layout: post
+title: JavaScript - Promise.all getting response
+date: 2019-10-06 07:46:49.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JavaScript
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '36047663910'
+  timeline_notification: '1570366010'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/10/06/javascript-promise-all-getting-response/"
+---
+<p>Promise.all guarantee the order of response in input promises so that caller can retrieve the result with array index number.</p>
+<p>[code lang="c"]<br />
+var allDone = Promise.all([<br />
+    promise1,<br />
+    promise2<br />
+])<br />
+.then(res =&gt; {<br />
+    res[0]; // promise1 result<br />
+    res[1]; // promise2 result<br />
+});<br />
+[/code]</p>

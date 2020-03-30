@@ -1,0 +1,30 @@
+---
+layout: post
+title: Spring - adding a bean in code
+date: 2016-11-22 09:02:01.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '29163619651'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/11/22/spring-adding-a-bean-in-code/"
+---
+<p>[code lang="c"]<br />
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();<br />
+    Set&lt;int&gt; sets = new Set&lt;int&gt;();<br />
+    ctx.getBeanFactory().registerSingleton(&quot;test&quot;, set);<br />
+[/code]</p>

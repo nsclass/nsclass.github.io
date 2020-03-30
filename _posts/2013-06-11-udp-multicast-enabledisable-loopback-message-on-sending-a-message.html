@@ -1,0 +1,37 @@
+---
+layout: post
+title: UDP Multicast - enable/disable loopback message on sending a message
+date: 2013-06-11 15:45:23.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-06-11
+    05:45:23";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/06/11/udp-multicast-enabledisable-loopback-message-on-sending-a-message/"
+---
+<p>[sourcecode language="c"]<br />
+bool EC_EnableMulticastLoopBack(SOCKET socket, bool IPv6, bool enable)<br />
+{<br />
+    // enable/disable loop<br />
+    char loop = enable ? 1 : 0;<br />
+    if (IPv6) {<br />
+        return setsockopt(socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &amp;loop, sizeof(loop)) == 0;<br />
+    } else<br />
+        return setsockopt(socket, IPPROTO_IP, IP_MULTICAST_LOOP, &amp;loop, sizeof(loop)) == 0;<br />
+}<br />
+[/sourcecode]</p>

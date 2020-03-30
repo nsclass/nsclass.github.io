@@ -1,0 +1,43 @@
+---
+layout: post
+title: Scala - ~> [Tilde arrow] explanation
+date: 2017-10-07 11:23:50.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Scala
+tags: []
+meta:
+  _edit_last: '14827209'
+  _oembed_fb680533a04f9e99749680259feca307: "{{unknown}}"
+  geo_public: '0'
+  _publicize_job_id: '10081723220'
+  _oembed_b135946faca6947922433b56175f0af9: "{{unknown}}"
+  _oembed_45338f5800747e907b78bb7090485537: "{{unknown}}"
+  _oembed_b6430d20814a3830cc1645c44fa2aa6a: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/10/07/scala-tilde-arrow-explanation/"
+---
+<p>"~&gt;" is a place holder for type.<br />
+Main reason to use "~&gt;" is to make readable on type A goes to type B. This is possible because Scala allow to express in in-fix notation for pre-fix expression.</p>
+<p>[code lang="c"]<br />
+trait Order[~&gt;[_,_]] {<br />
+   def sort[A,B](f: A ~&gt; B): B<br />
+}<br />
+[/code]</p>
+<p>is equivalent to</p>
+<p>[code lang="c"]<br />
+trait Order[M[_,_]] {<br />
+   def sort[A,B](f: M[A, B]): B<br />
+}<br />
+[/code]</p>
+<p>https://stackoverflow.com/questions/10085951/scala-tilde-greater-than-operator</p>

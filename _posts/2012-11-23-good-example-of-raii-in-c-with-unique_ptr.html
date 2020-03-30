@@ -1,0 +1,35 @@
+---
+layout: post
+title: C++11 - a good example of RAII by using unique_ptr
+date: 2012-11-23 09:12:06.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags:
+- C++11
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2012-11-22
+    23:53:25";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2012/11/23/good-example-of-raii-in-c-with-unique_ptr/"
+---
+<p>[sourcecode language="c"]<br />
+class FileDeleter {<br />
+void operator()(FILE* fp) { fclose(fp); }<br />
+};<br />
+unique_ptr&lt;FILE, FileDeleter&gt; fp = fopen(&quot;blah&quot;);</p>
+<p>or even</p>
+<p>unique_ptr&lt;FILE, int(*)(FILE*)&gt; fp( fopen(&quot;blah&quot;), fclose)<br />
+[/sourcecode]</p>

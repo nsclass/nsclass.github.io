@@ -1,0 +1,46 @@
+---
+layout: post
+title: Java - ZonedDateTime formatter for ISO-8601
+date: 2017-04-11 01:41:19.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '3841903103'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/04/11/java-zoneddatetime-formatter-for-iso-8601/"
+---
+<p>Parse example<br />
+[code lnag="c"]<br />
+DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();<br />
+DateTimeFormatter formatter = builder<br />
+        .parseCaseInsensitive()<br />
+        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)<br />
+        .appendOffsetId()<br />
+        .toFormatter();</p>
+<p>ZonedDateTime.parse(&quot;2015-08-18T00:00+01:00&quot;, formatter);<br />
+[/code]</p>
+<p>toString example<br />
+[code lang="c"]<br />
+DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();<br />
+DateTimeFormatter formatter = builder<br />
+        .parseCaseInsensitive()<br />
+        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)<br />
+        .appendOffsetId()<br />
+        .toFormatter();</p>
+<p>ZonedDateTime zoneTime = new ZonedDatTime();<br />
+String date = zoneTime.format(formatter);<br />
+[/code]</p>

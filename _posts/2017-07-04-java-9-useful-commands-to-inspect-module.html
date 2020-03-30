@@ -1,0 +1,35 @@
+---
+layout: post
+title: Java 9 - useful commands to inspect Module
+date: 2017-07-04 23:59:06.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '6759340606'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/07/04/java-9-useful-commands-to-inspect-module/"
+---
+<p>List modules<br />
+[code lang="c"]<br />
+$ java --list-modules<br />
+$ java --list-modules java.base<br />
+[/code]</p>
+<p>Diagnostic module dependencies<br />
+[code lang="c"]<br />
+$ java -Xdiag:resolver -p mods [module name]/[class package path]<br />
+$ jar --file [jar path] --print-module-descriptor<br />
+[/code]</p>

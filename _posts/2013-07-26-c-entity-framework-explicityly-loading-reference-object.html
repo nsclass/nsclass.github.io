@@ -1,0 +1,40 @@
+---
+layout: post
+title: 'C# - Entity Framework : explicitly loading a reference object'
+date: 2013-07-26 08:11:57.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-25
+    22:13:02";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/26/c-entity-framework-explicityly-loading-reference-object/"
+---
+<p>[code lang="c"]<br />
+using (var context = new BreakAwayContext())<br />
+{<br />
+  var davesDump = (from l in context.Lodgings<br />
+                   where l.Name == &quot;Dave's Dump&quot;<br />
+                   select l).Single();<br />
+  context.Entry(davesDump)<br />
+         .Reference(l =&gt; l.PrimaryContact)<br />
+         .Load();<br />
+  davesDump.PrimaryContact = null;<br />
+  context.SaveChanges();<br />
+}<br />
+[/code]</p>

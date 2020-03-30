@@ -1,0 +1,55 @@
+---
+layout: post
+title: Mac OSX NVCAP
+date: 2009-07-08 13:46:38.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Mac OSX
+tags: []
+meta:
+  spaces_8e963f1d044baa6ea177d10f0c6ccc02_permalink: http://cid-f610c86c6d82b8a2.users.api.live.net/Users(-715851972732602206)/Blogs('F610C86C6D82B8A2!116')/Entries('F610C86C6D82B8A2!263')?authkey=bau8ZqLz*pg%24
+  _oembed_5256053a34209f2929e1aba11dc7e761: "{{unknown}}"
+  _oembed_dd2824caaa85c682ddf2efc6047a1862: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2009/07/08/mac-osx-nvcap/"
+---
+<div id="msgcns!F610C86C6D82B8A2!263" class="bvMsg">
+<div><span>URL: <a href="http://nvinject.free.fr/forums/viewtopic.php?t=214">http://nvinject.free.fr/forums/viewtopic.php?t=214</a></span></div>
+<div><span></span> </div>
+<div><span>Thanks to Arti and the lot of experiments we've been doing last weeks on hackintoshes and PowerPC Macintoshes with NVIDIA cards, NVCAP is now mostly mastered. As I've said <a href="http://nvinject.free.fr/forums/viewtopic.php?t=193" target="_blank"><u><font color="#0000ff">here</font></u></a>, NVCAP can't fix everything, but it is necessary to get proper display detection on VGA and DVI outputs. TV out and laptops' displays may require further hacking... </p>
+<p>Anyway, first I'll show what are the important part in NVCAP and how they work : </p>
+<p>04000000 0000<span style="font-weight:bold;">xx</span>00 <span style="font-weight:bold;">xx</span>000000 00000000 00000000 </p>
+<p>the bold bytes define output channels. They are using a &quot;bitmap&quot; setting to define which output is used on which channel, and there's actually not so many possibilities for usual cards. </p>
+<p><span style="font-weight:bold;">Most cards are using 4 or 5 outputs :</span> </p>
+<p>1/ DVI - 2/ VGA, 3/ VGA, 4/ TV out <br />1/ DVI - 2/ VGA, 3/ DVI - 4/ VGA, 5/ TV out </p>
+<p>Later I'll show how this is defined in a PC NVIDIA ROM for GeForce 5/6/7/8 series. </p>
+<p>- <span style="text-decoration:underline;">so most dual DVI cards will have channels using this settings</span> (5 different outputs) : </p>
+<p><span style="font-weight:bold;">channel 1</span> : <br />DVI + VGA --&gt; bitmap 0 0 0 1 1 --&gt; hex 03 <br /><span style="font-weight:bold;">channel 2</span> : <br />DVI + VGA + TV --&gt; bitmap 1 1 1 0 0 --&gt; hex 1c </p>
+<p>or </p>
+<p><span style="font-weight:bold;">channel 1</span> : <br />DVI + VGA + TV --&gt; bitmap 1 0 0 1 1 --&gt; hex 13 <br /><span style="font-weight:bold;">channel 2</span> : <br />DVI + VGA + TV --&gt; bitmap 0 1 1 0 0 --&gt; hex 0c </p>
+<p><span style="font-style:italic;">TV output is usually defined a the last entry in the output definitions in VGA ROM, that's why it is using the last position (5th position on dual DVI cards, or 4th position on DVI + VGA cards)</span> </p>
+<p>- <span style="text-decoration:underline;">for DVI + VGA cards</span> (4 different outputs) : </p>
+<p><span style="font-weight:bold;">channel 1</span> : <br />DVI + VGA --&gt; bitmap 0 0 1 1 --&gt; hex 03 <br /><span style="font-weight:bold;">channel 2</span> : <br />VGA + TV --&gt; bitmap 1 1 0 0 --&gt; hex 0c </p>
+<p>or </p>
+<p><span style="font-weight:bold;">channel 1</span> : <br />DVI + VGA + TV--&gt; bitmap 1 0 1 1 --&gt; hex 0b <br /><span style="font-weight:bold;">channel 2</span> : <br />VGA --&gt; bitmap 0 1 0 0 --&gt; hex 04 <br />(as you can see, TV out is on last available postition, so 4th position for 4 available outputs) </p>
+<p>or </p>
+<p><span style="font-weight:bold;">channel 1</span> : <br />VGA --&gt; bitmap 0 0 0 1 --&gt; hex 01 <br /><span style="font-weight:bold;">channel 2</span> : <br />DVI + VGA + TV --&gt; bitmap 1 1 1 0 --&gt; hex 0e <br />or </p>
+<p><span style="font-weight:bold;">channel 1</span> : <br />VGA + TV --&gt; bitmap 1 0 0 1 --&gt; hex 09 <br /><span style="font-weight:bold;">channel 2</span> : <br />DVI + VGA --&gt; bitmap 0 1 1 0 --&gt; hex 06 </p>
+<p><span style="font-style:italic;">The main difference with windows behaviour is that Windows NVIDIA drivers are able to dynamically define which channel to use for TV output, whereas OS X drivers use a fixed position for TV out, NVCAP being defined in VGA ROM and saved in IOreg. This setting is not able to change in OS X once drivers are loaded.</span> </p>
+<p><span style="font-weight:bold;">So usual NVCAP for standard cards would be</span> : </p>
+<p><span style="text-decoration:underline;">dual DVI cards</span> : </p>
+<p>04000000 0000<span style="font-weight:bold;">03</span>00 <span style="font-weight:bold;">0c</span>000000 00000000 00000000 --&gt; disabling 5th position, no TV output. <br />04000000 0000<span style="font-weight:bold;">13</span>00 <span style="font-weight:bold;">0c</span>000000 00000000 00000000 --&gt; 5th position for TV out set on channel 1, TV out available when no other display is connected on channel 1. <br />04000000 0000<span style="font-weight:bold;">03</span>00 <span style="font-weight:bold;">1c</span>000000 00000000 00000000 --&gt; 5th position for TV out set on channel 2, TV out available when no other display is connected on channel 2. </p>
+<p><span style="text-decoration:underline;">DVI + VGA cards</span> : </p>
+<p>04000000 0000<span style="font-weight:bold;">01</span>00 <span style="font-weight:bold;">06</span>000000 00000000 00000000 --&gt; disabling 4th position, no TV output, only 1 output on channel 1 and DVI + VGA on channel 2 <br />04000000 0000<span style="font-weight:bold;">03</span>00 <span style="font-weight:bold;">04</span>000000 00000000 00000000 --&gt; disabling 4th position, no TV output, only 1 output on channel 2 and DVI + VGA on channel 1 <br />04000000 0000<span style="font-weight:bold;">03</span>00 <span style="font-weight:bold;">0e</span>000000 00000000 00000000 --&gt; VGA only on channel 1, 4th position for TV out set on channel 2, TV out available when no other display is connected on channel 2. <br />04000000 0000<span style="font-weight:bold;">09</span>00 <span style="font-weight:bold;">06</span>000000 00000000 00000000 --&gt; VGA only on channel 1, 4th position for TV out set on channel 1, TV out available when no other display is connected on channel 1 (DVI + VGA on channel 2 using position 2 and 3, bitmap 0 1 1 0) </p>
+<p><span style="font-style:italic;">Laptops usually have first channel using only 1 output for internal panel, on position 1, and depending on how many other outputs are available, second channel can use positions 2, 3, and 4</span> : <br />04000000 0000<span style="font-weight:bold;">01</span>00 <span style="font-weight:bold;">02</span>000000 00000000 00000000 <br />04000000 0000<span style="font-weight:bold;">01</span>00 <span style="font-weight:bold;">06</span>000000 00000000 00000000 <br />04000000 0000<span style="font-weight:bold;">01</span>00 <span style="font-weight:bold;">0e</span>000000 00000000 00000000 </p>
+<p>more about the VGA ROM output definitions later...</span></div>
+</div>

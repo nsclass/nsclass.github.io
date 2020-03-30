@@ -1,0 +1,36 @@
+---
+layout: post
+title: Java - Guava API to implement compareTo with considering sorting ordering
+date: 2018-01-20 21:02:31.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '13843839020'
+  timeline_notification: '1516503751'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/01/20/java-guava-api-to-implement-compareto-with-considering-sorting-ordering/"
+---
+<p>Example of a chained comparison statement.<br />
+[code lang="c"]<br />
+   public int compareTo(Foo that) {<br />
+     return ComparisonChain.start()<br />
+         .compare(this.aString, that.aString)<br />
+         .compare(this.anInt, that.anInt)<br />
+         .compare(this.anEnum, that.anEnum, Ordering.natural().nullsLast())<br />
+         .result();<br />
+   }<br />
+[/code]</p>

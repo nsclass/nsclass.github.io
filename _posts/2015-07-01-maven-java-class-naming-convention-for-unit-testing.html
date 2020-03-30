@@ -1,0 +1,35 @@
+---
+layout: post
+title: Maven - Java class naming convention for unit testing
+date: 2015-07-01 14:33:15.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- maven
+meta:
+  _edit_last: '14827209'
+  _oembed_d1f642aaf06db15f9464e427ec0af926: "{{unknown}}"
+  _oembed_5d68f47ce6668344a1dd84d5fd096113: "{{unknown}}"
+  geo_public: '0'
+  _publicize_job_id: '12204563984'
+  _oembed_35ad77e138f91a03c92689ad3cae0a95: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/07/01/maven-java-class-naming-convention-for-unit-testing/"
+---
+<p>Unit test Java classes should follow the following naming convention otherwise Maven can not find any unit testing class</p>
+<p>    Test*<br />
+    *Test<br />
+    *TestCase</p>
+<p>If you don't like to follow the above convention, you can configure Maven Surefire Plugin to use other patterns.</p>
+<p>http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html</p>

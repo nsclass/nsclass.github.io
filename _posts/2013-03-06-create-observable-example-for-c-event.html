@@ -1,0 +1,53 @@
+---
+layout: post
+title: C# - an example of creating an observable object with C# custom event
+date: 2013-03-06 14:55:41.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-03-06
+    03:57:08";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/06/create-observable-example-for-c-event/"
+---
+<p>[sourcecode language="c"]<br />
+ public class ValueChangeData<br />
+ {<br />
+        public object oldValue;<br />
+        public object newValue;<br />
+ }</p>
+<p> public IObservable&lt;ValueChangeData&gt; CreateObservableSourceChange()<br />
+ {<br />
+     return Observable.Create&lt;ValueChangeData&gt;(<br />
+             observer =&gt;<br />
+             {<br />
+                 DelegateValueChanged changedFunc = new DelegateValueChanged((oldValue, newValue) =&gt;<br />
+                 {<br />
+                       ValueChangeData data = new ValueChangeData();<br />
+                       data.oldValue = oldValue;<br />
+                       data.newValue = newValue;<br />
+                       observer.OnNext(data);<br />
+                  });<br />
+                  OnValueChanged += changedFunc;</p>
+<p>                  return () =&gt;<br />
+                  {<br />
+                      OnValueChanged -= changedFunc;<br />
+                  };<br />
+              }<br />
+        );<br />
+   }<br />
+[/sourcecode]</p>

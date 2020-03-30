@@ -1,0 +1,49 @@
+---
+layout: post
+title: C++ - Transforming C asynchronous function to C++ future
+date: 2017-02-10 03:29:21.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '1677863595'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/02/10/c-transforming-c-asynchronous-function-to-c-future/"
+---
+<p>C API definition to read data from a file in asynchronous way.<br />
+[code lang="c"]<br />
+void async_read_completed_callback(void* pUserData, char cont* pBuffer, int size);<br />
+void async_read_data(char const* pFilePath, void(*callback)(void* pUserData, char cont* pBuffer, int size));<br />
+[/code]</p>
+<p>C++ implementation by using future<br />
+[code lang="c"]</p>
+<p>void read_data_callback_wrapper(void* pUserData, char const* pBuffer, int size) {<br />
+    std::promise&lt;std::vector&lt;char&gt;&gt; promiseVar = std::promise&lt;std::vector&lt;char&gt;&gt; (reinterpret_cast&lt;std::promise&lt;std::vector&lt;char&gt;&gt;*&gt;(user_data));<br />
+    std::vector&lt;char&gt; data;<br />
+    for (int idx = 0; idx &lt; size; ++idx) {<br />
+         data.push_back(pBuffer[idx]);<br />
+    }<br />
+    promiseVar.set_value(data);<br />
+}</p>
+<p>std::future&lt;std::vector&lt;char&gt;&gt; read_data_in_cpp(char const* pPath) {<br />
+    std::unique_ptr&lt;std::promise&lt;std::vector&lt;char&gt;&gt;&gt; promiseVar =<br />
+        std::make_unique&lt;std::promise&lt;std::vector&lt;char&gt;&gt;&gt;();</p>
+<p>    std::future&lt;std::vector&lt;char&gt;&gt; futureRes = promiseVar-&gt;get_future();</p>
+<p>    async_read_data(pPath, reinterpret_cast&lt;void*&gt;(promiseVar.get()), read_data_callback_wrapper);<br />
+    promiseVar.release();<br />
+    return futureRes;<br />
+}<br />
+[/code]</p>

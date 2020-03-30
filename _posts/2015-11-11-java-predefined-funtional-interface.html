@@ -1,0 +1,61 @@
+---
+layout: post
+title: Java - Predefined funtional interface
+date: 2015-11-11 10:36:26.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- java
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '16734344768'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/11/11/java-predefined-funtional-interface/"
+---
+<p>1. Void return and zero paramter<br />
+Use Runnable</p>
+<p>[code lang="c"]<br />
+void runTask(Runnable task) {<br />
+  task.run();<br />
+}</p>
+<p>runTask(()-&gt; {<br />
+   // do something<br />
+});</p>
+<p>[/code]</p>
+<p>2. Return value and zero paramter<br />
+Use Supply</p>
+<p>[code lang="c"]<br />
+public &lt;T&gt; T runTask(Supply&lt;T&gt; task) {<br />
+  return task.get();<br />
+}</p>
+<p>Integer res = runTask&lt;Integer&gt;(()-&gt; {<br />
+   Integer value;<br />
+   // do something<br />
+   return value;<br />
+});<br />
+[/code]</p>
+<p>3. Return void and 1 parameter<br />
+Use Consumer</p>
+<p>[code lang="c"]<br />
+public &lt;T&gt; void runTask(Consumer&lt;T&gt; task, T value) {<br />
+  return task.accept(value);<br />
+}</p>
+<p>Integer value;<br />
+runTask&lt;Integer&gt;((Integer x)-&gt; {<br />
+   // do something<br />
+}, value);</p>
+<p>[/code]</p>
+<p>4. Generic case<br />
+Use Action0, Action1, Action2 ...</p>

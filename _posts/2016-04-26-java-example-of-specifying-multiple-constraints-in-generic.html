@@ -1,0 +1,37 @@
+---
+layout: post
+title: Java - example of specifying multiple constraints in Generic
+date: 2016-04-26 09:42:36.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '22165829638'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/04/26/java-example-of-specifying-multiple-constraints-in-generic/"
+---
+<p>[code lang="c"]<br />
+public interface Operation {<br />
+}</p>
+<p>public class enum TestEnum implements Operation {<br />
+}</p>
+<p>public class Test {<br />
+    private static &lt;T extends Enum&lt;T&gt; &amp; Operation&gt; void test(Class&lt;T&gt; opSet, double x, double y) {<br />
+        for (Operation op : opSet.getEnumConstants())<br />
+            System.out.printf(&quot;%f %s %f = %f%n&quot;,    x, op, y, op.apply(x, y));<br />
+    }<br />
+}<br />
+[/code]</p>

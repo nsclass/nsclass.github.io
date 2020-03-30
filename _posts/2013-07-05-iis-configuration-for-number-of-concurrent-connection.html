@@ -1,0 +1,38 @@
+---
+layout: post
+title: IIS configuration for number of concurrent connection
+date: 2013-07-05 08:31:03.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_b3b0cb95419cca3d1c05a7abc5ce0ffe: "{{unknown}}"
+  _oembed_0f68bf6d91494824488bc2d263f93aa8: "{{unknown}}"
+  _oembed_bf84b71ae763cb5f0e335a2108bf9b97: "{{unknown}}"
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-04
+    22:31:03";}
+  _oembed_c8d27cf5875f95994ee105bb0054488f: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/05/iis-configuration-for-number-of-concurrent-connection/"
+---
+<p>Open an administrator command prompt at %windir%\System32\inetsrv\<br />
+Run the command below to update the appConcurrentRequestLimit attribute to a suitable number (5000 is the default in IIS7+)<br />
+Example<br />
+[sourcecode language="c"]<br />
+appcmd.exe set config /section:system.webserver/serverRuntime /appConcurrentRequestLimit:100000<br />
+[/sourcecode]</p>
+<p>You can find more details from the following link.<br />
+https://github.com/SignalR/SignalR/wiki/Performance</p>

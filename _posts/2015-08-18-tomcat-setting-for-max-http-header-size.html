@@ -1,0 +1,30 @@
+---
+layout: post
+title: Tomcat - setting for max HTTP header size
+date: 2015-08-18 14:28:16.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+tags:
+- Tomat
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '13837508837'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/08/18/tomcat-setting-for-max-http-header-size/"
+---
+<p>you can specify the max HTTP header size for Tomcap by modifying the file in conf/server.xml as shown below.</p>
+<p>This example set max HTTP header size 24KB(24576)<br />
+[code lang="c"]<br />
+    &lt;Connector connectionTimeout=&quot;20000&quot; port=&quot;9080&quot; protocol=&quot;HTTP/1.1&quot; redirectPort=&quot;9443&quot; maxHttpHeaderSize=&quot;24576&quot;/&gt;<br />
+[/code]</p>

@@ -1,0 +1,42 @@
+---
+layout: post
+title: Log4j - setting for logging everying grobally
+date: 2015-04-14 11:14:40.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- Log4j
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/04/14/log4j-setting-for-logging-everying-grobally/"
+---
+<p>The following example show how to configure log4j configuration file(log4j.properties) to log all messages.<br />
+Main point is that rootLogger has to be configured.</p>
+<p>[code lang="c"]<br />
+log4j.rootLogger=DEBUG, CONSOLE, R</p>
+<p>log4j.appender.R=org.apache.log4j.RollingFileAppender<br />
+log4j.appender.R.File=e:\\tmp\\test.log<br />
+log4j.appender.R.MaxFileSize=7000KB<br />
+log4j.appender.R.MaxBackupIndex=1<br />
+log4j.appender.R.layout=org.apache.log4j.PatternLayout<br />
+log4j.appender.R.layout.ConversionPattern=%p %t (%F:%L) - %m%n</p>
+<p># CONSOLE is set to be a ConsoleAppender using a PatternLayout.<br />
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender<br />
+log4j.appender.CONSOLE.Threshold=DEBUG<br />
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout<br />
+log4j.appender.CONSOLE.layout.ConversionPattern=- %m%n</p>
+<p>[/code]</p>

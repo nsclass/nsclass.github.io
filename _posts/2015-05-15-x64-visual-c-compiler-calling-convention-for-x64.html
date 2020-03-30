@@ -1,0 +1,32 @@
+---
+layout: post
+title: x64 - Visual C++ compiler calling convention for x64
+date: 2015-05-15 08:03:02.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags:
+- x64
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_6d9a6fa542a455803783a589c36168ff: "{{unknown}}"
+  _oembed_effd24a0fe66b156d550e968bd46fcaf: "{{unknown}}"
+  geo_public: '0'
+  _oembed_1f417934b16989447210cb8029070f03: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/05/15/x64-visual-c-compiler-calling-convention-for-x64/"
+---
+<p>VC++ compiler is trying to utilize the 16 registers in x64 CPU which is 8bytes capacity. Due to this reason, first 4 parameters will be placed in registers but they should fit to 1, 2, 4, 8 bytes, if not it must be called by reference</p>
+<p>For the details, please find the following link.</p>
+<p>https://msdn.microsoft.com/en-us/library/ms235286.aspx</p>

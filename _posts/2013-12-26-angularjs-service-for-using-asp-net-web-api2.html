@@ -1,0 +1,78 @@
+---
+layout: post
+title: AngularJS service code with ASP .NET WEB API2
+date: 2013-12-26 23:14:01.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ASP.NET
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_121a6fb140f992a20360608bb1f817f0: "{{unknown}}"
+  _oembed_69e808c4638a3ba4a86c684e1a8ced20: "{{unknown}}"
+  _oembed_34a7099657ccd17d9d9513e8a7113be5: "{{unknown}}"
+  _oembed_c61093d4da86e5f9fede303628a8cb41: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/12/26/angularjs-service-for-using-asp-net-web-api2/"
+---
+<p>The following AngularJS service code shows how to login with bearer token authentication of ASP.NET WEB API2 to access exported restful APIs.</p>
+<p>[code lang="c"]<br />
+'use strict';<br />
+app.factory('authService', function ($http, $q) {</p>
+<p>    var service = {};</p>
+<p>    service.loginToken = {};</p>
+<p>    service.getAccessToken = function () {<br />
+        return loginToken.access_token;<br />
+    };</p>
+<p>    service.login = function (userName, password) {<br />
+        var deferred = $q.defer();</p>
+<p>        var loginData = {<br />
+            grant_type: &quot;password&quot;,<br />
+            username: userName,<br />
+            password: password<br />
+        };</p>
+<p>        $http({<br />
+                method: 'POST',<br />
+                url: '/Token',<br />
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },<br />
+                data: $.param(loginData)<br />
+            })<br />
+            .success(function (response) {<br />
+                service.loginToken = response;<br />
+                deferred.resolve(response);<br />
+            })<br />
+            .error(function (response) {<br />
+                deferred.reject(response);<br />
+            });</p>
+<p>        return deferred.promise;<br />
+    };</p>
+<p>    service.logout = function () {<br />
+        var deferred = $q.defer();</p>
+<p>        $http({<br />
+            method: 'POST',<br />
+            url: '/api/Account/Logout',<br />
+            headers: { 'Authorization': 'Bearer ' + this.loginToken.access_token },<br />
+        })<br />
+            .success(function (response) {<br />
+                service.loginToken = [];<br />
+                deferred.resolve(response);<br />
+            })<br />
+            .error(function (response) {<br />
+                deferred.reject(response);<br />
+            });</p>
+<p>        return deferred.promise;<br />
+    };</p>
+<p>    return service;<br />
+});<br />
+[/code]</p>

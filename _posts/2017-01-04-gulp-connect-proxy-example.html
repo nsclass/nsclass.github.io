@@ -1,0 +1,54 @@
+---
+layout: post
+title: Gulp - connect proxy example
+date: 2017-01-04 08:50:18.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Web
+tags:
+- gulp
+meta:
+  _edit_last: '14827209'
+  _oembed_a3a5433ba5839fa1be40024b8f3befbe: "{{unknown}}"
+  _oembed_ed03d4a507b5dd4ee80dd89324a75f9b: "{{unknown}}"
+  geo_public: '0'
+  _publicize_job_id: '372227800'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/01/04/gulp-connect-proxy-example/"
+---
+<p>It will avoid CORS problem during development.</p>
+<p>[code lang="c"]<br />
+var Proxy = require('gulp-connect-proxy');<br />
+...<br />
+// A local web server for dev convenience<br />
+gulp.task(&quot;server&quot;, function() {<br />
+	connect.server({<br />
+	  root: &quot;./dist&quot;,<br />
+	  port: 22532,<br />
+          middleware: function (connect, opt) {<br />
+	      opt.route = '/proxy';<br />
+	      var proxy = new Proxy(opt);<br />
+	      return [proxy];<br />
+	  }<br />
+	});<br />
+});<br />
+[/code]</p>
+<p>Example of calling API<br />
+[code lang="c"]<br />
+return $http.get(</p>
+<p>  'http://localhost:22532/proxy/external.host.com:8080/api/myservice/myid', </p>
+<p>  { params: { metricSelector: &quot;hello2&quot;} }<br />
+);<br />
+[/code]</p>
+<p>Gulp connect web site</p>
+<p>https://www.npmjs.com/package/gulp-connect-proxy</p>

@@ -1,0 +1,45 @@
+---
+layout: post
+title: Apache CXF - getting ServletContext in code
+date: 2015-01-13 14:26:05.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- Apache CXF
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+  _wpas_skip_facebook: '1'
+  _wpas_skip_google_plus: '1'
+  _wpas_skip_twitter: '1'
+  _wpas_skip_linkedin: '1'
+  _wpas_skip_tumblr: '1'
+  _wpas_skip_path: '1'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/01/13/apache-cxf-inject-messagecontext-in-implementing-class/"
+---
+<p>It is common to get a Servlet context on implementing WEB API. Apache CXF has a little different approach to get this instance. The following code show how to get ServletContext instance for RS.</p>
+<p>[code lang="c"]</p>
+<p>public interface IServiceInterface {<br />
+    void SampleFunction();<br />
+}</p>
+<p>public class ImplementClass implement IServiceInterface {<br />
+    @Context<br />
+    private org.apache.cxf.jaxrs.ext.MessageContext messgeContext;</p>
+<p>    public void SampleFunction() {<br />
+        ServletContext servletContext = messgeContext.getServletContext();<br />
+    }<br />
+}<br />
+[/code]</p>

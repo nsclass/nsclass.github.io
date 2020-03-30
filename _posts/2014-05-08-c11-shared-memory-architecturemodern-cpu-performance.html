@@ -1,0 +1,31 @@
+---
+layout: post
+title: C++11 - Shared memory architecture(Modern CPU) performance
+date: 2014-05-08 08:25:48.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_fe03fb95f07f60daec52d5a126545e16: "{{unknown}}"
+  _oembed_23b47717e98a987750a5a7482f02c747: "{{unknown}}"
+  _oembed_81cb889e1933c591800f2bfe853b0413: "{{unknown}}"
+  _oembed_6ea3282cc8289aa845eac68ac7bdd011: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/05/08/c11-shared-memory-architecturemodern-cpu-performance/"
+---
+<p> Main bottle neck of modern CPU(shared memory architecture) is always related to accessing memory because memory is the slowest part in modern computer architecture. In order to solve this problem, modern CPU are using smart cache mechanism by introducing L1,L2,L3 caches. So if your code can minimize the cache misses, you can achieve the best performance. Also you might need to understand how cache mechanism works in modern cpu. The simplest solution is that if you can allocate data in continuous way, you can easily achieve the goal.</p>
+<p>You can find one of good example of this from the following article.</p>
+<p>http://bannalia.blogspot.ca/2014/05/fast-polymorphic-collections.html</p>

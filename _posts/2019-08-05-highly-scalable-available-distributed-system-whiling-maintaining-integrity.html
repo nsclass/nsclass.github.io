@@ -1,0 +1,29 @@
+---
+layout: post
+title: Highly scalable/available distributed system whiling maintaining integrity
+date: 2019-08-05 08:49:30.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- kafka
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '33679264089'
+  timeline_notification: '1565012972'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/08/05/highly-scalable-available-distributed-system-whiling-maintaining-integrity/"
+---
+<p>I think that ACID is a main mechanism to maintain the application consistency but it's hard to make it highly scalable and available system because of synchronous property of ACID. But if we can relax the timeliness property in consistency, I think that it is possible highly scalable/available system by using a log based message system such as Kafka.<br />
+The main reason is that log based messaging system can guarantee the serializability of events, we can maintain the integrity of application by processing the fault tolerant events eventually.</p>
+<p>The another possible option is to use the optimistic locking mechanism. FoundataionDB is a good example.</p>

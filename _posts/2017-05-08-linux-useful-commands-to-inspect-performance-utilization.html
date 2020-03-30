@@ -1,0 +1,45 @@
+---
+layout: post
+title: Linux - useful commands to inspect performance utilization
+date: 2017-05-08 07:52:01.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '4803401739'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/05/08/linux-useful-commands-to-inspect-performance-utilization/"
+---
+<p>Memory utilization<br />
+[code lang="C"]<br />
+vmstat 1<br />
+[/cpde]</p>
+<p>Disk utilization<br />
+[code lang=&quot;C&quot;]<br />
+iostat -xm 5<br />
+[/code]</p>
+<p>Network utilization tool<br />
+[code lang="C"]<br />
+nicstat<br />
+[/code]</p>
+<p>Network connection status<br />
+[code lang="C"]<br />
+netstat<br />
+[/code]</p>
+<p>Note, Windows has the following equivalent command for above purpose<br />
+[code lang="C"]<br />
+typeperf<br />
+[/code]</p>

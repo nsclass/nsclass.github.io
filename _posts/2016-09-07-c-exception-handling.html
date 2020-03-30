@@ -1,0 +1,69 @@
+---
+layout: post
+title: C++ - Exception handling
+date: 2016-09-07 01:58:30.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _oembed_cfceacd9d569ceb17b8fa6c4fd7b5d1d: "<div class=\"embed-acoder039sjourney\"><blockquote
+    class=\"wp-embedded-content\"><a href=\"http://www.acodersjourney.com/2016/08/top-15-c-exception-handling-mistakes-avoid/\">Top
+    15 C++ Exception handling mistakes and how to avoid them.</a></blockquote><script
+    type='text/javascript'><!--//--><![CDATA[//><!--\t\t!function(a,b){\"use strict\";function
+    c(){if(!e){e=!0;var a,c,d,f,g=-1!==navigator.appVersion.indexOf(\"MSIE 10\"),h=!!navigator.userAgent.match(/Trident.*rv:11./),i=b.querySelectorAll(\"iframe.wp-embedded-content\");for(c=0;c<i.length;c++)if(d=i[c],!d.getAttribute(\"data-secret\")){if(f=Math.random().toString(36).substr(2,10),d.src+=\"#?secret=\"+f,d.setAttribute(\"data-secret\",f),g||h)a=d.cloneNode(!0),a.removeAttribute(\"security\"),d.parentNode.replaceChild(a,d)}else;}}var
+    d=!1,e=!1;if(b.querySelector)if(a.addEventListener)d=!0;if(a.wp=a.wp||{},!a.wp.receiveEmbedMessage)if(a.wp.receiveEmbedMessage=function(c){var
+    d=c.data;if(d.secret||d.message||d.value)if(!/[^a-zA-Z0-9]/.test(d.secret)){var
+    e,f,g,h,i,j=b.querySelectorAll('iframe[data-secret=\"'+d.secret+'\"]'),k=b.querySelectorAll('blockquote[data-secret=\"'+d.secret+'\"]');for(e=0;e<k.length;e++)k[e].style.display=\"none\";for(e=0;e<j.length;e++)if(f=j[e],c.source===f.contentWindow){if(f.removeAttribute(\"style\"),\"height\"===d.message){if(g=parseInt(d.value,10),g>1e3)g=1e3;else
+    if(~~g<200)g=200;f.height=g}if(\"link\"===d.message)if(h=b.createElement(\"a\"),i=b.createElement(\"a\"),h.href=f.getAttribute(\"src\"),i.href=d.value,i.host===h.host)if(b.activeElement===f)a.top.location.href=d.value}else;}},d)a.addEventListener(\"message\",a.wp.receiveEmbedMessage,!1),b.addEventListener(\"DOMContentLoaded\",c,!1),a.addEventListener(\"load\",c,!1)}(window,document);//--><!]]></script><iframe
+    sandbox=\"allow-scripts\" security=\"restricted\" src=\"http://www.acodersjourney.com/2016/08/top-15-c-exception-handling-mistakes-avoid/embed/\"
+    width=\"600\" height=\"338\" title=\"&#8220;Top 15 C++ Exception handling mistakes
+    and how to avoid them.&#8221; &#8212; A CODER&#039;S JOURNEY\" frameborder=\"0\"
+    marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" class=\"wp-embedded-content\"></iframe></div>"
+  geo_public: '0'
+  _publicize_job_id: '26546999395'
+  _oembed_fc41c990c8f5db88b49ad04ef4f612cd: "<div class=\"embed-acoder039sjourney\"><blockquote
+    class=\"wp-embedded-content\"><a href=\"http://www.acodersjourney.com/2016/08/top-15-c-exception-handling-mistakes-avoid/\">Top
+    15 C++ Exception handling mistakes and how to avoid them.</a></blockquote><script
+    type='text/javascript'><!--//--><![CDATA[//><!--\t\t!function(a,b){\"use strict\";function
+    c(){if(!e){e=!0;var a,c,d,f,g=-1!==navigator.appVersion.indexOf(\"MSIE 10\"),h=!!navigator.userAgent.match(/Trident.*rv:11./),i=b.querySelectorAll(\"iframe.wp-embedded-content\");for(c=0;c<i.length;c++)if(d=i[c],!d.getAttribute(\"data-secret\")){if(f=Math.random().toString(36).substr(2,10),d.src+=\"#?secret=\"+f,d.setAttribute(\"data-secret\",f),g||h)a=d.cloneNode(!0),a.removeAttribute(\"security\"),d.parentNode.replaceChild(a,d)}else;}}var
+    d=!1,e=!1;if(b.querySelector)if(a.addEventListener)d=!0;if(a.wp=a.wp||{},!a.wp.receiveEmbedMessage)if(a.wp.receiveEmbedMessage=function(c){var
+    d=c.data;if(d.secret||d.message||d.value)if(!/[^a-zA-Z0-9]/.test(d.secret)){var
+    e,f,g,h,i,j=b.querySelectorAll('iframe[data-secret=\"'+d.secret+'\"]'),k=b.querySelectorAll('blockquote[data-secret=\"'+d.secret+'\"]');for(e=0;e<k.length;e++)k[e].style.display=\"none\";for(e=0;e<j.length;e++)if(f=j[e],c.source===f.contentWindow){if(f.removeAttribute(\"style\"),\"height\"===d.message){if(g=parseInt(d.value,10),g>1e3)g=1e3;else
+    if(~~g<200)g=200;f.height=g}if(\"link\"===d.message)if(h=b.createElement(\"a\"),i=b.createElement(\"a\"),h.href=f.getAttribute(\"src\"),i.href=d.value,i.host===h.host)if(b.activeElement===f)a.top.location.href=d.value}else;}},d)a.addEventListener(\"message\",a.wp.receiveEmbedMessage,!1),b.addEventListener(\"DOMContentLoaded\",c,!1),a.addEventListener(\"load\",c,!1)}(window,document);//--><!]]></script><iframe
+    sandbox=\"allow-scripts\" security=\"restricted\" src=\"http://www.acodersjourney.com/2016/08/top-15-c-exception-handling-mistakes-avoid/embed/\"
+    width=\"500\" height=\"282\" title=\"&#8220;Top 15 C++ Exception handling mistakes
+    and how to avoid them.&#8221; &#8212; A CODER&#039;S JOURNEY\" frameborder=\"0\"
+    marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" class=\"wp-embedded-content\"></iframe></div>"
+  _oembed_time_fc41c990c8f5db88b49ad04ef4f612cd: '1473177513'
+  _oembed_0ae95830993ed0180c0555e0698422e4: "<div class=\"embed-acoder039sjourney\"><blockquote
+    class=\"wp-embedded-content\"><a href=\"http://www.acodersjourney.com/2016/08/top-15-c-exception-handling-mistakes-avoid/\">Top
+    15 C++ Exception handling mistakes and how to avoid them.</a></blockquote><script
+    type='text/javascript'><!--//--><![CDATA[//><!--\t\t!function(a,b){\"use strict\";function
+    c(){if(!e){e=!0;var a,c,d,f,g=-1!==navigator.appVersion.indexOf(\"MSIE 10\"),h=!!navigator.userAgent.match(/Trident.*rv:11./),i=b.querySelectorAll(\"iframe.wp-embedded-content\");for(c=0;c<i.length;c++)if(d=i[c],!d.getAttribute(\"data-secret\")){if(f=Math.random().toString(36).substr(2,10),d.src+=\"#?secret=\"+f,d.setAttribute(\"data-secret\",f),g||h)a=d.cloneNode(!0),a.removeAttribute(\"security\"),d.parentNode.replaceChild(a,d)}else;}}var
+    d=!1,e=!1;if(b.querySelector)if(a.addEventListener)d=!0;if(a.wp=a.wp||{},!a.wp.receiveEmbedMessage)if(a.wp.receiveEmbedMessage=function(c){var
+    d=c.data;if(d.secret||d.message||d.value)if(!/[^a-zA-Z0-9]/.test(d.secret)){var
+    e,f,g,h,i,j=b.querySelectorAll('iframe[data-secret=\"'+d.secret+'\"]'),k=b.querySelectorAll('blockquote[data-secret=\"'+d.secret+'\"]');for(e=0;e<k.length;e++)k[e].style.display=\"none\";for(e=0;e<j.length;e++)if(f=j[e],c.source===f.contentWindow){if(f.removeAttribute(\"style\"),\"height\"===d.message){if(g=parseInt(d.value,10),g>1e3)g=1e3;else
+    if(~~g<200)g=200;f.height=g}if(\"link\"===d.message)if(h=b.createElement(\"a\"),i=b.createElement(\"a\"),h.href=f.getAttribute(\"src\"),i.href=d.value,i.host===h.host)if(b.activeElement===f)a.top.location.href=d.value}else;}},d)a.addEventListener(\"message\",a.wp.receiveEmbedMessage,!1),b.addEventListener(\"DOMContentLoaded\",c,!1),a.addEventListener(\"load\",c,!1)}(window,document);//--><!]]></script><iframe
+    sandbox=\"allow-scripts\" security=\"restricted\" src=\"http://www.acodersjourney.com/2016/08/top-15-c-exception-handling-mistakes-avoid/embed/\"
+    width=\"600\" height=\"338\" title=\"&#8220;Top 15 C++ Exception handling mistakes
+    and how to avoid them.&#8221; &#8212; A CODER&#039;S JOURNEY\" frameborder=\"0\"
+    marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" class=\"wp-embedded-content\"></iframe></div>"
+  _oembed_time_0ae95830993ed0180c0555e0698422e4: '1473177513'
+  _oembed_time_cfceacd9d569ceb17b8fa6c4fd7b5d1d: '1473177516'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/09/07/c-exception-handling/"
+---
+<p>The following article provides a good way of using Exceptions in C++</p>
+<p>http://www.acodersjourney.com/2016/08/top-15-c-exception-handling-mistakes-avoid/</p>

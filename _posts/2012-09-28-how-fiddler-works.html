@@ -1,0 +1,45 @@
+---
+layout: post
+title: How fiddler works
+date: 2012-09-28 09:23:25.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Windows
+tags: []
+meta:
+  _edit_last: '14827209'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2012-09-27
+    23:23:25";}
+  _oembed_a82561132dc4488122a3a465278157bc: "{{unknown}}"
+  _oembed_c791d0029b6ce17971d707fed048353f: "{{unknown}}"
+  _oembed_a0cc79e6ecd02791ab99b0e96e86c29d: "{{unknown}}"
+  _oembed_317d47c54a4110c39c4c341b34a823ff: "{{unknown}}"
+  _oembed_2152f1c64e1e97e6b012d80c001c7b95: "{{unknown}}"
+  _oembed_ddc71dc2f4b05cf74765a1675c87f119: "{{unknown}}"
+  _oembed_b4cd8d3713f3c79a720705e0ee17e466: "{{unknown}}"
+  _oembed_eedab8c29bc4e5772063a6d868a06474: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2012/09/28/how-fiddler-works/"
+---
+<p>https://groups.google.com/forum/?fromgroups=#!topic/httpfiddler/Az0xW2MJMqU</p>
+<p>There's tons of information scattered through the various Fiddler<br />
+sites and this group. </p>
+<p>I think you're asking a more specific question: How does Fiddler tell<br />
+WinINET that it wants to be the proxy for a given WinINET connection? </p>
+<p>Answer: </p>
+<p>if (InternetSetOptionList((IntPtr)0,<br />
+INTERNET_OPTION_PER_CONNECTION_OPTION, ref Request, size))<br />
+{<br />
+    InternetSetOption((IntPtr)0,<br />
+INTERNET_OPTION_PROXY_SETTINGS_CHANGED, 0, 0);<br />
+} </p>

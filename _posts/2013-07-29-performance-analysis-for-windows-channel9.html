@@ -1,0 +1,47 @@
+---
+layout: post
+title: Performance Analysis for Windows - channel9
+date: 2013-07-29 09:06:27.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Performance
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_69877fd27e0d747e8ab2b484c81e1ad0: "{{unknown}}"
+  _oembed_9b437f30a4f2fdc9a00dd5568698f7d4: "{{unknown}}"
+  geo_public: '0'
+  _oembed_23dfb128ff970778384e1ddd96fb0c16: "{{unknown}}"
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-28
+    23:20:49";}
+  _oembed_41441b2560e57e4c636b4736174962fc: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/29/performance-analysis-for-windows-channel9/"
+---
+<p>The following URL contains the useful information about using xperf for analysis of Windows application and OS.<br />
+http://channel9.msdn.com/Shows/Defrag-Tools/RSS</p>
+<p>1. For example the following script shows how to get sampling CPU usage<br />
+[code lang="c"]<br />
+@echo off<br />
+echo Press a key when ready to start...<br />
+pause<br />
+echo .<br />
+echo ...Capturing... </p>
+<p>xperf -on PROC_THREAD+LOADER+PROFILE+INTERRUPT+DPC -stackwalk Profile -BufferSize 1024 -MinBuffers 256 -MaxBuffers 256 -MaxFile 256 -FileMode Circular</p>
+<p>echo Press a key when you want to stop...<br />
+pause </p>
+<p>echo .<br />
+echo ...Stopping...<br />
+xperf -stop -d cpu.etl<br />
+[/code]</p>

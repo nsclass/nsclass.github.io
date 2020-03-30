@@ -1,0 +1,30 @@
+---
+layout: post
+title: Spark - join transformation
+date: 2018-10-20 22:21:39.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Spark
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '23413684081'
+  timeline_notification: '1540092099'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/10/20/spark-join-transformation/"
+---
+<p>join—Equivalent to an inner join in RDBMS, this returns a new pair RDD with the elements (K, (V, W)) containing all possible pairs of values from the first and second RDDs that have the same keys. For the keys that exist in only one of the two RDDs, the resulting RDD will have no elements.  </p>
+<p>leftOuterJoin—Instead of (K, (V, W)), this returns elements of type (K, (V, Option(W))). The resulting RDD will also contain the elements (key, (v, None)) for those keys that don’t exist in the second RDD. Keys that exist only in the second RDD will have no matching elements in the new RDD.  </p>
+<p>rightOuterJoin—This returns elements of type (K, (Option(V), W)); the resulting RDD will also contain the elements (key, (None, w)) for those keys that don’t exist in the first RDD. Keys that exist only in the first RDD will have no matching elements in the new RDD.  </p>
+<p>fullOuterJoin—This returns elements of type (K, (Option(V), Option(W)); the resulting RDD will contain both (key, (v, None)) and (key, (None, w)) elements for those keys that exist in only one of the two RDDs.  </p>

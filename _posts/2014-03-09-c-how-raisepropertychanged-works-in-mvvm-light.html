@@ -1,0 +1,48 @@
+---
+layout: post
+title: C# - How RaisePropertyChanged works in MVVM light
+date: 2014-03-09 21:43:24.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags:
+- C#
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/03/09/c-how-raisepropertychanged-works-in-mvvm-light/"
+---
+<p>MVVM light provides an easy way of the strong typed RaisePropertyChanged with lambda. The following code shows how this can find the correct string for member of ViewModel.</p>
+<p>[code lang="c"]<br />
+public void RaisePropertyChanged&lt;T&gt;(Expression&lt;Func&lt;T&gt;&gt; property)<br />
+{<br />
+    PropertyChanged(this, new PropertyChangedEventArgs(property.GetMemberInfo().Name);<br />
+}<br />
+[/code]</p>
+<p>so you can use the following code safely.<br />
+[code lang="c"]<br />
+public class ViewModel : ViewModelBase<br />
+{<br />
+    private string _name;</p>
+<p>    public string ProductName;<br />
+    { get { return _name; }<br />
+    {<br />
+      set<br />
+      {<br />
+          _name = value;<br />
+          RasePropertyChanged(() =&gt; ProductName);<br />
+      }<br />
+    }<br />
+}<br />
+[/code]</p>

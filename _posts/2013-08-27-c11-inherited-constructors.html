@@ -1,0 +1,41 @@
+---
+layout: post
+title: C++11 - Inherited constructors
+date: 2013-08-27 08:25:39.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-08-26
+    22:25:39";}
+  _publicize_pending: '1'
+  _edit_last: '14827209'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/08/27/c11-inherited-constructors/"
+---
+<p>Now C++11 allow that derived class can inherit the constructors of base class as the following.</p>
+<p>[code lang="c"]<br />
+class A<br />
+{<br />
+public:<br />
+    A(int a) {}<br />
+    A(std::string const&amp; str) {}<br />
+    A(double a, int f) {}<br />
+};</p>
+<p>class B : public A<br />
+{<br />
+    using base::A;<br />
+};<br />
+[/code]</p>
+<p>However, you need to be careful when if B has any member variable, they will be initialized with random values unless you initialize specifically.</p>

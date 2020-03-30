@@ -1,0 +1,30 @@
+---
+layout: post
+title: Docker - Subnet address in Ubuntu
+date: 2017-07-16 07:49:01.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- docker
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '7134560720'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/07/16/docker-dhcp-network-address-in-ubuntu/"
+---
+<p>[code lang="c"]<br />
+$ sudo vi /etc/default/docker<br />
+[/code]</p>
+<p>modify the following section.<br />
+DOCKER_OPTS="--bip 192.168.1.1/24"</p>

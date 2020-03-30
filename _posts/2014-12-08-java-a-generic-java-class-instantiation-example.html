@@ -1,0 +1,52 @@
+---
+layout: post
+title: Java - a generic Java class instantiation example
+date: 2014-12-08 12:56:20.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- java
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/12/08/java-a-generic-java-class-instantiation-example/"
+---
+<p>[code lang="c"]<br />
+public class CommandFactory {<br />
+    public static &lt;T extends Command&lt;R&gt;, R extends CommandResult&gt; T createCommand(Class&lt;T&gt; classObject, Object... params) {<br />
+        try {<br />
+            T newInstance = classObject.newInstance();<br />
+            if (newInstance.initialize(params)) {<br />
+                return newInstance;<br />
+            }<br />
+        } catch (Exception e) {</p>
+<p>        }<br />
+        assert false;<br />
+        return null;<br />
+    }<br />
+}</p>
+<p>public class TestCommandResult extends CommandResult {<br />
+}</p>
+<p>public class TestCommand extends Command&lt;TestCommandResult&gt; {<br />
+    private int index;<br />
+    public TestCommand() {<br />
+    }</p>
+<p>    public bool initialize(int idx) {<br />
+        this.index = idx;<br />
+    }<br />
+}</p>
+<p>TestCommand testCmd = CommandFactory.&lt;TestCommand, TestCommandResult&gt;createCommand(TestCommand.class, 1);</p>
+<p>[/code]</p>

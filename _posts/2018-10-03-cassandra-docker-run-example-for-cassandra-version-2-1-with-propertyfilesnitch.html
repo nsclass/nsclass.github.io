@@ -1,0 +1,29 @@
+---
+layout: post
+title: Cassandra - Docker run example for Cassandra version 2.1 with PropertyFileSnitch
+date: 2018-10-03 08:50:30.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- cassandra
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '22796519959'
+  timeline_notification: '1538574631'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/10/03/cassandra-docker-run-example-for-cassandra-version-2-1-with-propertyfilesnitch/"
+---
+<p>[code lang="c"]<br />
+sudo docker run -d -v /mnt/ramdisk/:/var/lib/cassandra/ -e CLUSTER_NAME=TEST -e CASSANDRA_ENDPOINT_SNITCH=PropertyFileSnitch -p 9160:9160 -p 9042:9042 -p 7199:7199 --name cassandra-test cassandra:2.1<br />
+[/code]</p>

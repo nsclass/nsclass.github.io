@@ -1,0 +1,50 @@
+---
+layout: post
+title: Git diff and merge tool with Intellij Idea
+date: 2016-09-26 23:57:11.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Git
+- Programming
+tags:
+- git
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '27226215650'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/09/26/git-diff-and-merge-tool-with-intellij-idea/"
+---
+<p>Windows<br />
+[code lang="c"]<br />
+[merge]<br />
+    tool = intellij<br />
+[mergetool &quot;intellij&quot;]<br />
+    cmd = cmd.exe //c &quot;\&quot;c:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 2016.2.4/bin/idea.bat\&quot; merge \&quot;$LOCAL\&quot; \&quot;$REMOTE\&quot; \&quot;$BASE\&quot; \&quot;$MERGED\&quot;&quot;<br />
+    trustExitCode = true</p>
+<p>[diff]<br />
+    tool = intellij<br />
+[difftool &quot;intellij&quot;]<br />
+    cmd = cmd.exe //c &quot;\&quot;c:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 2016.2.4/bin/idea.bat\&quot; diff \&quot;$LOCAL\&quot; \&quot;$REMOTE\&quot;&quot;<br />
+[/code]</p>
+<p>Mac<br />
+[code lang="c"]<br />
+merge]<br />
+    tool = intellij<br />
+[mergetool &quot;intellij&quot;]<br />
+    cmd = /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea merge $(cd $(dirname &quot;$LOCAL&quot;) &amp;&amp; pwd)/$(basename &quot;$LOCAL&quot;) $(cd $(dirname &quot;$REMOTE&quot;) &amp;&amp; pwd)/$(basename &quot;$REMOTE&quot;) $(cd $(dirname &quot;$BASE&quot;) &amp;&amp; pwd)/$(basename &quot;$BASE&quot;) $(cd $(dirname &quot;$MERGED&quot;) &amp;&amp; pwd)/$(basename &quot;$MERGED&quot;)<br />
+    trustExitCode = true<br />
+[diff]<br />
+    tool = intellij<br />
+[difftool &quot;intellij&quot;]<br />
+    cmd = /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea diff $(cd $(dirname &quot;$LOCAL&quot;) &amp;&amp; pwd)/$(basename &quot;$LOCAL&quot;) $(cd $(dirname &quot;$REMOTE&quot;) &amp;&amp; pwd)/$(basename &quot;$REMOTE&quot;)<br />
+[/code]</p>

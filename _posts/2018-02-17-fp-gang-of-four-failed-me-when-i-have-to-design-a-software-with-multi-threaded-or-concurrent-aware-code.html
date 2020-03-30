@@ -1,0 +1,33 @@
+---
+layout: post
+title: FP - Designing multi threaded and concurrent enabled software with functional
+  programming
+date: 2018-02-17 15:36:24.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Functional Programming
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '14852356905'
+  timeline_notification: '1518903385'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/02/17/fp-gang-of-four-failed-me-when-i-have-to-design-a-software-with-multi-threaded-or-concurrent-aware-code/"
+---
+<p>Modern CPU architecture has been enforcing me to create multi-threaded and concurrent enabled software.</p>
+<p>I have been creating multi-thread software with Gang of four design principal but this design principal didn't show me the best way on creating high scalable software without losing the maintainability and performance.</p>
+<p>Gang of four design pattern encourage me to hide details and abstract operations but this created often harder problems on dealing with concurrent processing. In order to make a correct software, I had to use the locking API to avoid the race condition and this degraded the performance of application. And hiding details make harder to understand logic. Eventually it decreased the maintainability of software.</p>
+<p>But after understanding the functional programming concepts such as Monoid, Functor, Applicative Functor and Monads, it showed me another approach to solve this problem with minimizing of losing maintainability and performance.</p>
+<p>Functional programming don't hide details of logic instead it encourage to write declarative code on describing logic. This approach improve the maintainability of software. And immutable data structure and Monoid allow to maximize the utilization of multiple cores without worrying about race condition and thread locking.</p>
+<p>However, functional programming approach for concurrent application requires some basic infrastructure. The most visible one is to have a garbage collection environment. If it is mandatory to maintain the memory manually, there are some limitation on applying the functional programming approach but reference counting based memory management can help a lot for this case.</p>

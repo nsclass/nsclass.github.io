@@ -1,0 +1,40 @@
+---
+layout: post
+title: Java - Garbage collectors
+date: 2017-04-29 22:38:13.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _oembed_d20bb17290966b91a5c2711863ee6005: "{{unknown}}"
+  geo_public: '0'
+  _publicize_job_id: '4520229577'
+  _oembed_c70fbba4cd6333895fb5b65f80b68716: "{{unknown}}"
+  _oembed_e8001316a4b5b99f349972c636ce6c32: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/04/29/java-garbage-collectors/"
+---
+<p>1. Serial<br />
+-XX:+UseSerialGC JVM</p>
+<p>2. Parallel<br />
+default</p>
+<p>3. CMS(Current Markup Sweep)<br />
+-XX:+USeParNewGC</p>
+<p>4. G1<br />
+–XX:+UseG1GC</p>
+<p>Note: Java8 and G1 collector can optimize the string intern with the following option<br />
+-XX:+UseStringDeduplicationJVM</p>
+<p>More information regarding G1:<br />
+https://www.infoq.com/articles/G1-One-Garbage-Collector-To-Rule-Them-All</p>

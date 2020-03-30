@@ -1,0 +1,35 @@
+---
+layout: post
+title: 'Java - Apache CXF: return response code(HTTP status code)'
+date: 2015-02-12 14:11:07.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- Apache CXF
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '18215168436'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/02/12/java-apache-cxf-return-response-codehttp-status-code/"
+---
+<p>[code lang="c"]<br />
+import javax.ws.rs.core.Response;</p>
+<p>    Entity entity = service.getById(uuid);<br />
+    if(entity == null) {<br />
+        return Response.status(Response.Status.NOT_FOUND).entity(&quot;Entity not found for UUID: &quot; + uuid).build();<br />
+    }<br />
+    String json = //convert entity to json<br />
+    return Response.ok(json, MediaType.APPLICATION_JSON).build();</p>
+<p>[/code]</p>

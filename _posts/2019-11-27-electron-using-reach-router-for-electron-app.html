@@ -1,0 +1,40 @@
+---
+layout: post
+title: Electron - Using reach router for Electron app
+date: 2019-11-27 20:22:35.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Electron
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '37878349215'
+  timeline_notification: '1574907755'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/11/27/electron-using-reach-router-for-electron-app/"
+---
+<p>Creating a history with a memorySource will allow to work for Electron application with reach/router</p>
+<p>[code lang="js"]<br />
+import { Router, createMemorySource, createHistory, LocationProvider } from &quot;@reach/router&quot;</p>
+<p>let source = createMemorySource(&quot;/&quot;)<br />
+let history = createHistory(source)</p>
+<p>const App = () =&gt; {<br />
+   return (<br />
+      &lt;LocationProvider history={history}&gt;<br />
+           &lt;Router&gt;<br />
+           ....<br />
+           &lt;/Router&gt;<br />
+      &lt;/LocationProvider&gt;</p>
+<p>   )<br />
+}<br />
+[/code]</p>

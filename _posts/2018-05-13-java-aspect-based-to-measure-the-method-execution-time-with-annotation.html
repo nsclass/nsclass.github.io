@@ -1,0 +1,59 @@
+---
+layout: post
+title: Java - Aspect based measuring the method execution time of function with annotation
+date: 2018-05-13 09:41:37.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  timeline_notification: '1526222498'
+  geo_public: '0'
+  _publicize_job_id: '17803320190'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/05/13/java-aspect-based-to-measure-the-method-execution-time-with-annotation/"
+---
+<p>Annotation definition.<br />
+[code lang="java"]<br />
+@Target({ElementType.METHOD,<br />
+         ElementType.CONSTRUCTOR})<br />
+@Retention(RetentionPolicy.RUNTIME)<br />
+public @interface MeasureMethodTime {<br />
+}<br />
+[/code]</p>
+<p>Aspect advice implementation.<br />
+[code lang="java"]<br />
+@Aspect<br />
+public class MeasureMethodLogger {<br />
+    private static Logger LOGGER = LoggerFactory.getLogger(MeasureMethodLogger.class);</p>
+<p>    @Around(&quot;execution(@com.acrocontext.api.utils.MeasureMethodTime * *(..)) &amp;&amp; @annotation(measureMethodTimeAnnotation)&quot;)<br />
+    public Object logDuration(ProceedingJoinPoint joinPoint,<br />
+                              MeasureMethodTime measureMethodTimeAnnotation)<br />
+            throws Throwable {</p>
+<p>        long start = System.currentTimeMillis();<br />
+        Object result = joinPoint.proceed();<br />
+        LOGGER.info(<br />
+                String.format(&quot;[MEASURE]: %s in %d(msec)&quot;,<br />
+                joinPoint.getSignature().getName(),<br />
+                System.currentTimeMillis() - start));<br />
+        return result;<br />
+    }<br />
+}<br />
+[/code]</p>
+<p>Example<br />
+[code lang="java"]<br />
+  @MeasureMethodTime<br />
+  public int test(int value) {<br />
+  }<br />
+[/code]</p>

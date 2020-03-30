@@ -1,0 +1,65 @@
+---
+layout: post
+title: SpringBoot WebFlux - Reading a request body with Spring WebFlux for Controller
+date: 2019-12-24 10:37:17.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Spring
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '38815045713'
+  timeline_notification: '1577205437'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/12/24/springboot-webflux-reading-a-request-body-with-spring-webflux-for-controller/"
+---
+<p>SpringBoot WebFlux 2.2.x requires to load the request body by using an input stream.<br />
+Below example will show how it can convert the json data into the expected class after loading json data with an input stream.</p>
+<p>Full source code can be found from https://github.com/nsclass/ns-svg-converter/blob/master/ns-main-service/src/main/java/com/acrocontext/reactive/rest/SvgConverterController.java</p>
+<p>Github: https://github.com/nsclass/ns-svg-converter<br />
+[code lang="java"]<br />
+    private &lt;T&gt; T toRequestBody(InputStream inputStream, Class&lt;T&gt; classValue) {<br />
+        try {<br />
+            return objectMapper.readValue(inputStream, classValue);<br />
+        } catch(Exception e){<br />
+            throw new RuntimeException(e);<br />
+        }<br />
+    }</p>
+<p>    public static class InputStreamCollector {<br />
+        private InputStream inputStream;</p>
+<p>        public void collectInputStream(InputStream inputStream) {<br />
+            if (this.inputStream == null) {<br />
+                this.inputStream = inputStream;<br />
+            }</p>
+<p>            this.inputStream = new SequenceInputStream(this.inputStream, inputStream);<br />
+        }</p>
+<p>        public InputStream getInputStream() {<br />
+            return this.inputStream;<br />
+        }<br />
+    }</p>
+<p>[/code]</p>
+<p>REST Controller<br />
+[code lang="c"]<br />
+    @PutMapping(path = &quot;/conversion&quot;,<br />
+            consumes = MediaType.APPLICATION_JSON_VALUE,<br />
+            produces = MediaType.APPLICATION_JSON_VALUE)<br />
+    public Mono&lt;SvgConvertRespondView&gt; convertImage(ServerWebExchange exchange) {<br />
+        return exchange.getRequest().getBody()<br />
+                .collect(InputStreamCollector::new, (inputStreamCollector, dataBuffer)-&gt;<br />
+                        inputStreamCollector.collectInputStream(dataBuffer.asInputStream()))<br />
+                .map(InputStreamCollector::getInputStream)<br />
+                .map(inputStream -&gt; toRequestBody(inputStream, SvgConvertRequestView.class))<br />
+                .map(this::convertRespondView);<br />
+    }<br />
+[/code]</p>

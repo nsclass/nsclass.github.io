@@ -1,0 +1,32 @@
+---
+layout: post
+title: C++11 - an example of trailing return type
+date: 2013-05-31 09:17:55.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-05-30
+    23:22:26";}
+  _publicize_pending: '1'
+  _edit_last: '14827209'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/05/31/c11-a-example-of-trailing-return-type/"
+---
+<p>[sourcecode language="c"]<br />
+template&lt;typename T, typename S&gt;<br />
+auto multiply(T lhs, S rhs) -&gt; decltype(lhs * rhs) {<br />
+  return lhs * rhs;<br />
+}<br />
+[/sourcecode]</p>

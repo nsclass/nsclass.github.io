@@ -1,0 +1,42 @@
+---
+layout: post
+title: Java 11 - Enable Java Flight Recorder JVM option example
+date: 2018-11-08 23:39:39.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '24073623380'
+  timeline_notification: '1541741981'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/11/08/java-11-enable-java-flight-recorder-jvm-option-example/"
+---
+<p>[code lang="c"]<br />
+-XX:StartFlightRecording=\<br />
+        disk=true, \<br />
+        dumponexit=true, \<br />
+        filename=recording.jfr, \<br />
+        maxsize=1024m,\<br />
+        maxage=1d</p>
+<p>[/code]</p>
+<p>Checking running JFR with jcmd<br />
+[code lang="c"]<br />
+% jcmd PID JFR.check name=1<br />
+[/code]</p>
+<p>Dump JFR now<br />
+[code]<br />
+%jcmd PID JFR.dump name=1 filename=dump.jfr<br />
+[/code]</p>

@@ -1,0 +1,49 @@
+---
+layout: post
+title: C++ 11 - Exception safe guidline from Jon Kalb
+date: 2014-02-13 12:58:55.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags:
+- C++11
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/02/13/c-11-exception-safe-guidline-from-jon-kalb/"
+---
+<ul>
+<li>Throw by value. Catch by reference</li>
+<li>No dynamic exception specifications. Use noexcept.</li>
+<li>Destructors that throw are evil.</li>
+<li>Use RAII. (Every responsibility is an object. One per.)</li>
+<li>All cleanup code called from a destructor</li>
+<li>Support swapperator (With No-Throw Guarantee)</li>
+<li>Draw “Critical Lines” for the Strong Guarantee</li>
+<li>Know where to catch (Switch/Strategy/Some Success)</li>
+<li>Prefer exceptions to error codes.</li>
+</ul>
+<p>Where we should use "try, catch"</p>
+<p>• Anywhere that we support the No-Throw Guarantee<br />
+   • Destructors &amp; Cleanup<br />
+   • Swapperator &amp; Moves<br />
+• C-API<br />
+• OS Callbacks<br />
+• UI Reporting<br />
+• Converting to other exception types<br />
+• Threads</p>
+<p>And extra places<br />
+•Switch<br />
+•Strategy<br />
+•Some Success</p>

@@ -1,0 +1,41 @@
+---
+layout: post
+title: Java - Spring framework - adding property file in application
+date: 2015-04-13 10:01:12.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- java
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/04/13/java-spring-framework-adding-property-file-in-application/"
+---
+<p>1. Add the following code in applicationContext-config.xml</p>
+<p>[code lang="c"]<br />
+&lt;bean id=&quot;myProperties&quot;<br />
+      class=&quot;org.springframework.beans.factory.config.PropertiesFactoryBean&quot;&gt;<br />
+  &lt;property name=&quot;locations&quot;&gt;<br />
+    &lt;list&gt;<br />
+      &lt;value&gt;classpath*:my.properties&lt;/value&gt;<br />
+    &lt;/list&gt;<br />
+  &lt;/property&gt;<br />
+&lt;/bean&gt;<br />
+[/code]</p>
+<p>2. get an instance of myPropertes in code</p>
+<p>[code lang="c"]<br />
+java.util.Properties properties = (java.util.Properties)ApplicationContextProvider.getApplicationContext().getBean(&quot;myProperties&quot;)<br />
+[/code]</p>

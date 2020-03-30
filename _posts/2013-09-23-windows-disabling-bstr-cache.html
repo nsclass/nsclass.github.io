@@ -1,0 +1,31 @@
+---
+layout: post
+title: Windows - disabling BSTR cache
+date: 2013-09-23 14:39:04.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Performance
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-09-23
+    04:39:04";}
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/09/23/windows-disabling-bstr-cache/"
+---
+<p>When checking memory usage it might need to disable BSTR cache to avoid misleading information.</p>
+<p>Add the following environmental variable to disable BSTR cache.<br />
+[code lang="c"]<br />
+set OANOCACHE=1<br />
+[/code]</p>

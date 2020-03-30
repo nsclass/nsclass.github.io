@@ -1,0 +1,47 @@
+---
+layout: post
+title: C# - Changing log4Net logging path at runtime
+date: 2014-04-14 09:28:00.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags:
+- C++
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/04/14/c-changing-log4net-logging-path-at-runtime/"
+---
+<p>[code lang="c"]<br />
+        private static void InitLoggingPath()<br />
+        {<br />
+            string progDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);<br />
+            string dataPath = progDataPath + Resource.DATA_FILES_PATH;<br />
+            if (!Directory.Exists(dataPath))<br />
+                Directory.CreateDirectory(dataPath);</p>
+<p>            if (Directory.Exists(dataPath))<br />
+            {<br />
+                string configPath = Path.Combine(dataPath, &quot;Test.txt&quot;);</p>
+<p>                ILoggerRepository repository = LogManager.GetRepository();<br />
+                IAppender[] appenders = repository.GetAppenders();<br />
+                var rollingAppender = appenders.Where(p =&gt; p is RollingFileAppender).ToList();<br />
+                foreach (IAppender appender in rollingAppender)<br />
+                {<br />
+                    RollingFileAppender fileAppender = appender as RollingFileAppender;<br />
+                    fileAppender.File = configPath;<br />
+                    fileAppender.ActivateOptions();<br />
+                }<br />
+            }<br />
+        }<br />
+[/code]</p>

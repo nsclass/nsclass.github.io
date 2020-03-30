@@ -1,0 +1,51 @@
+---
+layout: post
+title: Python - REST API call example with a self certificated SSL connection
+date: 2017-06-06 05:11:23.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- python
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '5806764750'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/06/06/python-rest-api-example-for-self-certificated-ssl-connection/"
+---
+<p>[code lang="c"]<br />
+import time<br />
+import http.client<br />
+import ssl<br />
+import json</p>
+<p>conn = http.client.HTTPSConnection(&quot;localhost:9990&quot;, timeout=5, context=ssl._create_unverified_context())</p>
+<p>csvFileDat = &quot;&quot;<br />
+with open(&quot;c:\\tmp\\test.csv&quot;) as inputFile:<br />
+    csvFileDat = inputFile.read()</p>
+<p>headers = {<br />
+    'content-type': &quot;text/plain&quot;,<br />
+    'authorization': &quot;Basic base64encoded&quot;<br />
+}</p>
+<p>sumTotal = 0</p>
+<p>repeatCount = 100<br />
+for idx in range(repeatCount):<br />
+    start = time.time()</p>
+<p>    conn.request(&quot;PUT&quot;, &quot;/rest/import&quot;, csvFileDat, headers)</p>
+<p>    res = conn.getresponse()<br />
+    data = res.read()</p>
+<p>    end = time.time()<br />
+    elapse = end - start<br />
+    sumTotal += elapse</p>
+<p>    result = json.loads(data.decode('utf-8'))</p>
+<p>print(&quot;Total time: {}, Avg: {}&quot;.format(sumTotal, sumTotal / repeatCount))</p>
+<p>[/code]</p>

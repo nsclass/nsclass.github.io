@@ -1,0 +1,45 @@
+---
+layout: post
+title: Windows 7 CPU performance profiling example
+date: 2012-07-31 08:04:47.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Windows
+tags: []
+meta:
+  _edit_last: '14827209'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2012-08-05
+    22:50:38";}
+  _oembed_87bb364505f35730efbce57346c67cea: "{{unknown}}"
+  _oembed_c791d0029b6ce17971d707fed048353f: "{{unknown}}"
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2012/07/31/windows-7-cpu-performance-profiling/"
+---
+<p><code><br />
+@echo off<br />
+set _NT_SYMBOL_PATH=f:\src\Debug\;srv*c:\WebSymbol*http://msdl.microsoft.com/downloads/symbols</p>
+<p>xperf -on Latency -stackwalk profile</p>
+<p>echo.<br />
+echo Performance Trace started.<br />
+echo.<br />
+echo When done with profile actions, </p>
+<p>pause </p>
+<p>echo.<br />
+xperf -d Trace.etl</p>
+<p>echo.<br />
+start xperfview Trace.etl<br />
+</code></p>
+<p>On windows 64 bits, the following registry should be added to record the call stack.</p>
+<p><code><br />
+REG ADD "HKLM\System\CurrentControlSet\Control\Session Manager\Memory Management" -v DisablePagingExecutive -d 0x1 -t REG_DWORD -f<br />
+</code></p>

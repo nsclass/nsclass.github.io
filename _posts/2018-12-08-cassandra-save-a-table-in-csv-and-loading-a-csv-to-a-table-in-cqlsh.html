@@ -1,0 +1,31 @@
+---
+layout: post
+title: Cassandra - Save a table in CSV and loading a CSV to a table in CQLSH
+date: 2018-12-08 08:20:39.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- cassandra
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+  _publicize_job_id: '25150694129'
+  timeline_notification: '1544278839'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/12/08/cassandra-save-a-table-in-csv-and-loading-a-csv-to-a-table-in-cqlsh/"
+---
+<p>[code lang="c"]<br />
+cqlsh:test_keyspace&gt; COPY test_table TO 'test_table.csv' WITH HEADER=true;<br />
+cqlsh:test_keyspace&gt; COPY test_table FROM 'test_table.csv' WITH HEADER=true;<br />
+[/code]</p>

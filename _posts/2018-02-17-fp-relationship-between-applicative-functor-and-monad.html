@@ -1,0 +1,63 @@
+---
+layout: post
+title: FP - Relationship between Applicative Functor and Monad
+date: 2018-02-17 14:52:42.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Functional Programming
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '14851395994'
+  timeline_notification: '1518900763'
+author:
+  login: acrocontext
+  email: nsclass@hotmail.com
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2018/02/17/fp-relationship-between-applicative-functor-and-monad/"
+---
+<p>Applicative Functor has the following two properties.</p>
+<p>Pure: create a functor from value.<br />
+Apply: a function taking arguments which are a Functor having a function and a Pure. This function will return the Functor after applying the function inside the first Functor with a value from a Pure by unwrapping.</p>
+<p>Example)<br />
+[code lang="c"]</p>
+<p>Optional&lt;int&gt; apply(Optional&lt;function&lt;int(std::string)&gt;&gt; f, Optional&lt;std::string&gt; v) {<br />
+   if (f &amp; v) {<br />
+      return Optional&lt;int&gt;(*f (*v));<br />
+   }</p>
+<p>   return Optional(nullptr);<br />
+}</p>
+<p>[/code]</p>
+<p>Java example)<br />
+[code lang="c"]</p>
+<p>Optional&lt;Integer&gt; apply(Optional&lt;Function&lt;String, Integer&gt;&gt; f, Optional&lt;String&gt; v) {<br />
+   return f.flatMap(a -&gt; v.map(a(v))<br />
+}</p>
+<p>[/code]</p>
+<p>Monad is the Applicative Functor with joining to flat the returning Functor.<br />
+So Monad is Applicative Functor with a join.<br />
+Join: flattening the Functor</p>
+<p>Join Example)<br />
+[code lang="c"]<br />
+Optional&lt;int&gt; join(Optional&lt;Optional&lt;int&gt;&gt; v) {<br />
+   if (v) {<br />
+      return *v;<br />
+   }</p>
+<p>   return Optional&lt;int&gt;(nullptr);<br />
+}</p>
+<p>[/code]</p>
+<p>Monad C++ definition:<br />
+[code lang="c"]<br />
+template&lt;typename T, typename U&gt;<br />
+Monad&lt;U&gt; bind(Monad&lt;T&gt; m, std::function&lt;Monad&lt;U&gt;(T)&gt; f) {<br />
+   return join(apply(pure(f), m));<br />
+}<br />
+[/code]</p>
