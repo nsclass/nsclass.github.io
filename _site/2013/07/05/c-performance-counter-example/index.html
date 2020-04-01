@@ -1,0 +1,164 @@
+<p>[sourcecode language="c"]<br />
+using System;<br />
+using System.Collections.Generic;<br />
+using System.Linq;<br />
+using System.Text;<br />
+using System.Diagnostics;<br />
+using System.Runtime.InteropServices;</p>
+<p>namespace PerformanceCounterHelper<br />
+{<br />
+    public class PerformanceHelperClass<br />
+    {<br />
+        [DllImport(&quot;Kernel32.dll&quot;)]<br />
+        public static extern void QueryPerformanceCounter(ref long ticks);<br />
+        public static long GetCurrentTick()<br />
+        {<br />
+            long value = 0;<br />
+            QueryPerformanceCounter(ref value);<br />
+            return value;<br />
+        }<br />
+    }</p>
+<p>    public interface IPerformanceDescription<br />
+    {<br />
+        string Category { get; }<br />
+        string Description { get; }<br />
+    }</p>
+<p>    public class PerformanceCounter&lt;T&gt; where T : IPerformanceDescription, new()<br />
+    {<br />
+        /// &lt;summary&gt;<br />
+        /// Counter for counting total number of operations<br />
+        /// &lt;/summary&gt;<br />
+        private PerformanceCounter m_totalOperations;<br />
+        /// &lt;summary&gt;<br />
+        /// Counter for counting number of operations per second<br />
+        /// &lt;/summary&gt;<br />
+        private PerformanceCounter m_operationsPerSecond;<br />
+        /// &lt;summary&gt;<br />
+        /// Counter for counting duration averages<br />
+        /// &lt;/summary&gt;<br />
+        private PerformanceCounter m_averageDuration;<br />
+        /// &lt;summary&gt;<br />
+        /// Counter for counting duration averages base<br />
+        /// &lt;/summary&gt;<br />
+        private PerformanceCounter m_averageDurationBase;</p>
+<p>        /// &lt;summary&gt;<br />
+        /// Creates a new performance counter category m_perfClass.Category if it does not already exists and adds some counters to it.<br />
+        /// &lt;/summary&gt;<br />
+        /// </p>
+<p>        private T m_perfClass;<br />
+        private static readonly PerformanceCounter&lt;T&gt; m_instance = new PerformanceCounter&lt;T&gt;();</p>
+<p>        public static PerformanceCounter&lt;T&gt; Instance<br />
+        {<br />
+            get { return m_instance; }<br />
+        }</p>
+<p>        private PerformanceCounter()<br />
+        {<br />
+            m_perfClass = new T();</p>
+<p>            if (!PerformanceCounterCategory.Exists(m_perfClass.Category))<br />
+            {<br />
+                CounterCreationDataCollection counters = new CounterCreationDataCollection();</p>
+<p>                // 1. counter for counting totals: PerformanceCounterType.NumberOfItems32<br />
+                CounterCreationData totalOps = new CounterCreationData();<br />
+                totalOps.CounterName = &quot;# operations executed&quot;;<br />
+                totalOps.CounterHelp = &quot;Total number of operations executed&quot;;<br />
+                totalOps.CounterType = PerformanceCounterType.NumberOfItems32;<br />
+                counters.Add(totalOps);</p>
+<p>                // 2. counter for counting operations per second: PerformanceCounterType.RateOfCountsPerSecond32<br />
+                CounterCreationData opsPerSecond = new CounterCreationData();<br />
+                opsPerSecond.CounterName = &quot;# operations / sec&quot;;<br />
+                opsPerSecond.CounterHelp = &quot;Number of operations executed per second&quot;;<br />
+                opsPerSecond.CounterType = PerformanceCounterType.RateOfCountsPerSecond32;<br />
+                counters.Add(opsPerSecond);</p>
+<p>                // 3. counter for counting average time per operation: PerformanceCounterType.AverageTimer32<br />
+                CounterCreationData avgDuration = new CounterCreationData();<br />
+                avgDuration.CounterName = &quot;average time per operation&quot;;<br />
+                avgDuration.CounterHelp = &quot;Average duration per operation execution&quot;;<br />
+                avgDuration.CounterType = PerformanceCounterType.AverageTimer32;<br />
+                counters.Add(avgDuration);</p>
+<p>                // 4. base counter for counting average time per operation: PerformanceCounterType.AverageBase<br />
+                CounterCreationData avgDurationBase = new CounterCreationData();<br />
+                avgDurationBase.CounterName = &quot;average time per operation base&quot;;<br />
+                avgDurationBase.CounterHelp = &quot;Average duration per operation execution base&quot;;<br />
+                avgDurationBase.CounterType = PerformanceCounterType.AverageBase;<br />
+                counters.Add(avgDurationBase);</p>
+<p>                // create new category with the counters above<br />
+                PerformanceCounterCategory.Create(m_perfClass.Category, m_perfClass.Description, counters);<br />
+            }</p>
+<p>            // create counters to work with<br />
+            m_totalOperations = new PerformanceCounter();<br />
+            m_totalOperations.CategoryName = m_perfClass.Category;<br />
+            m_totalOperations.CounterName = &quot;# operations executed&quot;;<br />
+            m_totalOperations.MachineName = &quot;.&quot;;<br />
+            m_totalOperations.ReadOnly = false;<br />
+            m_totalOperations.RawValue = 0;</p>
+<p>            m_operationsPerSecond = new PerformanceCounter();<br />
+            m_operationsPerSecond.CategoryName = m_perfClass.Category;<br />
+            m_operationsPerSecond.CounterName = &quot;# operations / sec&quot;;<br />
+            m_operationsPerSecond.MachineName = &quot;.&quot;;<br />
+            m_operationsPerSecond.ReadOnly = false;<br />
+            m_operationsPerSecond.RawValue = 0;</p>
+<p>            m_averageDuration = new PerformanceCounter();<br />
+            m_averageDuration.CategoryName = m_perfClass.Category;<br />
+            m_averageDuration.CounterName = &quot;average time per operation&quot;;<br />
+            m_averageDuration.MachineName = &quot;.&quot;;<br />
+            m_averageDuration.ReadOnly = false;<br />
+            m_averageDuration.RawValue = 0;</p>
+<p>            m_averageDurationBase = new PerformanceCounter();<br />
+            m_averageDurationBase.CategoryName = m_perfClass.Category;<br />
+            m_averageDurationBase.CounterName = &quot;average time per operation base&quot;;<br />
+            m_averageDurationBase.MachineName = &quot;.&quot;;<br />
+            m_averageDurationBase.ReadOnly = false;<br />
+            m_averageDurationBase.RawValue = 0;<br />
+        }</p>
+<p>        public void Initialize()<br />
+        {</p>
+<p>        }</p>
+<p>        /// &lt;summary&gt;<br />
+        /// Increments counters.<br />
+        /// &lt;/summary&gt;<br />
+        /// &lt;param name=&quot;ticks&quot;&gt;The number of ticks the AverageTimer32 counter must be incremented by&lt;/param&gt;<br />
+        public void DoPerformanceCounter(long ticks)<br />
+        {<br />
+            // simply increment the counters<br />
+            m_totalOperations.Increment();<br />
+            m_operationsPerSecond.Increment();<br />
+            m_averageDuration.IncrementBy(ticks); // increment the timer by the time cost of the operation<br />
+            m_averageDurationBase.Increment(); // increment base counter only by 1<br />
+        }<br />
+    }<br />
+}<br />
+[/sourcecode]</p>
+<p>[sourcecode language="c"]<br />
+using System;<br />
+using System.Collections.Generic;<br />
+using System.Linq;<br />
+using System.Text;<br />
+using System.Runtime.InteropServices;</p>
+<p>namespace PerformanceCounterHelper<br />
+{<br />
+    [ComVisible(true)]<br />
+    [Guid(&quot;xxxxxxxxxxxxxxxxxxxxxxxx&quot;)]<br />
+    public interface INetCmdQueueTimeCounter<br />
+    {<br />
+        void DoPerformanceCounter(long tick);<br />
+    }</p>
+<p>    [ComVisible(true)]<br />
+    [Guid(&quot;xxxxxxxxxxxxxxxxxxxxxxxx&quot;)]<br />
+    public class NetCmdQueueTimeClass : INetCmdQueueTimeCounter<br />
+    {<br />
+        public class NetCmdPerformanceDescription : IPerformanceDescription<br />
+        {<br />
+            public string Category { get { return &quot;Network Command Queue Time&quot;; } }<br />
+            public string Description { get { return &quot;Network Command Queue Time Counter&quot;; } }<br />
+        }</p>
+<p>        public NetCmdQueueTimeClass()<br />
+        {<br />
+            PerformanceCounter&lt;NetCmdPerformanceDescription&gt;.Instance.Initialize();<br />
+        }</p>
+<p>        public void DoPerformanceCounter(long tick)<br />
+        {<br />
+            PerformanceCounter&lt;NetCmdPerformanceDescription&gt;.Instance.DoPerformanceCounter(tick);<br />
+        }<br />
+    }<br />
+}<br />
+[/sourcecode]</p>

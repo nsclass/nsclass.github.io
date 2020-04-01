@@ -1,0 +1,9 @@
+<p>[code lang="c"]<br />
+import javax.ws.rs.core.Response;</p>
+<p>    Entity entity = service.getById(uuid);<br />
+    if(entity == null) {<br />
+        return Response.status(Response.Status.NOT_FOUND).entity(&quot;Entity not found for UUID: &quot; + uuid).build();<br />
+    }<br />
+    String json = //convert entity to json<br />
+    return Response.ok(json, MediaType.APPLICATION_JSON).build();</p>
+<p>[/code]</p>

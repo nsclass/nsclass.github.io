@@ -1,0 +1,15 @@
+<p>[sourcecode language="c"]<br />
+@echo off</p>
+<p>set _NT_SYMBOL_PATH=f:\src\Debug\;srv*c:\WebSymbol*http://msdl.microsoft.com/downloads/symbols</p>
+<p>xperf -on Base+Cswitch -BufferSize 1024 -MinBuffers 512 -MaxBuffers 512<br />
+xperf -start HeapSession -heap -Pids %1 -BufferSize 1024 -MinBuffers 512 -MaxBuffers 512 -stackwalk HeapAlloc+HeapRealloc</p>
+<p>echo.<br />
+echo Performance Trace started.<br />
+echo.<br />
+echo When done with profile actions, </p>
+<p>pause </p>
+<p>echo Generating the report. </p>
+<p>xperf -stop HeapSession -stop -d heapUsage.etl</p>
+<p>echo.<br />
+start xperfview heapUsage.etl</p>
+<p>[/sourcecode]</p>

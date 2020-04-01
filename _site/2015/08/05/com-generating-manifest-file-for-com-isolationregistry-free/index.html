@@ -1,0 +1,14 @@
+<p>In order to load COM dll without searching from system registry key, application should include the manifest file in resource so that the application can create an instance of COM object from the specified file directly.</p>
+<p>After including this manifest file in your compilation(actually, linking time), it will create the Manifest resouce in your executable application.</p>
+<p>.NET COM dll example<br />
+[code lang="c"]<br />
+mt.exe -tlb:MyComNet.dll  -dll:MyComNet.dll -dependency -out:c:\temp\MyComNet.manifest<br />
+[/code]</p>
+<p>C++ COM dll example<br />
+[code lang="c"]<br />
+mt.exe -tlb:MyComCpp.dll  -dll:MyComCpp.dll -out:c:\temp\MyComCpp.manifest<br />
+[/code]</p>
+<p>If application depends on two dll(one from .NET and one from C++), you can merge the result in one manifest file. After merging, you can verify the result with the following command.</p>
+<p>[code lang="c"]<br />
+mt -manifest Merged.manifest -validate_manifest<br />
+[/code]</p>

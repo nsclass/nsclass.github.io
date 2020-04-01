@@ -1,0 +1,28 @@
+<p>[code lang="c"]<br />
+#include &lt;iostream&gt;<br />
+#include &lt;sstream&gt;<br />
+#include &lt;vector&gt;</p>
+<p>std::vector&lt;std::string&gt; to_string()<br />
+{<br />
+	return{};<br />
+}</p>
+<p>template &lt;typename ARG1, typename ... ARGS&gt;<br />
+std::vector&lt;std::string&gt; to_string(ARG1 arg, ARGS... args)<br />
+{<br />
+	std::vector&lt;std::string&gt; result;</p>
+<p>	std::stringstream str;<br />
+	str &lt;&lt; arg;</p>
+<p>	result.push_back(str.str());</p>
+<p>	auto others = to_string(args...);</p>
+<p>	result.insert(result.end(), others.begin(), others.end());</p>
+<p>	return result;<br />
+}</p>
+<p>int main()<br />
+{<br />
+	auto res = to_string(1, &quot;test&quot;);</p>
+<p>	for (auto&amp; item : res) {<br />
+		std::cout &lt;&lt; item &lt;&lt; std::endl;<br />
+	}<br />
+    return 0;<br />
+}<br />
+[/code]</p>

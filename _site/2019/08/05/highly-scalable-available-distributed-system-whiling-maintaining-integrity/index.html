@@ -1,0 +1,3 @@
+<p>I think that ACID is a main mechanism to maintain the application consistency but it's hard to make it highly scalable and available system because of synchronous property of ACID. But if we can relax the timeliness property in consistency, I think that it is possible highly scalable/available system by using a log based message system such as Kafka.<br />
+The main reason is that log based messaging system can guarantee the serializability of events, we can maintain the integrity of application by processing the fault tolerant events eventually.</p>
+<p>The another possible option is to use the optimistic locking mechanism. FoundataionDB is a good example.</p>

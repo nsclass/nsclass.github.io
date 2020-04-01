@@ -1,0 +1,16 @@
+<p>[code lang="c"]<br />
+    public static class ExceptionUtils<br />
+    {<br />
+        public static void PrintException(Exception e)<br />
+        {<br />
+            var frame = new StackTrace(e, true).GetFrame(0);<br />
+            if (frame != null)<br />
+            {<br />
+                var str = string.Format(&quot;File: {0}({1}){2}{3}&quot;, frame.GetFileName(), frame.GetFileLineNumber(), Environment.NewLine, e.Message);<br />
+                Trace.WriteLine(str);<br />
+            }<br />
+            else<br />
+                Trace.WriteLine(e.Message);<br />
+        }<br />
+    }<br />
+[/code]</p>

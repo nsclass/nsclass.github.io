@@ -1,0 +1,19 @@
+<p>[sourcecode language="c"]<br />
+class Invoker&lt;T&gt; where T : class<br />
+{<br />
+      static void Invoke(T invokeClass, string methodName, object[] args)<br />
+      {<br />
+         Debug.Assert(invokeClass != null);<br />
+         Type type = typeof(T);<br />
+         MethodInfo methodInfo = type.GetMethod(methodName);<br />
+         try<br />
+         {<br />
+            methodInfo.Invoke(invokeClass, args);<br />
+         }<br />
+         catch(Exception e)<br />
+         {<br />
+            Trace.WriteLine(e.Message);<br />
+         }<br />
+      }<br />
+}<br />
+[/sourcecode]</p>

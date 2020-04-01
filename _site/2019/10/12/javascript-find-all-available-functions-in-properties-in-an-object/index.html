@@ -1,0 +1,96 @@
+<p>The following three functions are very useful on inspecting methods and properties in any Javascrip object.<br />
+Github code: https://github.com/nsclass/describe-javascript-object-methods/blob/master/list-object-methods.js</p>
+<p>[code lang="c"]<br />
+const getArgs = func =&gt; {<br />
+  // First match everything inside the function argument parens.<br />
+  let matchedItems = func.toString().match(/function\s.*?\(([^)]*)\)/)<br />
+  if (matchedItems &amp;&amp; matchedItems.length &gt; 0) {<br />
+    let args = matchedItems[1].trim()<br />
+    if (args.length &gt; 0) {</p>
+<p>      // Split the arguments string into an array comma delimited.<br />
+      return args.split(',').map( arg =&gt; {<br />
+        // Ensure no inline comments are parsed and trim the whitespace.<br />
+        return arg.replace(/\/\*.*\*\//, '').trim()<br />
+      })<br />
+    }<br />
+  }</p>
+<p>  return &quot;no args&quot;<br />
+}</p>
+<p>const getMethods = (obj) =&gt; {<br />
+  return Object.entries(obj)<br />
+  .filter(([key, value]) =&gt; typeof obj[key] === 'function')<br />
+  .map(([key, value]) =&gt; `${key}: ${getArgs(value)}`)<br />
+  .sort((x, y) =&gt; {<br />
+    let strX = x.toString()<br />
+    let strY = y.toString()<br />
+    return strX.localeCompare(strY)<br />
+  })<br />
+}</p>
+<p>const getProperties = obj =&gt; {<br />
+  return Object.getOwnPropertyNames(obj)<br />
+  .filter(item =&gt; typeof obj[item] !== 'function')<br />
+}</p>
+<p>[/code]</p>
+<p>For instance, we can list all available functions and each function's arguemnts in fs node module.<br />
+[code lang="c"]<br />
+const fs = require('fs)</p>
+<p>getMethods(fs)</p>
+<p>[/code]</p>
+<p>Results<br />
+[code lang="c"]<br />
+[ '_debugEnd: no args',<br />
+  '_debugProcess: no args',<br />
+  '_fatalException: no args',<br />
+  '_getActiveHandles: no args',<br />
+  '_getActiveRequests: no args',<br />
+  '_kill: no args',<br />
+  '_linkedBinding: module',<br />
+  '_rawDebug: no args',<br />
+  '_startProfilerIdleNotifier: no args',<br />
+  '_stopProfilerIdleNotifier: no args',<br />
+  '_tickCallback: no args',<br />
+  'abort: no args',<br />
+  'activateUvLoop: no args',<br />
+  'assert: ...args',<br />
+  'atomBinding: name',<br />
+  'binding: module',<br />
+  'chdir: ...args',<br />
+  'cpuUsage: prevValue',<br />
+  'crash: no args',<br />
+  'cwd: no args',<br />
+  'dlopen: no args',<br />
+  'emitWarning: no args',<br />
+  'exit: no args',<br />
+  'getCPUUsage: no args',<br />
+  'getCreationTime: no args',<br />
+  'getegid: no args',<br />
+  'geteuid: no args',<br />
+  'getgid: no args',<br />
+  'getgroups: no args',<br />
+  'getHeapStatistics: no args',<br />
+  'getIOCounters: no args',<br />
+  'getRenderProcessPreferences: no args',<br />
+  'getSystemMemoryInfo: no args',<br />
+  'getuid: no args',<br />
+  'hang: no args',<br />
+  'hasUncaughtExceptionCaptureCallback: no args',<br />
+  'hrtime: time',<br />
+  'initgroups: ...args',<br />
+  'kill: no args',<br />
+  'log: no args',<br />
+  'memoryUsage: no args',<br />
+  'NativeModule: id',<br />
+  'nextTick: no args',<br />
+  'openStdin: no args',<br />
+  'reallyExit: no args',<br />
+  'setegid: ...args',<br />
+  'seteuid: ...args',<br />
+  'setFdLimit: no args',<br />
+  'setgid: ...args',<br />
+  'setgroups: ...args',<br />
+  'setuid: ...args',<br />
+  'setUncaughtExceptionCaptureCallback: no args',<br />
+  'takeHeapSnapshot: no args',<br />
+  'umask: ...args',<br />
+  'uptime: no args' ]<br />
+[/code]</p>

@@ -1,0 +1,14 @@
+<p>Partition Key: It will be hashed and saved across nodes.<br />
+Clustering Key: It will group in the same partition key.</p>
+<p>PRIMARY KEY((partion key), clustering key)<br />
+Example)<br />
+create table User(<br />
+    email text,<br />
+    name text,<br />
+    desc text,<br />
+    user_id uuid<br />
+    PRIMARY KEY((email), name, user_id)<br />
+) WITH CLUSTERING ORDER BY (name DESC, user_id ASC);</p>
+<p>Primary Key: email<br />
+Clustering Key: name, user_id</p>
+<p>Reason of adding a user_id is to ensure the uniqueness of primary key.</p>

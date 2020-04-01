@@ -1,0 +1,8 @@
+<p>[sourcecode language="c"]<br />
+class FileDeleter {<br />
+void operator()(FILE* fp) { fclose(fp); }<br />
+};<br />
+unique_ptr&lt;FILE, FileDeleter&gt; fp = fopen(&quot;blah&quot;);</p>
+<p>or even</p>
+<p>unique_ptr&lt;FILE, int(*)(FILE*)&gt; fp( fopen(&quot;blah&quot;), fclose)<br />
+[/sourcecode]</p>

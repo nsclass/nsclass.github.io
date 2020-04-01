@@ -1,0 +1,9 @@
+<p>[sourcecode language="c"]<br />
+class BaseClass : public std::enable_shared_from_this&lt;BaseClass&gt;<br />
+{<br />
+  template &lt;typename Derived&gt;<br />
+  std::shared_ptr&lt;Derived&gt; GetDerived(){<br />
+     return std::dynamic_pointer_cast&lt;Derived&gt;(shared_from_this());<br />
+  }<br />
+}<br />
+[/sourcecode]</p>

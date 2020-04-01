@@ -1,0 +1,53 @@
+<p>The following code utilize the CDO service of Windows OS to send an email. In my research CDO SMTP client can only support SSL/TLS connection type for using SSL. If you want to use START TLS connection type, C# SmtpClient class can support it.</p>
+<p>[code lang="c"]<br />
+/// &lt;summary&gt;<br />
+    /// Send an electronic message using the Collaboration Data Objects (CDO).<br />
+    /// &lt;/summary&gt;<br />
+    /// &lt;remarks&gt;http://support.microsoft.com/kb/310212&lt;/remarks&gt;<br />
+private void SendEmailWithCDO()<br />
+{<br />
+            try<br />
+            {<br />
+                var settings = ViewModel;</p>
+<p>                CDO.Message message = new CDO.Message();<br />
+                CDO.IConfiguration configuration = message.Configuration;<br />
+                ADODB.Fields fields = configuration.Fields;</p>
+<p>                // Set configuration.<br />
+                // sendusing:               cdoSendUsingPort, value 2, for sending the message using the network.<br />
+                // smtpauthenticate:     Specifies the mechanism used when authenticating to an SMTP service over the network.<br />
+                //                                  Possible values are:<br />
+                //                                  - cdoAnonymous, value 0. Do not authenticate.<br />
+                //                                  - cdoBasic, value 1. Use basic clear-text authentication. (Hint: This requires the use of &quot;sendusername&quot; and &quot;sendpassword&quot; fields)<br />
+                //                                  - cdoNTLM, value 2. The current process security context is used to authenticate with the service.</p>
+<p>                ADODB.Field field = fields[&quot;http://schemas.microsoft.com/cdo/configuration/smtpserver&quot;];<br />
+                field.Value = settings.SMTPServerAddress;</p>
+<p>                field = fields[&quot;http://schemas.microsoft.com/cdo/configuration/smtpserverport&quot;];<br />
+                field.Value = settings.PortNumber;</p>
+<p>                field = fields[&quot;http://schemas.microsoft.com/cdo/configuration/sendusing&quot;];<br />
+                field.Value = CDO.CdoSendUsing.cdoSendUsingPort;</p>
+<p>                field = fields[&quot;http://schemas.microsoft.com/cdo/configuration/smtpauthenticate&quot;];<br />
+                field.Value = CDO.CdoProtocolsAuthentication.cdoBasic;</p>
+<p>                field = fields[&quot;http://schemas.microsoft.com/cdo/configuration/sendusername&quot;];<br />
+                field.Value = settings.Username;</p>
+<p>                field = fields[&quot;http://schemas.microsoft.com/cdo/configuration/sendpassword&quot;];<br />
+                field.Value = settings.Password;</p>
+<p>                field = fields[&quot;http://schemas.microsoft.com/cdo/configuration/smtpusessl&quot;];<br />
+                field.Value = &quot;true&quot;;</p>
+<p>                fields.Update();</p>
+<p>                message.From = settings.SenderEmailAddress;<br />
+                message.To = settings.SenderEmailAddress;<br />
+                message.Subject = &quot;Test&quot;;<br />
+                message.TextBody = settings.Content;</p>
+<p>                // Send message.<br />
+                message.Send();<br />
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(message);<br />
+                MessageBox.Show(&quot;Sent a message successfully&quot;);<br />
+            }<br />
+            catch (Exception ex)<br />
+            {<br />
+                Debug.Print(ex.Message);<br />
+                MessageBox.Show(ex.Message);<br />
+            }<br />
+        }<br />
+}<br />
+[/code]</p>

@@ -1,0 +1,68 @@
+<p>[code lang="c"]<br />
+class StringMessageProcessor<br />
+{<br />
+public:<br />
+	StringMessageProcessor()<br />
+	{<br />
+		m_exit = false;<br />
+		m_messageArrived = false;<br />
+	}</p>
+<p>	~StringMessageProcessor()<br />
+	{<br />
+		m_thread.join();<br />
+	}</p>
+<p>	void SetHandler(std::function&lt;void(std::string const&amp;)&gt; msgHandler)<br />
+	{<br />
+		std::unique_lock&lt;std::mutex&gt; lock(m_condvarMutex);<br />
+		m_msgHandler = msgHandler;<br />
+	}</p>
+<p>	void Start()<br />
+	{<br />
+		boost::thread thread([this] {</p>
+<p>			while (!m_exit)<br />
+			{<br />
+				std::unique_lock&lt;std::mutex&gt; lock(m_condvarMutex);<br />
+				m_condvar.wait(lock, [this] { return m_exit || m_messageArrived;});</p>
+<p>				if (!m_exit)<br />
+				{<br />
+                                     std::vector&lt;Item&gt; data;</p>
+<p>                                     auto queueSize = m_msgQueue.size();<br />
+                                     while (m_msgQueue.size() &gt; 0) {<br />
+                                         data.push_back(m_msgQueue.front());<br />
+                                         m_msgQueue.pop();<br />
+                                     }</p>
+<p>                                     lock.unlock();</p>
+<p>                                     for (auto const&amp; msg: data) {<br />
+                                         m_processor-&gt;processItem(msg, queueSize);<br />
+                                     }<br />
+				}<br />
+			}<br />
+		});</p>
+<p>		m_thread.swap(thread);<br />
+	}</p>
+<p>	void Stop()<br />
+	{<br />
+		{<br />
+			std::lock_guard&lt;std::mutex&gt; lk(m_condvarMutex);<br />
+			m_exit = true;<br />
+		}<br />
+		m_condvar.notify_all();<br />
+	}</p>
+<p>	bool PushMessage(std::string const&amp; msg)<br />
+	{<br />
+		std::lock_guard&lt;std::mutex&gt; lk(m_condvarMutex);<br />
+		m_msgQueue.push(msg);<br />
+		m_messageArrived = true;<br />
+		m_condvar.notify_one();<br />
+		return true;<br />
+	}</p>
+<p>private:<br />
+	boost::thread m_thread;<br />
+	std::mutex m_condvarMutex;<br />
+	std::condition_variable m_condvar;<br />
+	bool m_exit;<br />
+	bool m_messageArrived;<br />
+	std::queue&lt;std::string&gt; m_msgQueue;<br />
+	std::function&lt;void(std::string const&amp;)&gt; m_msgHandler;<br />
+};</p>
+<p>[/code]</p>

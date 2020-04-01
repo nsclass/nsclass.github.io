@@ -1,0 +1,104 @@
+<p>Cursor movement<br />
+[sourcecode language="c"]<br />
+    h - move left<br />
+    j - move down<br />
+    k - move up<br />
+    l - move right<br />
+    w - jump by start of words (punctuation considered words)<br />
+    W - jump by words (spaces separate words)<br />
+    e - jump to end of words (punctuation considered words)<br />
+    E - jump to end of words (no punctuation)<br />
+    b - jump backward by words (punctuation considered words)<br />
+    B - jump backward by words (no punctuation)<br />
+    0 - (zero) start of line<br />
+    ^ - first non-blank character of line<br />
+    $ - end of line<br />
+    G - Go To command (prefix with number - 5G goes to line 5)<br />
+[/sourcecode]<br />
+Note: Prefix a cursor movement command with a number to repeat it. For example, 4j moves down 4 lines.<br />
+Insert Mode - Inserting/Appending text<br />
+[sourcecode language="c"]<br />
+    i - start insert mode at cursor<br />
+    I - insert at the beginning of the line<br />
+    a - append after the cursor<br />
+    A - append at the end of the line<br />
+    o - open (append) blank line below current line (no need to press return)<br />
+    O - open blank line above current line<br />
+    ea - append at end of word<br />
+    Esc - exit insert mode<br />
+[/sourcecode]<br />
+Editing<br />
+[sourcecode language="c"]<br />
+    r - replace a single character (does not use insert mode)<br />
+    J - join line below to the current one<br />
+    cc - change (replace) an entire line<br />
+    cw - change (replace) to the end of word<br />
+    c$ - change (replace) to the end of line<br />
+    s - delete character at cursor and subsitute text<br />
+    S - delete line at cursor and substitute text (same as cc)<br />
+    xp - transpose two letters (delete and paste, technically)<br />
+    u - undo<br />
+    . - repeat last command<br />
+[/sourcecode]<br />
+Marking text (visual mode)<br />
+[sourcecode language="c"]<br />
+    v - start visual mode, mark lines, then do command (such as y-yank)<br />
+    V - start Linewise visual mode<br />
+    o - move to other end of marked area<br />
+    Ctrl+v - start visual block mode<br />
+    O - move to Other corner of block<br />
+    aw - mark a word<br />
+    ab - a () block (with braces)<br />
+    aB - a {} block (with brackets)<br />
+    ib - inner () block<br />
+    iB - inner {} block<br />
+    Esc - exit visual mode<br />
+[/sourcecode]<br />
+Visual commands<br />
+[sourcecode language="c"]<br />
+    &amp;gt; - shift right<br />
+    &amp;lt; - shift left<br />
+    y - yank (copy) marked text<br />
+    d - delete marked text<br />
+    ~ - switch case<br />
+[/sourcecode]<br />
+Cut and Paste<br />
+[sourcecode language="c"]<br />
+    yy - yank (copy) a line<br />
+    2yy - yank 2 lines<br />
+    yw - yank word<br />
+    y$ - yank to end of line<br />
+    p - put (paste) the clipboard after cursor<br />
+    P - put (paste) before cursor<br />
+    dd - delete (cut) a line<br />
+    dw - delete (cut) the current word<br />
+    x - delete (cut) current character<br />
+[/sourcecode]<br />
+Exiting<br />
+[sourcecode language="c"]<br />
+    :w - write (save) the file, but don&#039;t exit<br />
+    :wq - write (save) and quit<br />
+    :q - quit (fails if anything has changed)<br />
+    :q! - quit and throw away changes<br />
+[/sourcecode]<br />
+Search/Replace<br />
+[sourcecode language="c"]<br />
+    /pattern - search for pattern<br />
+    ?pattern - search backward for pattern<br />
+    n - repeat search in same direction<br />
+    N - repeat search in opposite direction<br />
+    :%s/old/new/g - replace all old with new throughout file<br />
+    :%s/old/new/gc - replace all old with new throughout file with confirmations<br />
+[/sourcecode]<br />
+Working with multiple files<br />
+[sourcecode language="c"]<br />
+    :e filename - Edit a file in a new buffer<br />
+    :bnext (or :bn) - go to next buffer<br />
+    :bprev (of :bp) - go to previous buffer<br />
+    :bd - delete a buffer (close a file)<br />
+    :sp filename - Open a file in a new buffer and split window<br />
+    ctrl+ws - Split windows<br />
+    ctrl+ww - switch between windows<br />
+    ctrl+wq - Quit a window<br />
+    ctrl+wv - Split windows vertically<br />
+[/sourcecode]</p>

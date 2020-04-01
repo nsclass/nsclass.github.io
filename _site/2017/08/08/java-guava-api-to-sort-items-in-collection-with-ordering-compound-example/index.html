@@ -1,0 +1,5 @@
+<p>[code lang="c"]<br />
+Collection.sort(list,<br />
+	Ordering.from((Comparator&lt;Item&gt;) Comparator.comparingInt(item -&gt; item.getId()))<br />
+	.compound(Comparator.comparing(Item::getName)))<br />
+[/code]</p>

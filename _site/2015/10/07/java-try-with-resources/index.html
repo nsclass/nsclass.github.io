@@ -1,0 +1,13 @@
+<p>From Java7, it introduced the mechanism to release the resource automatically as C# does with using statement. In C#, you can use the using statement to release resource allocated by object which derives from IDisposable.</p>
+<p>[code lang="c"]<br />
+using (var socket = new Socket(...)) {</p>
+<p>}<br />
+[/code]</p>
+<p>Java7 can achieve same result with the following syntax. However it cannot use for any object, it can only support the instance which implements java.lang.AutoCloseable as C# does.</p>
+<p>[code lang="c"]<br />
+try (<br />
+    File file = new FileInputStream(...);<br />
+    File output = new FileInputStream(...);<br />
+) {<br />
+}<br />
+[/code]</p>

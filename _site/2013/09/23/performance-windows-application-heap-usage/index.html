@@ -1,0 +1,15 @@
+<p>The following script will show how to profile the heap memory usage of Windows application with Windows Performance Toolkits<br />
+[code lang="c"]<br />
+@echo off</p>
+<p>xperf -on PROC_THREAD+LOADER+VIRT_ALLOC -stackwalk VirtualAlloc+VirtualFree -BufferSize 1024 -MinBuffers 512 -MaxBuffers 512 -stackwalk VirtualAlloc<br />
+xperf -start HeapSession -heap -Pids %1 -BufferSize 1024 -MinBuffers 512 -MaxBuffers 512 -stackwalk HeapAlloc+HeapRealloc</p>
+<p>echo.<br />
+echo Performance Trace started.<br />
+echo.<br />
+echo When done with profile actions, </p>
+<p>pause </p>
+<p>echo Generating the report. </p>
+<p>xperf -stop HeapSession -stop -d heapUsage.etl</p>
+<p>echo.<br />
+start xperfview heapUsage.etl</p>
+<p>[/code]</p>

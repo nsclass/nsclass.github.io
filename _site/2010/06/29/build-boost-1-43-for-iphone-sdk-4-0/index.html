@@ -1,0 +1,19 @@
+<p>1. modify user.config.jam in tools/build/v2 directory<br />
+[sourcecode language="cpp"]<br />
+using darwin : 4.2.1~iphone<br />
+: /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/g++ -arch armv7<br />
+: &lt;striper&gt;<br />
+: &lt;architecture&gt;arm &lt;target-os&gt;iphone<br />
+;</p>
+<p>using darwin : 4.2.1~iphonesim<br />
+: /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/g++<br />
+: &lt;striper&gt;<br />
+: &lt;architecture&gt;x86 &lt;target-os&gt;iphone<br />
+;<br />
+[/sourcecode]</p>
+<p>2. compile<br />
+[sourcecode language="cpp"]<br />
+./bootstrap.sh<br />
+./bjam --prefix=${HOME}/usr/boost-1.43/iphone toolset=darwin architecture=arm target-os=iphone macosx-version=iphone-4.0 define=_LITTLE_ENDIAN link=static install<br />
+./bjam --prefix=${HOME}/usr/boost-1.43/iphoneSimulator toolset=darwin architecture=x86 target-os=iphone macosx-version=iphonesim-4.0 link=static install&lt;/pre&gt;<br />
+[/sourcecode]</p>

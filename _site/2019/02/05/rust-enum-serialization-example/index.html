@@ -1,0 +1,38 @@
+<p>[code lang="c"]</p>
+<p>use serde::ser::{ Serialize, Serializer };<br />
+use serde::de::{ Deserialize, Deserializer };</p>
+<p>pub enum EnumTestType {<br />
+    Type1,<br />
+    Type2,<br />
+    UNKNOWN,<br />
+}</p>
+<p>impl EnumTestType {<br />
+    pub fn value(&amp;self) -&gt; &amp;'static str {<br />
+        match *self {<br />
+            EnumTestType::Type1 =&gt; &quot;T1&quot;,<br />
+            EnumTestType::Type2 =&gt; &quot;T2&quot;,<br />
+            EnumTestType::UNKNOWN =&gt; &quot;?&quot;,<br />
+        }<br />
+    }<br />
+}</p>
+<p>impl Serialize for EnumTestType {<br />
+    fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;<br />
+        where S: Serializer,<br />
+    {<br />
+        serializer.serialize_str(self.value())<br />
+    }<br />
+}</p>
+<p>impl &lt;'a&gt; Deserialize&lt;'a&gt; for EnumTestType {<br />
+    fn deserialize&lt;D&gt;(deserializer: D) -&gt; Result&lt;Self, D::Error&gt;<br />
+        where D: Deserializer&lt;'a&gt;,<br />
+    {<br />
+        let s = String::deserialize(deserializer)?;<br />
+        let result = match s.as_str() {<br />
+            &quot;D&quot; =&gt; EnumTestType::Type1,<br />
+            &quot;I&quot; =&gt; EnumTestType::Type2,<br />
+            _ =&gt; EnumTestType::UNKNOWN,<br />
+        };</p>
+<p>        Ok(result)<br />
+    }<br />
+}</p>
+<p>[/code]</p>

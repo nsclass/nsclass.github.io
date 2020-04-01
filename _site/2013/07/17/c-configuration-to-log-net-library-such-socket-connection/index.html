@@ -1,0 +1,36 @@
+<p>If you create a file named [application].exe.config with the following contents in directory having your application, it can make logs on any socket connection and mail operations.</p>
+<p>[code lang="c"]<br />
+&lt;configuration&gt;<br />
+    &lt;system.diagnostics&gt;<br />
+        &lt;sources&gt;<br />
+            &lt;source name=&quot;System.Net&quot;&gt;<br />
+                &lt;listeners&gt;<br />
+                    &lt;add name=&quot;System.Net&quot;/&gt;<br />
+                &lt;/listeners&gt;<br />
+            &lt;/source&gt;<br />
+            &lt;source name=&quot;System.Net.Sockets&quot;&gt;<br />
+                &lt;listeners&gt;<br />
+                    &lt;add name=&quot;System.Net&quot;/&gt;<br />
+                &lt;/listeners&gt;<br />
+            &lt;/source&gt;<br />
+	   &lt;source name=&quot;System.Net.Mail&quot;&gt;<br />
+	       &lt;listeners&gt;<br />
+	           &lt;add name=&quot;System.Net&quot;/&gt;<br />
+	       &lt;/listeners&gt;<br />
+	   &lt;/source&gt;<br />
+        &lt;/sources&gt;<br />
+        &lt;switches&gt;<br />
+            &lt;add name=&quot;System.Net&quot; value=&quot;Verbose&quot; /&gt;<br />
+            &lt;add name=&quot;System.Net.Sockets&quot; value=&quot;Verbose&quot; /&gt;<br />
+            &lt;add name=&quot;System.Net.Mail&quot; value=&quot;Verbose&quot; /&gt;<br />
+        &lt;/switches&gt;<br />
+        &lt;sharedListeners&gt;<br />
+            &lt;add name=&quot;System.Net&quot;<br />
+                type=&quot;System.Diagnostics.TextWriterTraceListener&quot;<br />
+                initializeData=&quot;Application.log&quot;<br />
+                /&gt;<br />
+        &lt;/sharedListeners&gt;<br />
+        &lt;trace autoflush=&quot;true&quot; /&gt;<br />
+    &lt;/system.diagnostics&gt;<br />
+&lt;/configuration&gt;<br />
+[/code]</p>

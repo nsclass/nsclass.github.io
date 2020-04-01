@@ -1,0 +1,9 @@
+<p>Getting days of clocks<br />
+- Linux: clock_gettime(CLOCK_REALTIME)<br />
+- Java: System.currentTimeMillis()</p>
+<p>Getting monotonic clocks<br />
+- Linux: clock_gettime(CLOCK_MONOTONIC)<br />
+- Java: System.nanoTime()</p>
+<p>It's important to know difference between days of clocks and monotonic clocks because days of clocks is measured from a certain epock(Java is using 1970 Jan 1 in UTC) it can be backward when time is adjusted by NTP.<br />
+But monotonic clocks will never go back, it will guarantee to be always forward so if application want to measure the duration of time, monotonic clocks should be used.<br />
+However it's meaningless on comparing monotonic clocks between two machines. </p>

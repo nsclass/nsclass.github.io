@@ -1,0 +1,15 @@
+<p>Creating a history with a memorySource will allow to work for Electron application with reach/router</p>
+<p>[code lang="js"]<br />
+import { Router, createMemorySource, createHistory, LocationProvider } from &quot;@reach/router&quot;</p>
+<p>let source = createMemorySource(&quot;/&quot;)<br />
+let history = createHistory(source)</p>
+<p>const App = () =&gt; {<br />
+   return (<br />
+      &lt;LocationProvider history={history}&gt;<br />
+           &lt;Router&gt;<br />
+           ....<br />
+           &lt;/Router&gt;<br />
+      &lt;/LocationProvider&gt;</p>
+<p>   )<br />
+}<br />
+[/code]</p>

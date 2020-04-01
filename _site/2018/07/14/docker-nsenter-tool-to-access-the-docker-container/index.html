@@ -1,0 +1,16 @@
+<p>Installing nsenter in /usr/loca/bin directory<br />
+[code lang="c"]<br />
+$ sudo docker run -v /usr/local/bin:/target jpetazzo/nsenter<br />
+[/code]</p>
+<p>Get the process id of container<br />
+[code lang="c"]<br />
+PID=$(docker inspect --format  &lt;container&gt;)<br />
+[/code]</p>
+<p>Launching a shell inside the container<br />
+[code lang="c"]<br />
+$ sudo nsenter --target $PID --mount --uts --ipc --net --pid<br />
+[/code]</p>
+<p>Run a ls command inside the container<br />
+[code lang="c"]<br />
+$ sudo nsenter --target $PID --mount --uts --ipc --net --pid ls<br />
+[/code]</p>

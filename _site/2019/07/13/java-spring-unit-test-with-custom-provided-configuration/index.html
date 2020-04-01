@@ -1,0 +1,27 @@
+<p>The following example will show how to define the custom Spring configuration for unit test with @ContextConfiguration annotation.<br />
+Full example can be found the below github.</p>
+<p>https://github.com/nsclass/java-timezone/blob/master/src/test/java/com/ns/timezone/javatimezone/JavaTimezoneServiceApplicationTests.java</p>
+<p>[code lang="c"]<br />
+@RunWith(SpringRunner.class)<br />
+@SpringBootTest<br />
+@ContextConfiguration(classes = JavaTimezoneServiceApplicationTests.AppConfig.class)<br />
+public class JavaTimezoneServiceApplicationTests<br />
+{<br />
+	@Configuration<br />
+	static class AppConfig<br />
+	{<br />
+		@Bean<br />
+		TimezoneService timezoneService() {<br />
+			return new TimezoneService();<br />
+		}<br />
+	}</p>
+<p>	@Autowired<br />
+	private TimezoneService timezoneService;</p>
+<p>	@Test<br />
+	public void verifyGetAllTimezoneDisplay() {<br />
+		Flux&lt;TimezoneService.TimezoneDisplayInfo&gt; timezones = timezoneService.getAllTimezoneDisplay();<br />
+		int count = timezones.collectList().block().size();<br />
+		Assert.assertEquals(627, count);<br />
+	}</p>
+<p>}<br />
+[/code]</p>

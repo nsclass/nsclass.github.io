@@ -1,0 +1,44 @@
+<p>Pseudo C++ example implementation of map function of optional in Java8 for functional style programming.</p>
+<p>[code lang="c"]<br />
+#include &lt;type_traits&gt;</p>
+<p>template &lt;class T&gt;<br />
+class Optional {<br />
+private:<br />
+    T value;<br />
+    bool hasValue;</p>
+<p>public:<br />
+    Optional(T value) : value(value), hasValue(true) {</p>
+<p>    }</p>
+<p>public:<br />
+    T getValue() const {<br />
+        return value;<br />
+    }</p>
+<p>public:<br />
+    template&lt;class F&gt;<br />
+    auto map(F&amp;&amp; f) -&gt; Optional&lt;std::decay_t&lt;decltype(f(value))&gt;&gt; {<br />
+        if (hasValue) {<br />
+            return f(value);<br />
+        }</p>
+<p>        return decltype(f(value))();<br />
+    }</p>
+<p>};<br />
+[/code]</p>
+<p>Exampe<br />
+[code lang="c"]    Optional&lt;int&gt; value(1);</p>
+<p>    auto floatValue = value.map([](int value) -&gt; float {<br />
+        return value * 10.0f;<br />
+    });</p>
+<p>    std::cout &lt;&lt; &quot;floatValue: &quot; &lt;&lt; floatValue.getValue() &lt;&lt; &quot;\n&quot;;</p>
+<p>    auto stringValue = floatValue.map([](float value) -&gt; std::string {<br />
+        return std::to_string(value);<br />
+    });</p>
+<p>    std::cout &lt;&lt; &quot;stringValue: &quot; &lt;&lt; stringValue.getValue() &lt;&lt; &quot;\n&quot;;</p>
+<p>    auto finalValue = stringValue.map([](std::string const&amp; value) -&gt; int {<br />
+        return std::stoi(value);<br />
+    }).map([](int value) -&gt; double {<br />
+        return (double)value;<br />
+    }).map([](double value) -&gt; std::string {<br />
+        std::to_string(value);<br />
+    });</p>
+<p>    std::cout &lt;&lt; &quot;finalValue: &quot; &lt;&lt; stringValue.getValue() &lt;&lt; &quot;\n&quot;;</p>
+<p>[/code]</p>

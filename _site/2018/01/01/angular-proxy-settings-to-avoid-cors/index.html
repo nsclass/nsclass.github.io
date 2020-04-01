@@ -1,0 +1,13 @@
+<p>Create a proxy.config.json<br />
+[code lang="c"]<br />
+{<br />
+  &quot;/api&quot;: {<br />
+    &quot;target&quot;: &quot;http://localhost:8080&quot;,<br />
+    &quot;secure&quot;: false<br />
+  }<br />
+}<br />
+[/code]</p>
+<p>run ng serve with a configuration file.<br />
+[code lang="c"]<br />
+ng serve --proxy-config proxy.config.json<br />
+[/code]</p>

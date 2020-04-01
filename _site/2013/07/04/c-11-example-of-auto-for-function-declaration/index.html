@@ -1,0 +1,9 @@
+<p>[code lang="cpp"]<br />
+template &lt;class T&gt;<br />
+auto add(T t, U u) -&gt; decltype(t + u)<br />
+[/code]</p>
+<p>is equal to</p>
+<p>[code lang="cpp"]<br />
+template &lt;class T&gt;<br />
+decltype((*(T*)0) + (*(U*)0)) add(T t, U u);<br />
+[/code]</p>

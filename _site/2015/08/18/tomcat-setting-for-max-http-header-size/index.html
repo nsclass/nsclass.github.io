@@ -1,0 +1,5 @@
+<p>you can specify the max HTTP header size for Tomcap by modifying the file in conf/server.xml as shown below.</p>
+<p>This example set max HTTP header size 24KB(24576)<br />
+[code lang="c"]<br />
+    &lt;Connector connectionTimeout=&quot;20000&quot; port=&quot;9080&quot; protocol=&quot;HTTP/1.1&quot; redirectPort=&quot;9443&quot; maxHttpHeaderSize=&quot;24576&quot;/&gt;<br />
+[/code]</p>

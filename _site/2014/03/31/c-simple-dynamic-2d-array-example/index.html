@@ -1,0 +1,61 @@
+<p>[code lang="c"]<br />
+#include &lt;vector&gt;<br />
+#include &lt;iostream&gt;</p>
+<p>template &lt;typename T&gt;<br />
+class Dynamic2DArray<br />
+{<br />
+	std::vector&lt;std::vector&lt;T&gt;&gt; m_data;</p>
+<p>public:<br />
+	Dynamic2DArray(int rowCount, int colCount)<br />
+	{<br />
+		m_data.resize(rowCount);<br />
+		for (auto&amp; item : m_data)<br />
+		{<br />
+			item.resize(colCount);<br />
+		}<br />
+	}</p>
+<p>	int RowCount() const<br />
+	{<br />
+		return (int)m_data.size();<br />
+	}</p>
+<p>	int ColCount() const<br />
+	{<br />
+		if (m_data.size() &gt; 0)<br />
+		{<br />
+			return (int)m_data[0].size();<br />
+		}</p>
+<p>		return 0;<br />
+	}</p>
+<p>	std::vector&lt;T&gt;&amp; operator[](int rowIdx)<br />
+	{<br />
+		if (rowIdx &gt;= 0 &amp;&amp; rowIdx &lt; (int)m_data.size())<br />
+			return m_data[rowIdx];</p>
+<p>		throw std::runtime_error(&quot;out of index&quot;);<br />
+	}</p>
+<p>	void RemoveLastRow()<br />
+	{<br />
+		if (m_data.empty() == false)<br />
+			m_data.erase(m_data.end() - 1);<br />
+	}</p>
+<p>	void RemoveLastColumn()<br />
+	{<br />
+		for (auto&amp; item : m_data)<br />
+		{<br />
+			if (item.empty() == false)<br />
+				item.erase(item.end() - 1);<br />
+		}<br />
+	}</p>
+<p>	void PrintData()<br />
+	{<br />
+		int colCount = ColCount();</p>
+<p>		for (int row = 0; row &lt; (int)m_data.size(); ++row)<br />
+		{<br />
+			for (int col = 0; col &lt; colCount; ++col)<br />
+			{<br />
+				std::cout &lt;&lt; m_data[row][col] &lt;&lt; &quot; &quot;;<br />
+			}</p>
+<p>			std::cout &lt;&lt; std::endl;<br />
+		}<br />
+	}<br />
+};<br />
+[/code]</p>

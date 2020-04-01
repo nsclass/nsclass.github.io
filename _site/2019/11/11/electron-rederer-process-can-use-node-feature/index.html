@@ -1,0 +1,23 @@
+<p>Setting nodeIntegration true in webPreferences section in main.js will allow to use Node feature in renderer process such as require. And setting webSecurity false will disable CORS in a renderer process.<br />
+[code lang="js"]<br />
+  mainWindow = new BrowserWindow({<br />
+    width: 1024,<br />
+    height: 600,<br />
+    webPreferences: {<br />
+      nodeIntegration: true,<br />
+      webSecurity: false<br />
+    }<br />
+  });<br />
+[/code]</p>
+<p>If a renderer process needs to access the self signed web API, the following code will allow to access it.<br />
+[code lang="js"]<br />
+app.on(<br />
+  &quot;certificate-error&quot;,<br />
+  (event, webContents, url, error, certificate, callback) =&gt; {<br />
+    // On certificate error we disable default behaviour (stop loading the page)<br />
+    // and we then say &quot;it is all fine - true&quot; to the callback<br />
+    event.preventDefault();<br />
+    callback(true);<br />
+  }<br />
+);<br />
+[/code]</p>

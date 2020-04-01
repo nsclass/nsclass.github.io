@@ -1,0 +1,13 @@
+<p>[code lang="c"]<br />
+using (var context = new BreakAwayContext())<br />
+{<br />
+  var davesDump = (from l in context.Lodgings<br />
+                   where l.Name == &quot;Dave's Dump&quot;<br />
+                   select l).Single();<br />
+  context.Entry(davesDump)<br />
+         .Reference(l =&gt; l.PrimaryContact)<br />
+         .Load();<br />
+  davesDump.PrimaryContact = null;<br />
+  context.SaveChanges();<br />
+}<br />
+[/code]</p>

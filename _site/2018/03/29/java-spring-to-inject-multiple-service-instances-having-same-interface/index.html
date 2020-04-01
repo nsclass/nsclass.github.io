@@ -1,0 +1,24 @@
+<p>Create service for multiple name providers<br />
+[code lang="c"]<br />
+interface NameProvider {<br />
+    String name();<br />
+}</p>
+<p>@Service<br />
+public class SomeName implement NameProvider {<br />
+    public String name() { return &quot;SomeName&quot;; }<br />
+}</p>
+<p>@Service<br />
+public class AnotherName implement NameProvider {<br />
+    public String name() { return &quot;AnotherName&quot;; }<br />
+}</p>
+<p>[/code]</p>
+<p>NameService class can inject multiple NameProviders with the following constructor injection.<br />
+[code lang="c"]<br />
+@Service<br />
+public class NameService {<br />
+    private List&lt;NameProvider&gt; nameProviders;</p>
+<p>    NameService(List&lt;NameService&gt; nameProviders) {<br />
+        this.nameProviders = nameProviders;<br />
+    }<br />
+}<br />
+[/code]</p>

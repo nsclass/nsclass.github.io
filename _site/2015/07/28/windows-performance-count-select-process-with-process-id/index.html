@@ -1,0 +1,11 @@
+<p>If you have process having same name, it will be really difficult to collect performance counter. Here is a solution for this by modifying the registry key.</p>
+<p>Click Start, click Run, type regedit, and then click OK.<br />
+Locate and then click the following registry subkey:</p>
+<p>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfProc\Performance<br />
+On the Edit menu, click New, and then click DWORD Value.<br />
+Right-click New Value #1, click Rename, and then type ProcessNameFormat to name the new value.<br />
+Right-click ProcessNameFormat, and then click Modify.<br />
+In the Data value box, type one of the following values, and then click OK:</p>
+<p>    1: Disables PID data. This value is the default value.<br />
+    2: Enables PID data.</p>
+<p>Exit Registry Editor. </p>

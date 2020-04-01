@@ -1,0 +1,9 @@
+<p>[sourcecode language="c"]<br />
+var ui = TaskScheduler.FromCurrentSynchronizationContext();<br />
+Task.Factory.ContinueWhenAll(tasks.ToArray(),<br />
+    result =&gt;<br />
+    {<br />
+        var time = watch.ElapsedMilliseconds;<br />
+        label1.Content += time.ToString();<br />
+    }, CancellationToken.None, TaskContinuationOptions.None, ui);<br />
+[/sourcecode]</p>
