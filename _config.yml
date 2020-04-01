@@ -1,1 +1,5 @@
+title: Nam Seob Seo
 theme: jekyll-theme-slate
+exclude:
+  - Gemfile
+  - Gemfile.lock
