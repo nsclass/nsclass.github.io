@@ -1,5 +1,12 @@
-## All Posts
+---
+permalink: /
+redirect:  /posts/
+layout:    redirect
+blogfeed:  true
+---
 
+<!-- 
+## All Posts
 {% for post in site.posts %}
   <article>
     <h3>
@@ -10,4 +17,4 @@
     <time datetime="{{ post.date | date: "%Y-%m-%d" }}">{{ post.date | date_to_long_string }}</time>
     {{ post.content }}
   </article>
-{% endfor %}
+{% endfor %} -->
