@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2013/05/14/c-scheduler-from-synchronization-context/"
 ---
-<pre class = "code">
+<xmp class = "code">
 var ui = TaskScheduler.FromCurrentSynchronizationContext();
 Task.Factory.ContinueWhenAll(tasks.ToArray(),
     result =>
@@ -32,4 +32,4 @@ Task.Factory.ContinueWhenAll(tasks.ToArray(),
         var time = watch.ElapsedMilliseconds;
         label1.Content += time.ToString();
     }, CancellationToken.None, TaskContinuationOptions.None, ui);
-</pre>
+</xmp

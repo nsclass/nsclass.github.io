@@ -27,26 +27,26 @@ permalink: "/2017/09/04/monoid-simple-definition-of-monoid/"
 2. Associative: Doesn't matter or operation order wit a pair.<br />
 3. Identity: There is an identity can always result the original value.</p>
 <p>Integer plus:<br />
-<pre class = "code">
+<xmp class = "code">
 1 + 2 = 3
 (1 + 2) + 3 = 1 + (2 + 3)
 1 + 0 = 1
 0 + 1 = 1
-</pre>
+</xmp
 <p>String concatenation:<br />
-<pre class = "code">
+<xmp class = "code">
 "1" + "2" = "12"
 "1" + ("2" + "3") = ("1" + "2") + "3"
 "" + "1" = "1"
 "1" + "" = "1"
-</pre>
+</xmp
 <p>Importance of Monoids:<br />
 Once it is identified that provided data is Monoid, it can be parallelized very easily.<br />
 For instance, we can calculate the number of total sold items in a day from million items.</p>
 <p>Map/Reduce<br />
-<pre class = "code">
+<xmp class = "code">
 List.reduce(+)
-</pre>
+</xmp
 <p>Log file aggregation:<br />
 From a giant log file, we can aggregate useful data such as what is the average request on Monday, Tuesday, ..., Sunday because String is Monoid.<br />
 It is important to know that Metric data should be Monoid.</p>

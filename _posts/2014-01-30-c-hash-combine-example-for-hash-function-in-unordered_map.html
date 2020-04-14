@@ -22,15 +22,15 @@ author:
   last_name: ''
 permalink: "/2014/01/30/c-hash-combine-example-for-hash-function-in-unordered_map/"
 ---
-<pre class = "code">
+<xmp class = "code">
 template <class T>
 inline void hash_combine(std::size_t & seed, const T & v)
 {
   std::hash<T> hasher;
   seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
-</pre>
-<pre class = "code">
+</xmp
+<xmp class = "code">
 class Item
 {
 public:
@@ -60,4 +60,4 @@ struct ItemHasher
     }
 };
 std::unordered_map<Item, std::string, ItemHasher> testHash;
-</pre>
+</xmp

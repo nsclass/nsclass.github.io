@@ -25,15 +25,15 @@ author:
 permalink: "/2018/05/13/java-aspect-based-to-measure-the-method-execution-time-with-annotation/"
 ---
 <p>Annotation definition.<br />
-<pre class = "code">
+<xmp class = "code">
 @Target({ElementType.METHOD,
          ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MeasureMethodTime {
 }
-</pre>
+</xmp
 <p>Aspect advice implementation.<br />
-<pre class = "code">
+<xmp class = "code">
 @Aspect
 public class MeasureMethodLogger {
     private static Logger LOGGER = LoggerFactory.getLogger(MeasureMethodLogger.class);
@@ -50,10 +50,10 @@ public class MeasureMethodLogger {
         return result;
     }
 }
-</pre>
+</xmp
 <p>Example<br />
-<pre class = "code">
+<xmp class = "code">
   @MeasureMethodTime
   public int test(int value) {
   }
-</pre>
+</xmp

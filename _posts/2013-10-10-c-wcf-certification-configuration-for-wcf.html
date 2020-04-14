@@ -23,7 +23,7 @@ author:
 permalink: "/2013/10/10/c-wcf-certification-configuration-for-wcf/"
 ---
 <p>Server side configuration<br />
-<pre class = "code">
+<xmp class = "code">
 static Binding CreateBinding()
 {
     int maxReceivedSize = Constants.MAX_PACKET_LENGTH;
@@ -62,9 +62,9 @@ public WcfServiceHost(Uri address, Binding binding, X509Certificate2 serverCert,
     m_serviceHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
     m_serviceHost.Credentials.ClientCertificate.Certificate = clientCert;
 }
-</pre>
+</xmp
 <p>Client side configuration<br />
-<pre class = "code">
+<xmp class = "code">
 // create TCP binding
 protected static NetTcpBinding CreateDefaultSecureNetTCPBinding()
 {
@@ -104,4 +104,4 @@ protected void Open(Binding binding, EndpointAddress endpointAddr, X509Certifica
     m_proxy = CreateProxy(BootstrapBinding(binding), endpointAddr, cert);
     m_proxy.Open();
 }
-</pre>
+</xmp

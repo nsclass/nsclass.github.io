@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2015/01/16/java-log4j-fixed-file-size-setting-example/"
 ---
-<pre class = "code">
+<xmp class = "code">
 log4j.rootLogger=INFO, loggerId
 log4j.appender.loggerId=org.apache.log4j.rolling.RollingFileAppender
 log4j.appender.loggerId.rollingPolicy=org.apache.log4j.rolling.FixedWindowRollingPolicy
@@ -35,4 +35,4 @@ log4j.appender.loggerId.rollingPolicy.FileNamePattern=app-%i.log.zip
 log4j.appender.loggerId.rollingPolicy.ActiveFileName=app.log
 log4j.appender.loggerId.layout=org.apache.log4j.PatternLayout
 log4j.appender.loggerId.layout.ConversionPattern=%d [%t] %-5p (%F:%L) - %m%n
-</pre>
+</xmp

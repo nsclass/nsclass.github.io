@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2014/12/08/java-a-generic-java-class-instantiation-example/"
 ---
-<pre class = "code">
+<xmp class = "code">
 public class CommandFactory {
     public static <T extends Command<R>, R extends CommandResult> T createCommand(Class<T> classObject, Object... params) {
         try {
@@ -49,4 +49,4 @@ public class TestCommand extends Command<TestCommandResult> {
     }
 }
 TestCommand testCmd = CommandFactory.<TestCommand, TestCommandResult>createCommand(TestCommand.class, 1);
-</pre>
+</xmp

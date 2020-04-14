@@ -24,17 +24,17 @@ author:
 permalink: "/2012/01/25/setting-up-boost-unit-testing-visual-studio-project/"
 ---
 <p>1. Header<br />
-<pre class = "code">
+<xmp class = "code">
 #define BOOST_TEST_MODULE TestExample
 #include
 using namespace boost::unit_test;
-</pre>
+</xmp
 2. Linked library<br />
-<pre class = "code">
+<xmp class = "code">
 libboost_unit_test_framework-vc100-mt-sgd-1_46_1.lib
-</pre>
+</xmp
 <p>3. Global fixture<br />
-<pre class = "code">
+<xmp class = "code">
 struct TestGlobalInitFixture
 {
 	TestGlobalInitFixture()
@@ -47,9 +47,9 @@ struct TestGlobalInitFixture
 	}
 };
 BOOST_GLOBAL_FIXTURE(TestGlobalInitFixture);
-</pre>
+</xmp
 <p>4. Fixture<br />
-<pre class = "code">
+<xmp class = "code">
 struct BuisnessLogicTestSuiteFixture
 {
 	BuisnessLogicTestSuiteFixture()
@@ -60,18 +60,18 @@ struct BuisnessLogicTestSuiteFixture
 	}
 };
 BOOST_FIXTURE_TEST_SUITE(TestSuite_BusinessLogic, BuisnessLogicTestSuiteFixture)
-</pre>
+</xmp
 <p>5. Test case example<br />
-<pre class = "code">
+<xmp class = "code">
 BOOST_AUTO_TEST_CASE(test_should_check_xxx)
 {
 }
-</pre>
+</xmp
 6. run a specific test case example</p>
-<pre class = "code">
+<xmp class = "code">
 --run_test=*/test_should_check_xxx
-</pre>
+</xmp
 <p>7. change log level<br />
-<pre class = "code">
+<xmp class = "code">
 --result_code=no --report_level=no
-</pre>
+</xmp

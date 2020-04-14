@@ -23,7 +23,7 @@ author:
   last_name: ''
 permalink: "/2017/12/17/java-read-csv-file-from-a-stream/"
 ---
-<pre class = "code">
+<xmp class = "code">
 try (final CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(inputStream)))) {
     String[] line = null;
     while ((line = reader.readNext()) != null) {
@@ -31,4 +31,4 @@ try (final CSVReader reader = new CSVReader(new BufferedReader(new InputStreamRe
 } catch (Exception e) {
 ...
 }
-</pre>
+</xmp

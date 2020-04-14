@@ -26,7 +26,7 @@ permalink: "/2018/02/10/java-navigablemap-for-headmap-tailmap-and-submap/"
 ---
 <p>NavigableMap collection on Java provide methods to return the view of Map on sorted order of key. The most common methods are headMap, tailMap and subMap.</p>
 <p>headMap example.<br />
-<pre class = "code">
+<xmp class = "code">
         NavigableMap<String, String> navigableMap = new TreeMap<>();
         navigableMap.put("1", "1");
         navigableMap.put("2", "2");
@@ -35,20 +35,20 @@ permalink: "/2018/02/10/java-navigablemap-for-headmap-tailmap-and-submap/"
         SortedMap<String, String> resultViewMap = navigableMap.headMap("3");
         resultViewMap.entrySet().stream().forEach(entry ->
                 System.out.println(String.format("key: %s, value: %s", entry.getKey(), entry.getValue())));
-</pre>
+</xmp
 <p>output<br />
-<pre class = "code">
+<xmp class = "code">
 key: 1, value: 1
 key: 2, value: 2
-</pre>
+</xmp
 <p>If inclusive is true on calling headMap("3", true), it will be<br />
-<pre class = "code">
+<xmp class = "code">
 key: 1, value: 1
 key: 2, value: 2
 key: 3, value: 3
-</pre>
+</xmp
 <p>tailMap example.<br />
-<pre class = "code">
+<xmp class = "code">
         NavigableMap<String, String> navigableMap = new TreeMap<>();
         navigableMap.put("1", "1");
         navigableMap.put("2", "2");
@@ -57,15 +57,15 @@ key: 3, value: 3
         SortedMap<String, String> resultViewMap = navigableMap.tailMap("3");
         resultViewMap.entrySet().stream().forEach(entry ->
                 System.out.println(String.format("key: %s, value: %s", entry.getKey(), entry.getValue())));
-</pre>
+</xmp
 <p>output<br />
-<pre class = "code">
+<xmp class = "code">
 key: 3, value: 3
 key: 4, value: 4
-</pre>
+</xmp
 <p>By default, inclusive is true on calling tailMap("3", true).</p>
 <p>subMap example<br />
-<pre class = "code">
+<xmp class = "code">
         NavigableMap<String, String> navigableMap = new TreeMap<>();
         navigableMap.put("1", "1");
         navigableMap.put("2", "2");
@@ -74,17 +74,17 @@ key: 4, value: 4
         SortedMap<String, String> resultViewMap = navigableMap.subMap("2", "4");
         resultViewMap.entrySet().stream().forEach(entry ->
                 System.out.println(String.format("key: %s, value: %s", entry.getKey(), entry.getValue())));
-</pre>
+</xmp
 <p>output<br />
-<pre class = "code">
+<xmp class = "code">
 key: 2, value: 2
 key: 3, value: 3
-</pre>
+</xmp
 <p>By default, inclusive is true for fromKey, and inclusive is false for toKey on calling subMap("2", true, "4", false)</p>
 <p>There are more available methods in NavigableMap<br />
-<pre class = "code">
+<xmp class = "code">
 descendingKeySet() and descendingMap()
 ceilingKey(), floorKey(), higherKey() and lowerKey()
 celingEntry(), floorEntry(), higherEntry(), lowerEntry()
 pollFirstEntry() and pollLastEntry()
-</pre>
+</xmp

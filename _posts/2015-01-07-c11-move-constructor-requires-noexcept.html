@@ -24,11 +24,11 @@ author:
 permalink: "/2015/01/07/c11-move-constructor-requires-noexcept/"
 ---
 <p>If a class having move constructor needs to be in the container class, it should have "noexcept" qualification. If move constructor may throw exceptions, it will try to use copy constructor instead of move constructor.</p>
-<pre class = "code">
+<xmp class = "code">
 class Manager
 {
    ...
    Manager(Manager&& other) noexcept;
    ...
 }
-</pre>
+</xmp

@@ -28,36 +28,36 @@ permalink: "/2018/02/17/fp-relationship-between-applicative-functor-and-monad/"
 <p>Pure: create a functor from value.<br />
 Apply: a function taking arguments which are a Functor having a function and a Pure. This function will return the Functor after applying the function inside the first Functor with a value from a Pure by unwrapping.</p>
 <p>Example)<br />
-<pre class = "code">
+<xmp class = "code">
 Optional<int> apply(Optional<function<int(std::string)>> f, Optional<std::string> v) {
    if (f & v) {
       return Optional<int>(*f (*v));
    }
    return Optional(nullptr);
 }
-</pre>
+</xmp
 <p>Java example)<br />
-<pre class = "code">
+<xmp class = "code">
 Optional<Integer> apply(Optional<Function<String, Integer>> f, Optional<String> v) {
    return f.flatMap(a -> v.map(a(v))
 }
-</pre>
+</xmp
 <p>Monad is the Applicative Functor with joining to flat the returning Functor.<br />
 So Monad is Applicative Functor with a join.<br />
 Join: flattening the Functor</p>
 <p>Join Example)<br />
-<pre class = "code">
+<xmp class = "code">
 Optional<int> join(Optional<Optional<int>> v) {
    if (v) {
       return *v;
    }
    return Optional<int>(nullptr);
 }
-</pre>
+</xmp
 <p>Monad C++ definition:<br />
-<pre class = "code">
+<xmp class = "code">
 template<typename T, typename U>
 Monad<U> bind(Monad<T> m, std::function<Monad<U>(T)> f) {
    return join(apply(pure(f), m));
 }
-</pre>
+</xmp

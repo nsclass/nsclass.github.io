@@ -25,7 +25,7 @@ author:
 permalink: "/2019/11/11/electron-rederer-process-can-use-node-feature/"
 ---
 <p>Setting nodeIntegration true in webPreferences section in main.js will allow to use Node feature in renderer process such as require. And setting webSecurity false will disable CORS in a renderer process.<br />
-<pre class = "code">
+<xmp class = "code">
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 600,
@@ -34,9 +34,9 @@ permalink: "/2019/11/11/electron-rederer-process-can-use-node-feature/"
       webSecurity: false
     }
   });
-</pre>
+</xmp
 <p>If a renderer process needs to access the self signed web API, the following code will allow to access it.<br />
-<pre class = "code">
+<xmp class = "code">
 app.on(
   "certificate-error",
   (event, webContents, url, error, certificate, callback) => {
@@ -46,4 +46,4 @@ app.on(
     callback(true);
   }
 );
-</pre>
+</xmp

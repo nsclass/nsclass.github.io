@@ -26,17 +26,17 @@ permalink: "/2015/11/11/java-predefined-funtional-interface/"
 ---
 <p>1. Void return and zero paramter<br />
 Use Runnable</p>
-<pre class = "code">
+<xmp class = "code">
 void runTask(Runnable task) {
   task.run();
 }
 runTask(()-> {
    // do something
 });
-</pre>
+</xmp
 <p>2. Return value and zero paramter<br />
 Use Supply</p>
-<pre class = "code">
+<xmp class = "code">
 public <T> T runTask(Supply<T> task) {
   return task.get();
 }
@@ -45,10 +45,10 @@ Integer res = runTask<Integer>(()-> {
    // do something
    return value;
 });
-</pre>
+</xmp
 <p>3. Return void and 1 parameter<br />
 Use Consumer</p>
-<pre class = "code">
+<xmp class = "code">
 public <T> void runTask(Consumer<T> task, T value) {
   return task.accept(value);
 }
@@ -56,6 +56,6 @@ Integer value;
 runTask<Integer>((Integer x)-> {
    // do something
 }, value);
-</pre>
+</xmp
 <p>4. Generic case<br />
 Use Action0, Action1, Action2 ...</p>

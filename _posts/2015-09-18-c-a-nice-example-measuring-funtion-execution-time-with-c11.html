@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2015/09/18/c-a-nice-example-measuring-funtion-execution-time-with-c11/"
 ---
-<pre class = "code">
+<xmp class = "code">
 #include <iostream>
 #include <chrono>
 template<typename TimeT = std::chrono::milliseconds>
@@ -43,4 +43,4 @@ struct measure
 int main() {
     std::cout << measure<>::execution(functor(dummy)) << std::endl;
 }
-</pre>
+</xmp

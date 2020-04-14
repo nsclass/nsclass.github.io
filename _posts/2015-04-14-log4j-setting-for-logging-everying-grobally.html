@@ -26,7 +26,7 @@ permalink: "/2015/04/14/log4j-setting-for-logging-everying-grobally/"
 ---
 <p>The following example show how to configure log4j configuration file(log4j.properties) to log all messages.<br />
 Main point is that rootLogger has to be configured.</p>
-<pre class = "code">
+<xmp class = "code">
 log4j.rootLogger=DEBUG, CONSOLE, R
 log4j.appender.R=org.apache.log4j.RollingFileAppender
 log4j.appender.R.File=e:\\tmp\\test.log
@@ -39,4 +39,4 @@ log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
 log4j.appender.CONSOLE.Threshold=DEBUG
 log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
 log4j.appender.CONSOLE.layout.ConversionPattern=- %m%n
-</pre>
+</xmp

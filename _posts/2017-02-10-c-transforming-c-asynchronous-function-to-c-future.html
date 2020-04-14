@@ -24,12 +24,12 @@ author:
 permalink: "/2017/02/10/c-transforming-c-asynchronous-function-to-c-future/"
 ---
 <p>C API definition to read data from a file in asynchronous way.<br />
-<pre class = "code">
+<xmp class = "code">
 void async_read_completed_callback(void* pUserData, char cont* pBuffer, int size);
 void async_read_data(char const* pFilePath, void(*callback)(void* pUserData, char cont* pBuffer, int size));
-</pre>
+</xmp
 <p>C++ implementation by using future<br />
-<pre class = "code">
+<xmp class = "code">
 void read_data_callback_wrapper(void* pUserData, char const* pBuffer, int size) {
     std::promise<std::vector<char>> promiseVar = std::promise<std::vector<char>> (reinterpret_cast<std::promise<std::vector<char>>*>(user_data));
     std::vector<char> data;
@@ -46,4 +46,4 @@ std::future<std::vector<char>> read_data_in_cpp(char const* pPath) {
     promiseVar.release();
     return futureRes;
 }
-</pre>
+</xmp

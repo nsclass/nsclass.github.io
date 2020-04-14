@@ -34,7 +34,7 @@ permalink: "/2013/07/26/c-example-of-optimistic-concurrency-in-entity-framework/
 http://msdn.microsoft.com/en-us/data/jj592904.aspx</p>
 <p>Just in case I would like to copy the code examples from the above page.<br />
 Resolving optimistic concurrency exceptions as client wins<br />
-<pre class = "code">
+<xmp class = "code">
 using (var context = new BloggingContext())
 {
     var blog = context.Blogs.Find(1);
@@ -56,9 +56,9 @@ using (var context = new BloggingContext())
         }
     } while (saveFailed);
 }
-</pre>
+</xmp
 Resolving optimistic concurrency exceptions with Reload (database wins)<br />
-<pre class = "code">
+<xmp class = "code">
 using (var context = new BloggingContext())
 {
     var blog = context.Blogs.Find(1);
@@ -79,9 +79,9 @@ using (var context = new BloggingContext())
         }
     } while (saveFailed);
 }
-</pre>
+</xmp
 <p>Custom resolution of optimistic concurrency exceptions<br />
-<pre class = "code">
+<xmp class = "code">
 using (var context = new BloggingContext())
 {
     var blog = context.Blogs.Find(1);
@@ -120,9 +120,9 @@ public void HaveUserResolveConcurrency(DbPropertyValues currentValues,
     // Show the current, database, and resolved values to the user and have
     // them edit the resolved values to get the correct resolution.
 }
-</pre>
+</xmp
 Custom resolution of optimistic concurrency exceptions using objects<br />
-<pre class = "code">
+<xmp class = "code">
 using (var context = new BloggingContext())
 {
     var blog = context.Blogs.Find(1);
@@ -164,4 +164,4 @@ public void HaveUserResolveConcurrency(Blog entity,
     // Show the current, database, and resolved values to the user and have
     // them update the resolved values to get the correct resolution.
 }
-</pre>
+</xmp

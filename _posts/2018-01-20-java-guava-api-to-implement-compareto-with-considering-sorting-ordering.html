@@ -25,7 +25,7 @@ author:
 permalink: "/2018/01/20/java-guava-api-to-implement-compareto-with-considering-sorting-ordering/"
 ---
 <p>Example of a chained comparison statement.<br />
-<pre class = "code">
+<xmp class = "code">
    public int compareTo(Foo that) {
      return ComparisonChain.start()
          .compare(this.aString, that.aString)
@@ -33,4 +33,4 @@ permalink: "/2018/01/20/java-guava-api-to-implement-compareto-with-considering-s
          .compare(this.anEnum, that.anEnum, Ordering.natural().nullsLast())
          .result();
    }
-</pre>
+</xmp

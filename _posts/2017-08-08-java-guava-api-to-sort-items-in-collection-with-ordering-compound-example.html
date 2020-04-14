@@ -23,8 +23,8 @@ author:
   last_name: ''
 permalink: "/2017/08/08/java-guava-api-to-sort-items-in-collection-with-ordering-compound-example/"
 ---
-<pre class = "code">
+<xmp class = "code">
 Collection.sort(list,
 	Ordering.from((Comparator<Item>) Comparator.comparingInt(item -> item.getId()))
 	.compound(Comparator.comparing(Item::getName)))
-</pre>
+</xmp

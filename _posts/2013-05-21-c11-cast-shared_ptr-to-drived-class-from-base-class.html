@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2013/05/21/c11-cast-shared_ptr-to-drived-class-from-base-class/"
 ---
-<pre class = "code">
+<xmp class = "code">
 class BaseClass : public std::enable_shared_from_this<BaseClass>
 {
   template <typename Derived>
@@ -32,4 +32,4 @@ class BaseClass : public std::enable_shared_from_this<BaseClass>
      return std::dynamic_pointer_cast<Derived>(shared_from_this());
   }
 }
-</pre>
+</xmp

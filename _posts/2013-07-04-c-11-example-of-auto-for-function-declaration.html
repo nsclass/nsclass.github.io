@@ -24,12 +24,12 @@ author:
   last_name: ''
 permalink: "/2013/07/04/c-11-example-of-auto-for-function-declaration/"
 ---
-<pre class = "code">
+<xmp class = "code">
 template <class T>
 auto add(T t, U u) -> decltype(t + u)
-</pre>
+</xmp
 <p>is equal to</p>
-<pre class = "code">
+<xmp class = "code">
 template <class T>
 decltype((*(T*)0) + (*(U*)0)) add(T t, U u);
-</pre>
+</xmp

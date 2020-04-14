@@ -31,18 +31,18 @@ permalink: "/2013/07/08/c-dynamic-keyword/"
 <p>.NET 4.0(vs2010) introduced the dynamic feature to support better integration of dynamic language such as Python, Ruby etc.<br />
 Example)<br />
 Without dynamic feature.<br />
-<pre class = "code">
+<xmp class = "code">
 object calc = GetCalculator();
 Type calcType = calc.GetType();
 object res = calcType.InvokeMember("Add",
     BindingFlags.InvokeMethod, null,
     new object[] { 10, 20 });
 int sum = Convert.ToInt32(res);
-</pre>
+</xmp
 With dynamic feature.<br />
-<pre class = "code">
+<xmp class = "code">
 dynamic calc = GetCalculator();
 int sum = calc.Add(10, 20);
-</pre>
+</xmp
 <p>You can find more information from the following URL.<br />
 http://dlr.codeplex.com/</p>

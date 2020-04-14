@@ -24,15 +24,15 @@ author:
 permalink: "/2016/07/18/c11-enum-class-with-underlying-type/"
 ---
 <p>C++11 allows us to specify the underlying type for enum class as shown below. If specified value is not in the range of the underlying type, compiler can catch error as well.</p>
-<pre class = "code">
+<xmp class = "code">
 enum class Color : unsigned char
 {
     Red = 0x01,
     Green = 0x02,
     Blue = 0x04
 }
-</pre>
+</xmp
 <p>Getting underlying type from enum type<br />
-<pre class = "code">
+<xmp class = "code">
 std::underlying_type<Color>::type value;
-</pre>
+</xmp

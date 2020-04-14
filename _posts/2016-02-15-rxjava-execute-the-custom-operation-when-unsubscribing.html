@@ -24,7 +24,7 @@ author:
 permalink: "/2016/02/15/rxjava-execute-the-custom-operation-when-unsubscribing/"
 ---
 <p>The following example will show how to perform the custom operation when unsubscribing</p>
-<pre class = "code">
+<xmp class = "code">
 Service service = new Service();
 Observable<String> ob = Observable.create(subscriber -> {
           subscriber.onNext("test");
@@ -35,4 +35,4 @@ Observable<String> ob = Observable.create(subscriber -> {
       }));
     }
 );
-</pre>
+</xmp

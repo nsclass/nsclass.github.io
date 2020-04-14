@@ -22,7 +22,7 @@ author:
   last_name: ''
 permalink: "/2013/03/05/simple-makefile-example-for-mpi/"
 ---
-<pre class = "code">
+<xmp class = "code">
 CC=mpicxx
 CFLAGS=-c -Wall
 LDFLAGS=
@@ -33,7 +33,7 @@ all: $(SOURCES) $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 .cpp.o:
-	$(CC) $(CFLAGS) $&lt; -o $@
+	$(CC) $(CFLAGS) $< -o $@
 clean:
 	rm -rf *.o $(EXECUTABLE)
-</pre>
+</xmp

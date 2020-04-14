@@ -26,7 +26,7 @@ permalink: "/2014/11/05/tomcat-logging-all-http-traffic-with-logback/"
    logback-core-1.1.2.jar</p>
 <p>2. Create a logback-access.xml in a tomcat\conf foler<br />
 Example)<br />
-<pre class = "code">
+<xmp class = "code">
 <configuration>
   <appender name="cgFileRoller" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>c:/logs/logback.log</file>
@@ -39,10 +39,10 @@ Example)<br />
   </appender>
   <appender-ref ref="cgFileRoller" />
 </configuration>
-</pre>
+</xmp
 <p>3. Modify server.xml in a tomcat/conf folder<br />
 Example)<br />
-<pre class = "code">
+<xmp class = "code">
       <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true">
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
@@ -52,13 +52,13 @@ Example)<br />
         <!-- Access log processes all example.
              Documentation at: /docs/config/valve.html
              Note: The pattern used is equivalent to using pattern="common" -->
-        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log." suffix=".txt"/>
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t "%r" %s %b" prefix="localhost_access_log." suffix=".txt"/>
         <Valve className="ch.qos.logback.access.tomcat.LogbackValve"/>
 </Host>
-</pre>
+</xmp
 <p>4. Modify web.xml to register filer<br />
 Example)<br />
-<pre class = "code">
+<xmp class = "code">
 <filter>
   <filter-name>TeeFilter</filter-name>
   <filter-class>ch.qos.logback.access.servlet.TeeFilter</filter-class>
@@ -67,4 +67,4 @@ Example)<br />
   <filter-name>TeeFilter</filter-name>
   <url-pattern>/*</url-pattern>
 </filter-mapping>
-</pre>
+</xmp

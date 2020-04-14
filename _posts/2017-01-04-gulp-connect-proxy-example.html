@@ -27,7 +27,7 @@ author:
 permalink: "/2017/01/04/gulp-connect-proxy-example/"
 ---
 <p>It will avoid CORS problem during development.</p>
-<pre class = "code">
+<xmp class = "code">
 var Proxy = require('gulp-connect-proxy');
 ...
 // A local web server for dev convenience
@@ -42,13 +42,13 @@ gulp.task("server", function() {
 	  }
 	});
 });
-</pre>
+</xmp
 <p>Example of calling API<br />
-<pre class = "code">
+<xmp class = "code">
 return $http.get(
   'http://localhost:22532/proxy/external.host.com:8080/api/myservice/myid', 
   { params: { metricSelector: "hello2"} }
 );
-</pre>
+</xmp
 <p>Gulp connect web site</p>
 <p>https://www.npmjs.com/package/gulp-connect-proxy</p>

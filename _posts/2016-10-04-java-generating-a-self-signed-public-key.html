@@ -23,7 +23,7 @@ author:
   last_name: ''
 permalink: "/2016/10/04/java-generating-a-self-signed-public-key/"
 ---
-<pre class = "code">
+<xmp class = "code">
 1. Generate self-signed public key
 $JAVA_HOME/bin/keytool -genkey -alias test_alias --keyalg RSA -keystore test_key.jks
 -keysize 2048 -dname "CN=Test, OU=PAV, O=PROS, L=HOU, ST=TX, C=US" -keypass test_password
@@ -34,4 +34,4 @@ $JAVA_HOME/bin/keytool -certreq -alias certalias -file test_cert_req.csr -keysto
 3. Importing a root certificate files
 $JAVA_HOME/bin/keytool -import -v -trustcacerts -alias ExternalCARoot -file Test_CARoot.crt
 -keystore test_key.jks -storepass test_password
-</pre>
+</xmp

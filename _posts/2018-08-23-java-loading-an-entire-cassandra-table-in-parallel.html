@@ -26,7 +26,7 @@ permalink: "/2018/08/23/java-loading-an-entire-cassandra-table-in-parallel/"
 ---
 <p>Sometimes, it is required to load all rows in the Cassandra table but it is very slow if loading is performed by a single thread.<br />
 Let's say we have the following table in Cassandra<br />
-<pre class = "code">
+<xmp class = "code">
 CREATE TABLE users (
   userid text PRIMARY KEY,
   first_name text,
@@ -35,19 +35,19 @@ CREATE TABLE users (
   top_scores list<int>,
   todo map<timestamp, text>
 );
-</pre>
+</xmp
 <p>If we load the entire table with the following CQL syntax in a single thread, it can take several hours if number of rows is 10 million.<br />
-<pre class = "code">
+<xmp class = "code">
 select * from users;
-</pre>
+</xmp
 <p>Fortunately, there is a way to load an entire table in parallel. Astyanax has a class called AllRowsReader which is showing how to load entire table in parallel.<br />
 The basic idea of this code is to use token() keyword on selecting data. Since Cassandra is using hashing mechanism on distributing data in multiple hosts. If we know the token range, Cassandra is allow to load data in parallel.<br />
 For example, the below CQL syntax will load users rows between 0 and 10000 but this token value will be determined by the configured current partitioner in Cassandra.<br />
-<pre class = "code">
+<xmp class = "code">
 select * from users where token(userid) >= 0 and token(userid) <= 10000;
-</pre>
+</xmp
 <p>The below code is summarizing this idea.<br />
-<pre class = "code">
+<xmp class = "code">
 public class TokenRange
 {
     private final BigInteger beginToken;
@@ -66,14 +66,14 @@ public class TokenRange
         return endToken;
     }
 }
-</pre>
-<pre class = "code">
+</xmp
+<xmp class = "code">
 public interface TokenPartitioner
 {
     List<TokenRange> splitTokenRange(int count);
 }
-</pre>
-<pre class = "code">
+</xmp
+<xmp class = "code">
 public class MurmurPartitioner implements TokenPartitioner
 {
     private static final BigInteger MIN = new BigInteger(Long.toString(Long.MIN_VALUE));
@@ -108,8 +108,8 @@ public class MurmurPartitioner implements TokenPartitioner
         return tokens;
     }
 }
-</pre>
-<pre class = "code">
+</xmp
+<xmp class = "code">
 public class AllRowReader<T>
 {
     private static final Logger log = LoggerFactory.getLogger(AllRowCqlReader.class);
@@ -286,4 +286,4 @@ public class AllRowReader<T>
         };
     }
 }
-</pre>
+</xmp
