@@ -24,22 +24,22 @@ author:
 permalink: "/2014/03/06/c11-default-member-initialization/"
 ---
 <p>You can initialize the member variable as shown the following in C++11. It will save a lot of typing when you have many constructors.</p>
-<p>[code lang="c"]<br />
-enum class BuildingType<br />
-{<br />
-    None,<br />
-    Resident,<br />
-    Commercial,<br />
-};</p>
-<p>class Building<br />
-{<br />
-    BuildingType m_type { BuildingType::None };<br />
-    std::string m_address { &quot;None&quot; };<br />
-    int m_roomCount { 0 };<br />
-    std::string m_name;</p>
-<p>    Building(std::string name)<br />
-     : m_name(std::move(name))<br />
-    {<br />
-    }<br />
-};</p>
-<p>[/code]</p>
+<pre class = "code">
+enum class BuildingType
+{
+    None,
+    Resident,
+    Commercial,
+};
+class Building
+{
+    BuildingType m_type { BuildingType::None };
+    std::string m_address { "None" };
+    int m_roomCount { 0 };
+    std::string m_name;
+    Building(std::string name)
+     : m_name(std::move(name))
+    {
+    }
+};
+</pre>

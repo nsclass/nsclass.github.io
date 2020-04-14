@@ -25,12 +25,12 @@ author:
   last_name: ''
 permalink: "/2013/06/11/udp-multicast-selecting-a-network-adapter-interface-on-sending-a-multicast-message/"
 ---
-<p>[sourcecode language="c"]<br />
-bool EC_SetMulticastInterfaceIndex(SOCKET socket, bool IPv6, int index)<br />
-{<br />
-    if (IPv6) {<br />
-        return setsockopt(socket, IPPROTO_IPV6, IPV6_MULTICAST_IF, (char const*)&amp;index, sizeof(index)) == 0;<br />
-    } else<br />
-        return setsockopt(socket, IPPROTO_IP, IP_MULTICAST_IF, (char const*)&amp;index, sizeof(index)) == 0;<br />
-}<br />
-[/sourcecode]</p>
+<pre class = "code">
+bool EC_SetMulticastInterfaceIndex(SOCKET socket, bool IPv6, int index)
+{
+    if (IPv6) {
+        return setsockopt(socket, IPPROTO_IPV6, IPV6_MULTICAST_IF, (char const*)&index, sizeof(index)) == 0;
+    } else
+        return setsockopt(socket, IPPROTO_IP, IP_MULTICAST_IF, (char const*)&index, sizeof(index)) == 0;
+}
+</pre>

@@ -30,17 +30,17 @@ author:
 permalink: "/2019/09/30/parcel-proxy-setting/"
 ---
 <p>In 'package.json', you can defined the proxy table.<br />
-[code lang="c"]<br />
-{<br />
-  &quot;proxy&quot;: {<br />
-    &quot;/api&quot;: {<br />
-      &quot;target&quot;: &quot;http://localhost:8000&quot;<br />
-    },<br />
-    &quot;/authorization/login&quot;: {<br />
-      &quot;target&quot;: &quot;https://example.com/login&quot;,<br />
-      &quot;secure&quot;: true<br />
-    }<br />
-  }<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+{
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:8000"
+    },
+    "/authorization/login": {
+      "target": "https://example.com/login",
+      "secure": true
+    }
+  }
+}
+</pre>
 <p>https://github.com/parcel-bundler/parcel/pull/3281</p>

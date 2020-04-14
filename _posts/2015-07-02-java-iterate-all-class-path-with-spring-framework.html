@@ -24,28 +24,28 @@ author:
 permalink: "/2015/07/02/java-iterate-all-class-path-with-spring-framework/"
 ---
 <p>The following code will iterate all available classpath in the application.</p>
-<p>[code lang="c"]<br />
-try {<br />
-    Enumeration&lt;URL&gt; resources = ApplicationContextProvider.getApplicationContext().getClassLoader().getResources(&quot;&quot;);<br />
-    while (resources.hasMoreElements()) {<br />
-        URL url = resources.nextElement();<br />
-        String path = url.getPath();<br />
-    }<br />
-} catch (Exception e) {</p>
-<p>}<br />
-[/code]</p>
+<pre class = "code">
+try {
+    Enumeration<URL> resources = ApplicationContextProvider.getApplicationContext().getClassLoader().getResources("");
+    while (resources.hasMoreElements()) {
+        URL url = resources.nextElement();
+        String path = url.getPath();
+    }
+} catch (Exception e) {
+}
+</pre>
 <p>Iterate classpath for the jar application<br />
-[code lang="c"]<br />
-    private static void iterateClassPath() {<br />
-        try {<br />
-            Enumeration&lt;URL&gt; resources = MainApp.class.getClassLoader().getResources(&quot;&quot;);<br />
-            while (resources.hasMoreElements()) {<br />
-                URL url = resources.nextElement();<br />
-                String path = url.getPath();<br />
-                System.out.println(&quot;Classpath: &quot; + path);<br />
-            }<br />
-        } catch (Exception e) {<br />
-            System.out.println(&quot;Failed to get class path: &quot; + e.getMessage());<br />
-        }<br />
-    }<br />
-[/code]</p>
+<pre class = "code">
+    private static void iterateClassPath() {
+        try {
+            Enumeration<URL> resources = MainApp.class.getClassLoader().getResources("");
+            while (resources.hasMoreElements()) {
+                URL url = resources.nextElement();
+                String path = url.getPath();
+                System.out.println("Classpath: " + path);
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to get class path: " + e.getMessage());
+        }
+    }
+</pre>

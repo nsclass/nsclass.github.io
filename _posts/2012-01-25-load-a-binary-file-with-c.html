@@ -23,20 +23,20 @@ author:
   last_name: ''
 permalink: "/2012/01/25/load-a-binary-file-with-c/"
 ---
-<p>[sourcecode language="c"]<br />
-bool LoadBinaryFile(std::wstring const&amp; path, std::vector&lt;unsigned char&gt;&amp; data)<br />
-{<br />
-	try<br />
-	{<br />
-		std::basic_ifstream&lt;unsigned char, std::char_traits&gt; ifs(path, std::ios::binary);<br />
-		std::istreambuf_iterator streamIter(ifs);</p>
-<p>		data.clear();<br />
-		std::copy(streamIter, std::istreambuf_iterator(), std::back_inserter(data));<br />
-		return true;<br />
-	}<br />
-	catch(...)<br />
-	{<br />
-	}</p>
-<p>	return false;<br />
-}<br />
-[/sourcecode]</p>
+<pre class = "code">
+bool LoadBinaryFile(std::wstring const& path, std::vector<unsigned char>& data)
+{
+	try
+	{
+		std::basic_ifstream<unsigned char, std::char_traits> ifs(path, std::ios::binary);
+		std::istreambuf_iterator streamIter(ifs);
+		data.clear();
+		std::copy(streamIter, std::istreambuf_iterator(), std::back_inserter(data));
+		return true;
+	}
+	catch(...)
+	{
+	}
+	return false;
+}
+</pre>

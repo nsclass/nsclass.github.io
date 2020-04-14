@@ -34,134 +34,134 @@ permalink: "/2013/07/26/c-example-of-optimistic-concurrency-in-entity-framework/
 http://msdn.microsoft.com/en-us/data/jj592904.aspx</p>
 <p>Just in case I would like to copy the code examples from the above page.<br />
 Resolving optimistic concurrency exceptions as client wins<br />
-[code lang="c"]<br />
-using (var context = new BloggingContext())<br />
-{<br />
-    var blog = context.Blogs.Find(1);<br />
-    blog.Name = &quot;The New ADO.NET Blog&quot;;</p>
-<p>    bool saveFailed;<br />
-    do<br />
-    {<br />
-        saveFailed = false;<br />
-        try<br />
-        {<br />
-            context.SaveChanges();<br />
-        }<br />
-        catch (DbUpdateConcurrencyException ex)<br />
-        {<br />
-            saveFailed = true;</p>
-<p>            // Update original values from the database<br />
-            var entry = ex.Entries.Single();<br />
-            entry.OriginalValues.SetValues(entry.GetDatabaseValues());<br />
-        }</p>
-<p>    } while (saveFailed);<br />
-}<br />
-[/code]<br />
+<pre class = "code">
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Update original values from the database
+            var entry = ex.Entries.Single();
+            entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+        }
+    } while (saveFailed);
+}
+</pre>
 Resolving optimistic concurrency exceptions with Reload (database wins)<br />
-[code lang="c"]<br />
-using (var context = new BloggingContext())<br />
-{<br />
-    var blog = context.Blogs.Find(1);<br />
-    blog.Name = &quot;The New ADO.NET Blog&quot;;</p>
-<p>    bool saveFailed;<br />
-    do<br />
-    {<br />
-        saveFailed = false;</p>
-<p>        try<br />
-        {<br />
-            context.SaveChanges();<br />
-        }<br />
-        catch (DbUpdateConcurrencyException ex)<br />
-        {<br />
-            saveFailed = true;</p>
-<p>            // Update the values of the entity that failed to save from the store<br />
-            ex.Entries.Single().Reload();<br />
-        }</p>
-<p>    } while (saveFailed);<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Update the values of the entity that failed to save from the store
+            ex.Entries.Single().Reload();
+        }
+    } while (saveFailed);
+}
+</pre>
 <p>Custom resolution of optimistic concurrency exceptions<br />
-[code lang="c"]<br />
-using (var context = new BloggingContext())<br />
-{<br />
-    var blog = context.Blogs.Find(1);<br />
-    blog.Name = &quot;The New ADO.NET Blog&quot;;</p>
-<p>    bool saveFailed;<br />
-    do<br />
-    {<br />
-        saveFailed = false;<br />
-        try<br />
-        {<br />
-            context.SaveChanges();<br />
-        }<br />
-        catch (DbUpdateConcurrencyException ex)<br />
-        {<br />
-            saveFailed = true;</p>
-<p>            // Get the current entity values and the values in the database<br />
-            var entry = ex.Entries.Single();<br />
-            var currentValues = entry.CurrentValues;<br />
-            var databaseValues = entry.GetDatabaseValues();</p>
-<p>            // Choose an initial set of resolved values. In this case we<br />
-            // make the default be the values currently in the database.<br />
-            var resolvedValues = databaseValues.Clone();</p>
-<p>            // Have the user choose what the resolved values should be<br />
-            HaveUserResolveConcurrency(currentValues, databaseValues, resolvedValues);</p>
-<p>            // Update the original values with the database values and<br />
-            // the current values with whatever the user choose.<br />
-            entry.OriginalValues.SetValues(databaseValues);<br />
-            entry.CurrentValues.SetValues(resolvedValues);<br />
-        }<br />
-    } while (saveFailed);<br />
-}</p>
-<p>public void HaveUserResolveConcurrency(DbPropertyValues currentValues,<br />
-                                       DbPropertyValues databaseValues,<br />
-                                       DbPropertyValues resolvedValues)<br />
-{<br />
-    // Show the current, database, and resolved values to the user and have<br />
-    // them edit the resolved values to get the correct resolution.<br />
-}<br />
-[/code]<br />
+<pre class = "code">
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Get the current entity values and the values in the database
+            var entry = ex.Entries.Single();
+            var currentValues = entry.CurrentValues;
+            var databaseValues = entry.GetDatabaseValues();
+            // Choose an initial set of resolved values. In this case we
+            // make the default be the values currently in the database.
+            var resolvedValues = databaseValues.Clone();
+            // Have the user choose what the resolved values should be
+            HaveUserResolveConcurrency(currentValues, databaseValues, resolvedValues);
+            // Update the original values with the database values and
+            // the current values with whatever the user choose.
+            entry.OriginalValues.SetValues(databaseValues);
+            entry.CurrentValues.SetValues(resolvedValues);
+        }
+    } while (saveFailed);
+}
+public void HaveUserResolveConcurrency(DbPropertyValues currentValues,
+                                       DbPropertyValues databaseValues,
+                                       DbPropertyValues resolvedValues)
+{
+    // Show the current, database, and resolved values to the user and have
+    // them edit the resolved values to get the correct resolution.
+}
+</pre>
 Custom resolution of optimistic concurrency exceptions using objects<br />
-[code lang="c"]<br />
-using (var context = new BloggingContext())<br />
-{<br />
-    var blog = context.Blogs.Find(1);<br />
-    blog.Name = &quot;The New ADO.NET Blog&quot;;</p>
-<p>    bool saveFailed;<br />
-    do<br />
-    {<br />
-        saveFailed = false;<br />
-        try<br />
-        {<br />
-            context.SaveChanges();<br />
-        }<br />
-        catch (DbUpdateConcurrencyException ex)<br />
-        {<br />
-            saveFailed = true;</p>
-<p>            // Get the current entity values and the values in the database<br />
-            // as instances of the entity type<br />
-            var entry = ex.Entries.Single();<br />
-            var databaseValues = entry.GetDatabaseValues();<br />
-            var databaseValuesAsBlog = (Blog)databaseValues.ToObject();</p>
-<p>            // Choose an initial set of resolved values. In this case we<br />
-            // make the default be the values currently in the database.<br />
-            var resolvedValuesAsBlog = (Blog)databaseValues.ToObject();</p>
-<p>            // Have the user choose what the resolved values should be<br />
-            HaveUserResolveConcurrency((Blog)entry.Entity,<br />
-                                       databaseValuesAsBlog,<br />
-                                       resolvedValuesAsBlog);</p>
-<p>            // Update the original values with the database values and<br />
-            // the current values with whatever the user choose.<br />
-            entry.OriginalValues.SetValues(databaseValues);<br />
-            entry.CurrentValues.SetValues(resolvedValuesAsBlog);<br />
-        }</p>
-<p>    } while (saveFailed);<br />
-}</p>
-<p>public void HaveUserResolveConcurrency(Blog entity,<br />
-                                       Blog databaseValues,<br />
-                                       Blog resolvedValues)<br />
-{<br />
-    // Show the current, database, and resolved values to the user and have<br />
-    // them update the resolved values to get the correct resolution.<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Get the current entity values and the values in the database
+            // as instances of the entity type
+            var entry = ex.Entries.Single();
+            var databaseValues = entry.GetDatabaseValues();
+            var databaseValuesAsBlog = (Blog)databaseValues.ToObject();
+            // Choose an initial set of resolved values. In this case we
+            // make the default be the values currently in the database.
+            var resolvedValuesAsBlog = (Blog)databaseValues.ToObject();
+            // Have the user choose what the resolved values should be
+            HaveUserResolveConcurrency((Blog)entry.Entity,
+                                       databaseValuesAsBlog,
+                                       resolvedValuesAsBlog);
+            // Update the original values with the database values and
+            // the current values with whatever the user choose.
+            entry.OriginalValues.SetValues(databaseValues);
+            entry.CurrentValues.SetValues(resolvedValuesAsBlog);
+        }
+    } while (saveFailed);
+}
+public void HaveUserResolveConcurrency(Blog entity,
+                                       Blog databaseValues,
+                                       Blog resolvedValues)
+{
+    // Show the current, database, and resolved values to the user and have
+    // them update the resolved values to get the correct resolution.
+}
+</pre>

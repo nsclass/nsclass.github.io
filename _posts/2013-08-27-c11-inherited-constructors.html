@@ -25,17 +25,17 @@ author:
 permalink: "/2013/08/27/c11-inherited-constructors/"
 ---
 <p>Now C++11 allow that derived class can inherit the constructors of base class as the following.</p>
-<p>[code lang="c"]<br />
-class A<br />
-{<br />
-public:<br />
-    A(int a) {}<br />
-    A(std::string const&amp; str) {}<br />
-    A(double a, int f) {}<br />
-};</p>
-<p>class B : public A<br />
-{<br />
-    using base::A;<br />
-};<br />
-[/code]</p>
+<pre class = "code">
+class A
+{
+public:
+    A(int a) {}
+    A(std::string const& str) {}
+    A(double a, int f) {}
+};
+class B : public A
+{
+    using base::A;
+};
+</pre>
 <p>However, you need to be careful when if B has any member variable, they will be initialized with random values unless you initialize specifically.</p>

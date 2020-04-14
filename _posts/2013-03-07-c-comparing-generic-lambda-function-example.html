@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2013/03/07/c-comparing-generic-lambda-function-example/"
 ---
-<p>[sourcecode language="c"]<br />
-var comparer = Comparer&lt;T&gt;‌.Default;<br />
-Func&lt;T,T,T&gt; minOf = (‌x, y) =&gt; comparer‌.Compare(‌x, y) &lt; 0 ? x: y;</p>
-<p>[/sourcecode]</p>
+<pre class = "code">
+var comparer = Comparer<T>‌.Default;
+Func<T,T,T> minOf = (‌x, y) => comparer‌.Compare(‌x, y) < 0 ? x: y;
+</pre>

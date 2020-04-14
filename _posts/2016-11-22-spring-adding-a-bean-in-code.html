@@ -23,8 +23,8 @@ author:
   last_name: ''
 permalink: "/2016/11/22/spring-adding-a-bean-in-code/"
 ---
-<p>[code lang="c"]<br />
-    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();<br />
-    Set&lt;int&gt; sets = new Set&lt;int&gt;();<br />
-    ctx.getBeanFactory().registerSingleton(&quot;test&quot;, set);<br />
-[/code]</p>
+<pre class = "code">
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+    Set<int> sets = new Set<int>();
+    ctx.getBeanFactory().registerSingleton("test", set);
+</pre>

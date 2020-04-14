@@ -25,22 +25,22 @@ author:
 permalink: "/2019/05/17/kafka-docker-compose-example-for-kafka/"
 ---
 <p>Kafka docker compose example. Please set value of KAFKA_ADVERTISED_HOST_NAME for local host IP address.</p>
-<p>[code lang="c"]<br />
-version: '2.1'</p>
-<p>services:<br />
-  zookeeper:<br />
-    image: wurstmeister/zookeeper:3.4.6<br />
-    ports:<br />
-      - &quot;2181:2181&quot;</p>
-<p>  kafka:<br />
-    image: wurstmeister/kafka:2.12-2.2.0<br />
-    ports:<br />
-      - '9092:9092'<br />
-    tmpfs:<br />
-      - /kafka/:rw<br />
-    depends_on:<br />
-      - zookeeper<br />
-    environment:<br />
-      KAFKA_ADVERTISED_HOST_NAME: [HOST_IPADDRESS]<br />
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'<br />
-[/code]</p>
+<pre class = "code">
+version: '2.1'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka:2.12-2.2.0
+    ports:
+      - '9092:9092'
+    tmpfs:
+      - /kafka/:rw
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: [HOST_IPADDRESS]
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+</pre>

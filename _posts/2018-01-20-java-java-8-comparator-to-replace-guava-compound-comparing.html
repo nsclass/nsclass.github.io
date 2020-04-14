@@ -25,15 +25,15 @@ author:
 permalink: "/2018/01/20/java-java-8-comparator-to-replace-guava-compound-comparing/"
 ---
 <p>Guava example<br />
-[code lang="c"]<br />
-Collection.sort(list,<br />
-    Ordering.from((Comparator&lt;Item&gt;) Comparator.comparingInt(item -&gt; item.getId()))<br />
-    .compound(Comparator.comparing(Item::getName)))<br />
-[/code]</p>
+<pre class = "code">
+Collection.sort(list,
+    Ordering.from((Comparator<Item>) Comparator.comparingInt(item -> item.getId()))
+    .compound(Comparator.comparing(Item::getName)))
+</pre>
 <p>Java 8 example<br />
-[code lang="c"]<br />
-Comparator&lt;Item&gt; compoundComparator<br />
-      = Comparator.comparingInt(Item::getId)<br />
-        .thenComparing(Item::getName);</p>
-<p>Collection.sort(list, compoundComparator)<br />
-[/code]</p>
+<pre class = "code">
+Comparator<Item> compoundComparator
+      = Comparator.comparingInt(Item::getId)
+        .thenComparing(Item::getName);
+Collection.sort(list, compoundComparator)
+</pre>

@@ -29,15 +29,15 @@ permalink: "/2017/10/07/scala-tilde-arrow-explanation/"
 ---
 <p>"~&gt;" is a place holder for type.<br />
 Main reason to use "~&gt;" is to make readable on type A goes to type B. This is possible because Scala allow to express in in-fix notation for pre-fix expression.</p>
-<p>[code lang="c"]<br />
-trait Order[~&gt;[_,_]] {<br />
-   def sort[A,B](f: A ~&gt; B): B<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+trait Order[~>[_,_]] {
+   def sort[A,B](f: A ~> B): B
+}
+</pre>
 <p>is equivalent to</p>
-<p>[code lang="c"]<br />
-trait Order[M[_,_]] {<br />
-   def sort[A,B](f: M[A, B]): B<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+trait Order[M[_,_]] {
+   def sort[A,B](f: M[A, B]): B
+}
+</pre>
 <p>https://stackoverflow.com/questions/10085951/scala-tilde-greater-than-operator</p>

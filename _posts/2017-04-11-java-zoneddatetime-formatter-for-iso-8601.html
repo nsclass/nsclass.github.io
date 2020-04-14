@@ -24,23 +24,23 @@ author:
 permalink: "/2017/04/11/java-zoneddatetime-formatter-for-iso-8601/"
 ---
 <p>Parse example<br />
-[code lnag="c"]<br />
-DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();<br />
-DateTimeFormatter formatter = builder<br />
-        .parseCaseInsensitive()<br />
-        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)<br />
-        .appendOffsetId()<br />
-        .toFormatter();</p>
-<p>ZonedDateTime.parse(&quot;2015-08-18T00:00+01:00&quot;, formatter);<br />
-[/code]</p>
+<pre class = "code">
+DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();
+DateTimeFormatter formatter = builder
+        .parseCaseInsensitive()
+        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        .appendOffsetId()
+        .toFormatter();
+ZonedDateTime.parse("2015-08-18T00:00+01:00", formatter);
+</pre>
 <p>toString example<br />
-[code lang="c"]<br />
-DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();<br />
-DateTimeFormatter formatter = builder<br />
-        .parseCaseInsensitive()<br />
-        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)<br />
-        .appendOffsetId()<br />
-        .toFormatter();</p>
-<p>ZonedDateTime zoneTime = new ZonedDatTime();<br />
-String date = zoneTime.format(formatter);<br />
-[/code]</p>
+<pre class = "code">
+DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();
+DateTimeFormatter formatter = builder
+        .parseCaseInsensitive()
+        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        .appendOffsetId()
+        .toFormatter();
+ZonedDateTime zoneTime = new ZonedDatTime();
+String date = zoneTime.format(formatter);
+</pre>

@@ -24,12 +24,12 @@ author:
   last_name: ''
 permalink: "/2013/07/04/c-11-example-of-auto-for-function-declaration/"
 ---
-<p>[code lang="cpp"]<br />
-template &lt;class T&gt;<br />
-auto add(T t, U u) -&gt; decltype(t + u)<br />
-[/code]</p>
+<pre class = "code">
+template <class T>
+auto add(T t, U u) -> decltype(t + u)
+</pre>
 <p>is equal to</p>
-<p>[code lang="cpp"]<br />
-template &lt;class T&gt;<br />
-decltype((*(T*)0) + (*(U*)0)) add(T t, U u);<br />
-[/code]</p>
+<pre class = "code">
+template <class T>
+decltype((*(T*)0) + (*(U*)0)) add(T t, U u);
+</pre>

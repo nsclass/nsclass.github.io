@@ -24,41 +24,41 @@ author:
   last_name: ''
 permalink: "/2019/02/05/rust-enum-serialization-example/"
 ---
-<p>[code lang="c"]</p>
-<p>use serde::ser::{ Serialize, Serializer };<br />
-use serde::de::{ Deserialize, Deserializer };</p>
-<p>pub enum EnumTestType {<br />
-    Type1,<br />
-    Type2,<br />
-    UNKNOWN,<br />
-}</p>
-<p>impl EnumTestType {<br />
-    pub fn value(&amp;self) -&gt; &amp;'static str {<br />
-        match *self {<br />
-            EnumTestType::Type1 =&gt; &quot;T1&quot;,<br />
-            EnumTestType::Type2 =&gt; &quot;T2&quot;,<br />
-            EnumTestType::UNKNOWN =&gt; &quot;?&quot;,<br />
-        }<br />
-    }<br />
-}</p>
-<p>impl Serialize for EnumTestType {<br />
-    fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;<br />
-        where S: Serializer,<br />
-    {<br />
-        serializer.serialize_str(self.value())<br />
-    }<br />
-}</p>
-<p>impl &lt;'a&gt; Deserialize&lt;'a&gt; for EnumTestType {<br />
-    fn deserialize&lt;D&gt;(deserializer: D) -&gt; Result&lt;Self, D::Error&gt;<br />
-        where D: Deserializer&lt;'a&gt;,<br />
-    {<br />
-        let s = String::deserialize(deserializer)?;<br />
-        let result = match s.as_str() {<br />
-            &quot;D&quot; =&gt; EnumTestType::Type1,<br />
-            &quot;I&quot; =&gt; EnumTestType::Type2,<br />
-            _ =&gt; EnumTestType::UNKNOWN,<br />
-        };</p>
-<p>        Ok(result)<br />
-    }<br />
-}</p>
-<p>[/code]</p>
+<pre class = "code">
+use serde::ser::{ Serialize, Serializer };
+use serde::de::{ Deserialize, Deserializer };
+pub enum EnumTestType {
+    Type1,
+    Type2,
+    UNKNOWN,
+}
+impl EnumTestType {
+    pub fn value(&self) -> &'static str {
+        match *self {
+            EnumTestType::Type1 => "T1",
+            EnumTestType::Type2 => "T2",
+            EnumTestType::UNKNOWN => "?",
+        }
+    }
+}
+impl Serialize for EnumTestType {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where S: Serializer,
+    {
+        serializer.serialize_str(self.value())
+    }
+}
+impl <'a> Deserialize<'a> for EnumTestType {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where D: Deserializer<'a>,
+    {
+        let s = String::deserialize(deserializer)?;
+        let result = match s.as_str() {
+            "D" => EnumTestType::Type1,
+            "I" => EnumTestType::Type2,
+            _ => EnumTestType::UNKNOWN,
+        };
+        Ok(result)
+    }
+}
+</pre>

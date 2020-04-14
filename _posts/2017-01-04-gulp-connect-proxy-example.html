@@ -27,28 +27,28 @@ author:
 permalink: "/2017/01/04/gulp-connect-proxy-example/"
 ---
 <p>It will avoid CORS problem during development.</p>
-<p>[code lang="c"]<br />
-var Proxy = require('gulp-connect-proxy');<br />
-...<br />
-// A local web server for dev convenience<br />
-gulp.task(&quot;server&quot;, function() {<br />
-	connect.server({<br />
-	  root: &quot;./dist&quot;,<br />
-	  port: 22532,<br />
-          middleware: function (connect, opt) {<br />
-	      opt.route = '/proxy';<br />
-	      var proxy = new Proxy(opt);<br />
-	      return [proxy];<br />
-	  }<br />
-	});<br />
-});<br />
-[/code]</p>
+<pre class = "code">
+var Proxy = require('gulp-connect-proxy');
+...
+// A local web server for dev convenience
+gulp.task("server", function() {
+	connect.server({
+	  root: "./dist",
+	  port: 22532,
+          middleware: function (connect, opt) {
+	      opt.route = '/proxy';
+	      var proxy = new Proxy(opt);
+	      return [proxy];
+	  }
+	});
+});
+</pre>
 <p>Example of calling API<br />
-[code lang="c"]<br />
-return $http.get(</p>
-<p>  'http://localhost:22532/proxy/external.host.com:8080/api/myservice/myid', </p>
-<p>  { params: { metricSelector: &quot;hello2&quot;} }<br />
-);<br />
-[/code]</p>
+<pre class = "code">
+return $http.get(
+  'http://localhost:22532/proxy/external.host.com:8080/api/myservice/myid', 
+  { params: { metricSelector: "hello2"} }
+);
+</pre>
 <p>Gulp connect web site</p>
 <p>https://www.npmjs.com/package/gulp-connect-proxy</p>

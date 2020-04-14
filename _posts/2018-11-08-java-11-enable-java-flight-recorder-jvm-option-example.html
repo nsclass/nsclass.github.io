@@ -24,19 +24,19 @@ author:
   last_name: ''
 permalink: "/2018/11/08/java-11-enable-java-flight-recorder-jvm-option-example/"
 ---
-<p>[code lang="c"]<br />
--XX:StartFlightRecording=\<br />
-        disk=true, \<br />
-        dumponexit=true, \<br />
-        filename=recording.jfr, \<br />
-        maxsize=1024m,\<br />
-        maxage=1d</p>
-<p>[/code]</p>
+<pre class = "code">
+-XX:StartFlightRecording=\
+        disk=true, \
+        dumponexit=true, \
+        filename=recording.jfr, \
+        maxsize=1024m,\
+        maxage=1d
+</pre>
 <p>Checking running JFR with jcmd<br />
-[code lang="c"]<br />
-% jcmd PID JFR.check name=1<br />
-[/code]</p>
+<pre class = "code">
+% jcmd PID JFR.check name=1
+</pre>
 <p>Dump JFR now<br />
-[code]<br />
-%jcmd PID JFR.dump name=1 filename=dump.jfr<br />
-[/code]</p>
+<pre class = "code">
+%jcmd PID JFR.dump name=1 filename=dump.jfr
+</pre>

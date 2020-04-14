@@ -23,85 +23,85 @@ author:
 permalink: "/2013/10/10/c-wcf-certification-configuration-for-wcf/"
 ---
 <p>Server side configuration<br />
-[code lang="c"]<br />
-static Binding CreateBinding()<br />
-{<br />
-    int maxReceivedSize = Constants.MAX_PACKET_LENGTH;</p>
-<p>    NetTcpBinding clientManBinding = new NetTcpBinding(SecurityMode.Message, false);</p>
-<p>    clientManBinding.TransferMode = TransferMode.Buffered;<br />
-    clientManBinding.MaxBufferSize = maxReceivedSize;<br />
-    clientManBinding.MaxReceivedMessageSize = maxReceivedSize;<br />
-    clientManBinding.ReaderQuotas.MaxStringContentLength = maxReceivedSize;<br />
-    clientManBinding.ReaderQuotas.MaxBytesPerRead = maxReceivedSize;<br />
-    clientManBinding.ReaderQuotas.MaxArrayLength = maxReceivedSize;<br />
-    clientManBinding.ReaderQuotas.MaxDepth = 1024;<br />
-    clientManBinding.MaxBufferPoolSize = maxReceivedSize;</p>
-<p>    clientManBinding.Security.Message.ClientCredentialType = MessageCredentialType.Certificate;</p>
-<p>    TimeSpan ClockSkew = TimeSpan.MaxValue;<br />
-    CustomBinding custBinding = new CustomBinding(clientManBinding);<br />
-    SymmetricSecurityBindingElement security = custBinding.Elements.Find&lt;SymmetricSecurityBindingElement&gt;();<br />
-    security.LocalClientSettings.MaxClockSkew = ClockSkew;<br />
-    security.LocalServiceSettings.MaxClockSkew = ClockSkew;<br />
-    security.LocalServiceSettings.DetectReplays = false;<br />
-    security.LocalClientSettings.DetectReplays = false;</p>
-<p>    SecureConversationSecurityTokenParameters secureTokenParams = (SecureConversationSecurityTokenParameters)security.ProtectionTokenParameters;<br />
-    // From the collection, get the bootstrap element.<br />
-    SecurityBindingElement bootstrap = secureTokenParams.BootstrapSecurityBindingElement;<br />
-    // Set the MaxClockSkew on the bootstrap element.<br />
-    bootstrap.LocalClientSettings.MaxClockSkew = ClockSkew;<br />
-    bootstrap.LocalServiceSettings.MaxClockSkew = ClockSkew;<br />
-    bootstrap.LocalServiceSettings.DetectReplays = false;<br />
-    bootstrap.LocalClientSettings.DetectReplays = false;</p>
-<p>    return custBinding;<br />
-}</p>
-<p>public WcfServiceHost(Uri address, Binding binding, X509Certificate2 serverCert, X509Certificate2 clientCert)<br />
-{<br />
-    m_serviceHost = new ServiceHost(typeof(Host), address);<br />
-    m_serviceHost.Credentials.ServiceCertificate.Certificate = serverCert;<br />
-    m_serviceHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None;<br />
-    m_serviceHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;<br />
-    m_serviceHost.Credentials.ClientCertificate.Certificate = clientCert;<br />
-}</p>
-<p>[/code]</p>
+<pre class = "code">
+static Binding CreateBinding()
+{
+    int maxReceivedSize = Constants.MAX_PACKET_LENGTH;
+    NetTcpBinding clientManBinding = new NetTcpBinding(SecurityMode.Message, false);
+    clientManBinding.TransferMode = TransferMode.Buffered;
+    clientManBinding.MaxBufferSize = maxReceivedSize;
+    clientManBinding.MaxReceivedMessageSize = maxReceivedSize;
+    clientManBinding.ReaderQuotas.MaxStringContentLength = maxReceivedSize;
+    clientManBinding.ReaderQuotas.MaxBytesPerRead = maxReceivedSize;
+    clientManBinding.ReaderQuotas.MaxArrayLength = maxReceivedSize;
+    clientManBinding.ReaderQuotas.MaxDepth = 1024;
+    clientManBinding.MaxBufferPoolSize = maxReceivedSize;
+    clientManBinding.Security.Message.ClientCredentialType = MessageCredentialType.Certificate;
+    TimeSpan ClockSkew = TimeSpan.MaxValue;
+    CustomBinding custBinding = new CustomBinding(clientManBinding);
+    SymmetricSecurityBindingElement security = custBinding.Elements.Find<SymmetricSecurityBindingElement>();
+    security.LocalClientSettings.MaxClockSkew = ClockSkew;
+    security.LocalServiceSettings.MaxClockSkew = ClockSkew;
+    security.LocalServiceSettings.DetectReplays = false;
+    security.LocalClientSettings.DetectReplays = false;
+    SecureConversationSecurityTokenParameters secureTokenParams = (SecureConversationSecurityTokenParameters)security.ProtectionTokenParameters;
+    // From the collection, get the bootstrap element.
+    SecurityBindingElement bootstrap = secureTokenParams.BootstrapSecurityBindingElement;
+    // Set the MaxClockSkew on the bootstrap element.
+    bootstrap.LocalClientSettings.MaxClockSkew = ClockSkew;
+    bootstrap.LocalServiceSettings.MaxClockSkew = ClockSkew;
+    bootstrap.LocalServiceSettings.DetectReplays = false;
+    bootstrap.LocalClientSettings.DetectReplays = false;
+    return custBinding;
+}
+public WcfServiceHost(Uri address, Binding binding, X509Certificate2 serverCert, X509Certificate2 clientCert)
+{
+    m_serviceHost = new ServiceHost(typeof(Host), address);
+    m_serviceHost.Credentials.ServiceCertificate.Certificate = serverCert;
+    m_serviceHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None;
+    m_serviceHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
+    m_serviceHost.Credentials.ClientCertificate.Certificate = clientCert;
+}
+</pre>
 <p>Client side configuration<br />
-[code lang="c"]<br />
-// create TCP binding<br />
-protected static NetTcpBinding CreateDefaultSecureNetTCPBinding()<br />
-{<br />
-    SecurityMode security = SecurityMode.Message;<br />
-    int maxStringContentLength = Constants.MAX_PACKET_LENGTH;</p>
-<p>    NetTcpBinding tcpIpBinding = new NetTcpBinding();<br />
-    tcpIpBinding.Security.Mode = security;<br />
-    if (security == SecurityMode.Message)<br />
-    {<br />
-        tcpIpBinding.Security.Message.ClientCredentialType = MessageCredentialType.Certificate;<br />
-    }<br />
-    tcpIpBinding.ReaderQuotas.MaxArrayLength = maxStringContentLength;<br />
-    tcpIpBinding.ReaderQuotas.MaxBytesPerRead = maxStringContentLength;<br />
-    tcpIpBinding.ReaderQuotas.MaxStringContentLength = maxStringContentLength;<br />
-    tcpIpBinding.ReaderQuotas.MaxDepth = 100;<br />
-    tcpIpBinding.MaxReceivedMessageSize = maxStringContentLength;<br />
-    tcpIpBinding.MaxBufferSize = maxStringContentLength;</p>
-<p>    return tcpIpBinding;<br />
-}</p>
-<p>// create endpoint address with created TCP binding and certification<br />
-public static EndpointAddress GetSecureEndPointAddress(Uri uri, X509Certificate2 cert)<br />
-{<br />
-    EndpointAddress endpointAddress = new EndpointAddress(uri, EndpointIdentity.CreateX509CertificateIdentity(cert));<br />
-    return endpointAddress;<br />
-}</p>
-<p>// create proxy(ClientBase&lt;I&gt;) based on created binding and certificated address<br />
-protected virtual Proxy CreateProxy(Binding binding, EndpointAddress addr, X509Certificate2 cert)<br />
-{<br />
-    var proxy = new Proxy(binding, addr);<br />
-    proxy.ClientCredentials.ClientCertificate.Certificate = cert;<br />
-    proxy.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None;<br />
-    return proxy;<br />
-}</p>
-<p>// open proxy<br />
-protected void Open(Binding binding, EndpointAddress endpointAddr, X509Certificate2 cert)<br />
-{<br />
-    m_proxy = CreateProxy(BootstrapBinding(binding), endpointAddr, cert);<br />
-    m_proxy.Open();<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+// create TCP binding
+protected static NetTcpBinding CreateDefaultSecureNetTCPBinding()
+{
+    SecurityMode security = SecurityMode.Message;
+    int maxStringContentLength = Constants.MAX_PACKET_LENGTH;
+    NetTcpBinding tcpIpBinding = new NetTcpBinding();
+    tcpIpBinding.Security.Mode = security;
+    if (security == SecurityMode.Message)
+    {
+        tcpIpBinding.Security.Message.ClientCredentialType = MessageCredentialType.Certificate;
+    }
+    tcpIpBinding.ReaderQuotas.MaxArrayLength = maxStringContentLength;
+    tcpIpBinding.ReaderQuotas.MaxBytesPerRead = maxStringContentLength;
+    tcpIpBinding.ReaderQuotas.MaxStringContentLength = maxStringContentLength;
+    tcpIpBinding.ReaderQuotas.MaxDepth = 100;
+    tcpIpBinding.MaxReceivedMessageSize = maxStringContentLength;
+    tcpIpBinding.MaxBufferSize = maxStringContentLength;
+    return tcpIpBinding;
+}
+// create endpoint address with created TCP binding and certification
+public static EndpointAddress GetSecureEndPointAddress(Uri uri, X509Certificate2 cert)
+{
+    EndpointAddress endpointAddress = new EndpointAddress(uri, EndpointIdentity.CreateX509CertificateIdentity(cert));
+    return endpointAddress;
+}
+// create proxy(ClientBase<I>) based on created binding and certificated address
+protected virtual Proxy CreateProxy(Binding binding, EndpointAddress addr, X509Certificate2 cert)
+{
+    var proxy = new Proxy(binding, addr);
+    proxy.ClientCredentials.ClientCertificate.Certificate = cert;
+    proxy.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None;
+    return proxy;
+}
+// open proxy
+protected void Open(Binding binding, EndpointAddress endpointAddr, X509Certificate2 cert)
+{
+    m_proxy = CreateProxy(BootstrapBinding(binding), endpointAddr, cert);
+    m_proxy.Open();
+}
+</pre>

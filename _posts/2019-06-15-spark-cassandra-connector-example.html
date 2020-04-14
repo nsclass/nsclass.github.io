@@ -30,34 +30,34 @@ permalink: "/2019/06/15/spark-cassandra-connector-example/"
 ---
 <p>Github<br />
 https://github.com/nsclass/spark-cassandra-example</p>
-<p>[code lang="c"]<br />
-object SparkCassandra {<br />
-  def main(args: Array[String]): Unit = {<br />
-    val spark = SparkSession.builder()<br />
-      .appName(&quot;SparkCassandra&quot;)<br />
-      .master(&quot;local&quot;)<br />
-      .config(&quot;spark.cassandra.connection.host&quot;, &quot;127.0.0.1&quot;)<br />
-      .getOrCreate()</p>
-<p>    // Read data as RDD<br />
-    val rdd = spark.sparkContext.cassandraTable(keyspace = &quot;system&quot;, table = &quot;local&quot;)<br />
-      .select(&quot;key&quot;, &quot;cluster_name&quot;, &quot;cql_version&quot;)</p>
-<p>    println(&quot;Data read as RDD&quot;)<br />
-    rdd.collect()<br />
-      .foreach(row =&gt; {<br />
-        println(row.getString(&quot;key&quot;))<br />
-        println(row.getString(&quot;cluster_name&quot;))<br />
-        println(row.getString(&quot;cql_version&quot;))<br />
-      })</p>
-<p>    // Read data as DataSet (DataFrame)<br />
-    val dataset = spark.read<br />
-      .cassandraFormat(keyspace = &quot;system&quot;, table = &quot;local&quot;)<br />
-      .load()</p>
-<p>    dataset.collect()<br />
-      .foreach(row =&gt; {<br />
-        println(row.getAs(&quot;key&quot;))<br />
-        println(row.getAs(&quot;cluster_name&quot;))<br />
-        println(row.getAs(&quot;cql_version&quot;))<br />
-      })<br />
-  }<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+object SparkCassandra {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder()
+      .appName("SparkCassandra")
+      .master("local")
+      .config("spark.cassandra.connection.host", "127.0.0.1")
+      .getOrCreate()
+    // Read data as RDD
+    val rdd = spark.sparkContext.cassandraTable(keyspace = "system", table = "local")
+      .select("key", "cluster_name", "cql_version")
+    println("Data read as RDD")
+    rdd.collect()
+      .foreach(row => {
+        println(row.getString("key"))
+        println(row.getString("cluster_name"))
+        println(row.getString("cql_version"))
+      })
+    // Read data as DataSet (DataFrame)
+    val dataset = spark.read
+      .cassandraFormat(keyspace = "system", table = "local")
+      .load()
+    dataset.collect()
+      .foreach(row => {
+        println(row.getAs("key"))
+        println(row.getAs("cluster_name"))
+        println(row.getAs("cql_version"))
+      })
+  }
+}
+</pre>

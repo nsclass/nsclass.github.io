@@ -25,34 +25,34 @@ permalink: "/2017/05/08/java-java-application-monitoring-tools/"
 ---
 <p>jcmd: Prints basic class, thread, and VM information for a Java process<br />
 Example)<br />
-[code lang="c"]<br />
-% jcmd &lt;process_id&gt; VM.uptime<br />
-% jcmd &lt;process_id&gt; VM.system_properties<br />
-% jcmd &lt;process_id&gt; VM.version<br />
-% jcmd &lt;process_id&gt; VM.command_line<br />
-% jcmd &lt;process_id&gt; VM.flags [-all]<br />
-% jcmd &lt;process_id&gt; Thread.print<br />
-% jcmd &lt;process_id&gt; GC.run // force to run full GC<br />
-% jcmd &lt;process_id&gt; GC.heap_dump /path/to/heap_dump.hprof // heap dump</p>
-<p>[/code]</p>
+<pre class = "code">
+% jcmd <process_id> VM.uptime
+% jcmd <process_id> VM.system_properties
+% jcmd <process_id> VM.version
+% jcmd <process_id> VM.command_line
+% jcmd <process_id> VM.flags [-all]
+% jcmd <process_id> Thread.print
+% jcmd <process_id> GC.run // force to run full GC
+% jcmd <process_id> GC.heap_dump /path/to/heap_dump.hprof // heap dump
+</pre>
 <p>jconsole: Provides a graphical view of JVM activities, including thread usage, class usage, and GC activities<br />
 jhat: Reads and helps analyze memory heap dumps. This is a postprocessing utility<br />
 jmap: Provides heap dumps and other information about JVM memory usage<br />
 jinfo: Provides visibility into the system properties of the JVM, and allows some system properties to be set dynamically<br />
-[code lang="c"]<br />
-% jinfo -flags &lt;process_id&gt;<br />
-% jinfo -flag PrintGCDetails &lt;process_id&gt;<br />
-[/code]</p>
+<pre class = "code">
+% jinfo -flags <process_id>
+% jinfo -flag PrintGCDetails <process_id>
+</pre>
 <p>jstack: Dumps the stacks of a Java process</p>
 <p>jstat: Provides information about GC and class-loading activities<br />
-[code lang="c"]<br />
-% jstat -compiler &lt;process_id&gt;<br />
-% jstat -printcompilation &lt;process_id&gt; &lt;duration(ms)&gt;<br />
-[/code]</p>
+<pre class = "code">
+% jstat -compiler <process_id>
+% jstat -printcompilation <process_id> <duration(ms)>
+</pre>
 <p>jvisualvm: A GUI tool to monitor a JVM, profile a running application, and analyze JVM heap dumps </p>
 <p>jmap:<br />
-[code lang="c"]<br />
-% jmap -clstats : print out information about class loaders(Java 8)<br />
-% jmap -permstat : print out information about class loaders(Java 7)<br />
-% jmap -dump:live,file=/path/to/heap_dump.hprof &lt;process_id&gt; // heap dump<br />
-[/code]</p>
+<pre class = "code">
+% jmap -clstats : print out information about class loaders(Java 8)
+% jmap -permstat : print out information about class loaders(Java 7)
+% jmap -dump:live,file=/path/to/heap_dump.hprof <process_id> // heap dump
+</pre>

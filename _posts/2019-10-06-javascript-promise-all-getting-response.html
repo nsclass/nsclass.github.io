@@ -25,13 +25,13 @@ author:
 permalink: "/2019/10/06/javascript-promise-all-getting-response/"
 ---
 <p>Promise.all guarantee the order of response in input promises so that caller can retrieve the result with array index number.</p>
-<p>[code lang="c"]<br />
-var allDone = Promise.all([<br />
-    promise1,<br />
-    promise2<br />
-])<br />
-.then(res =&gt; {<br />
-    res[0]; // promise1 result<br />
-    res[1]; // promise2 result<br />
-});<br />
-[/code]</p>
+<pre class = "code">
+var allDone = Promise.all([
+    promise1,
+    promise2
+])
+.then(res => {
+    res[0]; // promise1 result
+    res[1]; // promise2 result
+});
+</pre>

@@ -22,18 +22,18 @@ author:
   last_name: ''
 permalink: "/2013/03/05/simple-makefile-example-for-mpi/"
 ---
-<p>[sourcecode language="c"]<br />
-CC=mpicxx<br />
-CFLAGS=-c -Wall<br />
-LDFLAGS=<br />
-SOURCES=test.cpp<br />
-OBJECTS=$(SOURCES:.cpp=.o)<br />
-EXECUTABLE=test</p>
-<p>all: $(SOURCES) $(EXECUTABLE)</p>
-<p>$(EXECUTABLE): $(OBJECTS)<br />
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@</p>
-<p>.cpp.o:<br />
-	$(CC) $(CFLAGS) $&amp;lt; -o $@</p>
-<p>clean:<br />
-	rm -rf *.o $(EXECUTABLE)<br />
-[/sourcecode]</p>
+<pre class = "code">
+CC=mpicxx
+CFLAGS=-c -Wall
+LDFLAGS=
+SOURCES=test.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=test
+all: $(SOURCES) $(EXECUTABLE)
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+.cpp.o:
+	$(CC) $(CFLAGS) $&lt; -o $@
+clean:
+	rm -rf *.o $(EXECUTABLE)
+</pre>

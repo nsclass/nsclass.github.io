@@ -26,60 +26,60 @@ author:
   last_name: ''
 permalink: "/2013/08/09/c-performance-measure-util-classes/"
 ---
-<p>[code lang="c"]<br />
-    public class PerformanceHelperClass<br />
-    {<br />
-        [DllImport(&quot;Kernel32.dll&quot;)]<br />
-        public static extern void QueryPerformanceCounter(ref long ticks);<br />
-        [DllImport(&quot;Kernel32.dll&quot;)]<br />
-        public static extern void QueryPerformanceFrequency(ref long freq);<br />
-        public static long GetCurrentTick()<br />
-        {<br />
-            long value = 0;<br />
-            QueryPerformanceCounter(ref value);<br />
-            return value;<br />
-        }</p>
-<p>        public static long GetPerformanceFrequency()<br />
-        {<br />
-            long value = 0;<br />
-            QueryPerformanceFrequency(ref value);<br />
-            return value;<br />
-        }<br />
-    }</p>
-<p>    public class PerformanceCouterable<br />
-    {<br />
-        protected long m_tickCreated;<br />
-        protected double m_frequency;</p>
-<p>        public PerformanceCouterable()<br />
-        {<br />
-            ResetStartPerformanceTick();<br />
-        }</p>
-<p>        protected void ResetStartPerformanceTick()<br />
-        {<br />
-            m_frequency = ((double)PerformanceHelperClass.GetPerformanceFrequency()) / 1000.0;<br />
-            m_tickCreated = PerformanceHelperClass.GetCurrentTick();<br />
-        }</p>
-<p>        protected long GetPerformanceElapsedTick()<br />
-        {<br />
-            return PerformanceHelperClass.GetCurrentTick() - m_tickCreated;<br />
-        }</p>
-<p>        protected double GetElapsedTime()<br />
-        {<br />
-            var elapsed = PerformanceHelperClass.GetCurrentTick() - m_tickCreated;<br />
-            return (double)elapsed / m_frequency;<br />
-        }<br />
-    }</p>
-<p>    public class MesaureScope : PerformanceCouterable, IDisposable<br />
-    {<br />
-        private string m_scopeName = string.Empty;<br />
-        public MesaureScope(string name)<br />
-        {<br />
-            m_scopeName = name;<br />
-            Trace.WriteLine(string.Format(&quot;[MEASURE TIME - BEGIN] {0}&quot;, m_scopeName));<br />
-        }</p>
-<p>        public void Dispose()<br />
-        {<br />
-            Trace.WriteLine(string.Format(&quot;[MEASURE TIME - END  ] {0} - {1}(ms)&quot;, m_scopeName, GetElapsedTime()));<br />
-        }<br />
-    }<br />
-[/code]</p>
+<pre class = "code">
+    public class PerformanceHelperClass
+    {
+        [DllImport("Kernel32.dll")]
+        public static extern void QueryPerformanceCounter(ref long ticks);
+        [DllImport("Kernel32.dll")]
+        public static extern void QueryPerformanceFrequency(ref long freq);
+        public static long GetCurrentTick()
+        {
+            long value = 0;
+            QueryPerformanceCounter(ref value);
+            return value;
+        }
+        public static long GetPerformanceFrequency()
+        {
+            long value = 0;
+            QueryPerformanceFrequency(ref value);
+            return value;
+        }
+    }
+    public class PerformanceCouterable
+    {
+        protected long m_tickCreated;
+        protected double m_frequency;
+        public PerformanceCouterable()
+        {
+            ResetStartPerformanceTick();
+        }
+        protected void ResetStartPerformanceTick()
+        {
+            m_frequency = ((double)PerformanceHelperClass.GetPerformanceFrequency()) / 1000.0;
+            m_tickCreated = PerformanceHelperClass.GetCurrentTick();
+        }
+        protected long GetPerformanceElapsedTick()
+        {
+            return PerformanceHelperClass.GetCurrentTick() - m_tickCreated;
+        }
+        protected double GetElapsedTime()
+        {
+            var elapsed = PerformanceHelperClass.GetCurrentTick() - m_tickCreated;
+            return (double)elapsed / m_frequency;
+        }
+    }
+    public class MesaureScope : PerformanceCouterable, IDisposable
+    {
+        private string m_scopeName = string.Empty;
+        public MesaureScope(string name)
+        {
+            m_scopeName = name;
+            Trace.WriteLine(string.Format("[MEASURE TIME - BEGIN] {0}", m_scopeName));
+        }
+        public void Dispose()
+        {
+            Trace.WriteLine(string.Format("[MEASURE TIME - END  ] {0} - {1}(ms)", m_scopeName, GetElapsedTime()));
+        }
+    }
+</pre>

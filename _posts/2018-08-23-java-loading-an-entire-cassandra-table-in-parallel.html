@@ -26,264 +26,264 @@ permalink: "/2018/08/23/java-loading-an-entire-cassandra-table-in-parallel/"
 ---
 <p>Sometimes, it is required to load all rows in the Cassandra table but it is very slow if loading is performed by a single thread.<br />
 Let's say we have the following table in Cassandra<br />
-[code lang="java"]<br />
-CREATE TABLE users (<br />
-  userid text PRIMARY KEY,<br />
-  first_name text,<br />
-  last_name text,<br />
-  emails set&lt;text&gt;,<br />
-  top_scores list&lt;int&gt;,<br />
-  todo map&lt;timestamp, text&gt;<br />
-);<br />
-[/code]</p>
+<pre class = "code">
+CREATE TABLE users (
+  userid text PRIMARY KEY,
+  first_name text,
+  last_name text,
+  emails set<text>,
+  top_scores list<int>,
+  todo map<timestamp, text>
+);
+</pre>
 <p>If we load the entire table with the following CQL syntax in a single thread, it can take several hours if number of rows is 10 million.<br />
-[code lang="java"]<br />
-select * from users;<br />
-[/code]</p>
+<pre class = "code">
+select * from users;
+</pre>
 <p>Fortunately, there is a way to load an entire table in parallel. Astyanax has a class called AllRowsReader which is showing how to load entire table in parallel.<br />
 The basic idea of this code is to use token() keyword on selecting data. Since Cassandra is using hashing mechanism on distributing data in multiple hosts. If we know the token range, Cassandra is allow to load data in parallel.<br />
 For example, the below CQL syntax will load users rows between 0 and 10000 but this token value will be determined by the configured current partitioner in Cassandra.<br />
-[code lang="java"]<br />
-select * from users where token(userid) &gt;= 0 and token(userid) &lt;= 10000;<br />
-[/code]</p>
+<pre class = "code">
+select * from users where token(userid) >= 0 and token(userid) <= 10000;
+</pre>
 <p>The below code is summarizing this idea.<br />
-[code lang="java"]<br />
-public class TokenRange<br />
-{<br />
-    private final BigInteger beginToken;<br />
-    private final BigInteger endToken;</p>
-<p>    public TokenRange(BigInteger beginToken, BigInteger endToken)<br />
-    {<br />
-        this.beginToken = beginToken;<br />
-        this.endToken = endToken;<br />
-    }</p>
-<p>    public BigInteger getBeginToken()<br />
-    {<br />
-        return beginToken;<br />
-    }</p>
-<p>    public BigInteger getEndToken()<br />
-    {<br />
-        return endToken;<br />
-    }<br />
-}<br />
-[/code]</p>
-<p>[code lang="java"]<br />
-public interface TokenPartitioner<br />
-{<br />
-    List&lt;TokenRange&gt; splitTokenRange(int count);<br />
-}<br />
-[/code]</p>
-<p>[code lang="java"]<br />
-public class MurmurPartitioner implements TokenPartitioner<br />
-{<br />
-    private static final BigInteger MIN = new BigInteger(Long.toString(Long.MIN_VALUE));<br />
-    private static final BigInteger MAX = new BigInteger(Long.toString(Long.MAX_VALUE));</p>
-<p>    @Override<br />
-    public List&lt;TokenRange&gt; splitTokenRange(int count)<br />
-    {<br />
-        List&lt;TokenRange&gt; tokens = new ArrayList&lt;&gt;();<br />
-        List&lt;BigInteger&gt; splits = splitRange(MIN, MAX, count);<br />
-        Iterator&lt;BigInteger&gt; iter = splits.iterator();<br />
-        BigInteger current = iter.next();<br />
-        while (iter.hasNext())<br />
-        {<br />
-            BigInteger next = iter.next();<br />
-            tokens.add(new TokenRange(current, next));<br />
-            current = next;<br />
-        }<br />
-        return tokens;<br />
-    }</p>
-<p>    public static List&lt;BigInteger&gt; splitRange(BigInteger first, BigInteger last, int count)<br />
-    {<br />
-        List&lt;BigInteger&gt; tokens = new ArrayList&lt;&gt;();<br />
-        tokens.add(first);<br />
-        BigInteger delta = (last.subtract(first).divide(BigInteger.valueOf((long) count)));<br />
-        BigInteger current = first;<br />
-        for (int i = 0; i &lt; count - 1; i++)<br />
-        {<br />
-            current = current.add(delta);<br />
-            tokens.add(current);<br />
-        }<br />
-        tokens.add(last);<br />
-        return tokens;<br />
-    }<br />
-}<br />
-[/code]</p>
-<p>[code lang="java"]<br />
-public class AllRowReader&lt;T&gt;<br />
-{<br />
-    private static final Logger log = LoggerFactory.getLogger(AllRowCqlReader.class);</p>
-<p>    private final Cluster cluster;<br />
-    private final Session session;<br />
-    private final static int DEFAULT_PAGE_SIZE = 100;<br />
-    private final String tableName;<br />
-    private final List&lt;String&gt; partitionKeyNames;<br />
-    private final String realm;<br />
-    private final Class&lt;T&gt; klass;<br />
-    private int pageSize;<br />
-    private int concurrencyLevel;</p>
-<p>    private final Map&lt;String, TokenPartitioner&gt; partitionerMap = ImmutableMap.of(<br />
-            &quot;org.apache.cassandra.dht.Murmur3Partitioner&quot;, new MurmurPartitioner(),<br />
-            &quot;org.apache.cassandra.dht.RandomPartitioner&quot;, new RandomPartitioner()<br />
-    );</p>
-<p>    public static class Builder&lt;T&gt;<br />
-    {<br />
-        private final Cluster cluster;<br />
-        private final Session session;<br />
-        private final String tableName;<br />
-        private final List&lt;String&gt; partitionKeyNames;<br />
-        private final String realm;<br />
-        private final Class&lt;T&gt; klass;<br />
-        private int pageSize = DEFAULT_PAGE_SIZE;<br />
-        private int concurrencyLevel = 4;</p>
-<p>        public Builder(Cluster cluster,<br />
-                       Session session,<br />
-                       String tableName,<br />
-                       List&lt;String&gt; partitionKeyNames,<br />
-                       String realm,<br />
-                       Class&lt;T&gt; klass)<br />
-        {<br />
-            this.cluster = cluster;<br />
-            this.Session = session;<br />
-            this.tableName = tableName;<br />
-            this.partitionKeyNames = partitionKeyNames;<br />
-            this.realm = realm;<br />
-            this.klass = klass;<br />
-        }</p>
-<p>        public Builder&lt;T&gt; withPageSize(int pageSize)<br />
-        {<br />
-            this.pageSize = pageSize;<br />
-            return this;<br />
-        }</p>
-<p>        public Builder&lt;T&gt; withConcurrencyLevel(int level)<br />
-        {<br />
-            this.concurrencyLevel = level;<br />
-            return this;<br />
-        }</p>
-<p>        public AllRowReader&lt;T&gt; build()<br />
-        {<br />
-            return new AllRowCqlReader&lt;&gt;(cluster,<br />
-                    session,<br />
-                    tableName,<br />
-                    partitionKeyNames,<br />
-                    realm,<br />
-                    klass,<br />
-                    pageSize,<br />
-                    concurrencyLevel);<br />
-        }<br />
-    }</p>
-<p>    private AllRowCqlReader(Cluster cluster,<br />
-                            Session session,<br />
-                            String tableName,<br />
-                            List&lt;String&gt; partitionKeyNames,<br />
-                            String realm,<br />
-                            Class&lt;T&gt; klass,<br />
-                            int pageSize,<br />
-                            int concurrencyLevel)<br />
-    {<br />
-        this.cluster = cluster;<br />
-        this.session = session;<br />
-        this.tableName = tableName;<br />
-        this.partitionKeyNames = partitionKeyNames;<br />
-        this.realm = realm;<br />
-        this.klass = klass;<br />
-        this.pageSize = pageSize;<br />
-        this.concurrencyLevel = concurrencyLevel;<br />
-    }</p>
-<p>    public void executeWithCallback(RequestContext ctx,<br />
-                                    Function&lt;List&lt;T&gt;, Boolean&gt; callback)<br />
-    {<br />
-        TokenPartitioner partitioner = findTokenPartitioner(ctx, realm);<br />
-        List&lt;TokenRange&gt; tokens = partitioner.splitTokenRange(concurrencyLevel);</p>
-<p>        List&lt;Callable&lt;Boolean&gt;&gt; tasks = new ArrayList&lt;&gt;(concurrencyLevel);<br />
-        for (TokenRange token : tokens)<br />
-        {<br />
-            tasks.add(createLoadTaskInRange(ctx, token, callback));<br />
-        }</p>
-<p>        try<br />
-        {<br />
-            ExecutorService localExecutor = Executors.newFixedThreadPool(concurrencyLevel,<br />
-                    new ThreadFactoryBuilder().setDaemon(true)<br />
-                            .setNameFormat(&quot;AllRowCqlReaderExecutor-%d&quot;)<br />
-                            .build());</p>
-<p>            try<br />
-            {<br />
-                List&lt;Future&lt;Boolean&gt;&gt; futures = localExecutor.invokeAll(tasks);<br />
-                waitForTasksToFinish(futures);<br />
-            }<br />
-            finally<br />
-            {<br />
-                localExecutor.shutdownNow();<br />
-            }<br />
-        }<br />
-        catch (Exception e)<br />
-        {<br />
-            log.error(&quot;failed to load a table {}&quot;, tableName, e);<br />
-        }<br />
-    }</p>
-<p>    private void waitForTasksToFinish(List&lt;Future&lt;Boolean&gt;&gt; futures) throws Exception<br />
-    {<br />
-        for (Future&lt;Boolean&gt; future : futures)<br />
-        {<br />
-            future.get();<br />
-        }<br />
-    }</p>
-<p>    private TokenPartitioner findTokenPartitioner(RequestContext ctx, String realm)<br />
-    {<br />
-        String partitioner = cluster.getMetadata().getPartitioner();<br />
-        TokenPartitioner found = partitionerMap.get(partitioner);<br />
-        if (found == null)<br />
-        {<br />
-            throw new IllegalArgumentException(&quot;Not supported partitioner: &quot; + partitioner);<br />
-        }<br />
-        return found;<br />
-    }</p>
-<p>    private Callable&lt;Boolean&gt; createLoadTaskInRange(RequestContext ctx,<br />
-                                                    TokenRange token,<br />
-                                                    Function&lt;List&lt;T&gt;, Boolean&gt; callback)<br />
-    {<br />
-        return () -&gt;<br />
-        {<br />
-            try<br />
-            {<br />
-                StringBuilder sb = new StringBuilder();<br />
-                sb.append(&quot;token(&quot;);<br />
-                sb.append(String.join(&quot;,&quot;, partitionKeyNames));<br />
-                sb.append(&quot;)&quot;);<br />
-                String tokenOfKey = sb.toString();</p>
-<p>                BigInteger beginTokenB = token.getBeginToken();<br />
-                BigInteger endTokenB = token.getEndToken();</p>
-<p>                Statement statement = QueryBuilder.select()<br />
-                        .all()<br />
-                        .from(tableName)<br />
-                        .where(QueryBuilder.gte(tokenOfKey, beginTokenB.longValue()))<br />
-                        .and(QueryBuilder.lte(tokenOfKey, endTokenB.longValue()))<br />
-                        .setFetchSize(pageSize);</p>
-<p>                MappingManager mappingManager = new MappingManager(session);<br />
-                ResultSet rs = session.execute(statement);<br />
-                Result&lt;T&gt; mappedResultSet = mappingManager.mapper(klass).map(rs);</p>
-<p>                List&lt;T&gt; rows = new ArrayList&lt;&gt;(pageSize);<br />
-                while (mappedResultSet.iterator().hasNext())<br />
-                {<br />
-                    rows.add(mappedResultSet.iterator().next());<br />
-                    if (rows.size() &gt;= pageSize)<br />
-                    {<br />
-                        callback.apply(rows);<br />
-                        rows = new ArrayList&lt;&gt;(pageSize);<br />
-                    }<br />
-                }</p>
-<p>                if (rows.size() &gt; 0)<br />
-                {<br />
-                    callback.apply(rows);<br />
-                }</p>
-<p>                return true;<br />
-            }<br />
-            catch (Exception e)<br />
-            {<br />
-                log.error(&quot;failed to load rows in range: {} - {}&quot;, token.getBeginToken().toString(), token.getEndToken().toString(), e);<br />
-            }</p>
-<p>            return false;<br />
-        };<br />
-    }<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+public class TokenRange
+{
+    private final BigInteger beginToken;
+    private final BigInteger endToken;
+    public TokenRange(BigInteger beginToken, BigInteger endToken)
+    {
+        this.beginToken = beginToken;
+        this.endToken = endToken;
+    }
+    public BigInteger getBeginToken()
+    {
+        return beginToken;
+    }
+    public BigInteger getEndToken()
+    {
+        return endToken;
+    }
+}
+</pre>
+<pre class = "code">
+public interface TokenPartitioner
+{
+    List<TokenRange> splitTokenRange(int count);
+}
+</pre>
+<pre class = "code">
+public class MurmurPartitioner implements TokenPartitioner
+{
+    private static final BigInteger MIN = new BigInteger(Long.toString(Long.MIN_VALUE));
+    private static final BigInteger MAX = new BigInteger(Long.toString(Long.MAX_VALUE));
+    @Override
+    public List<TokenRange> splitTokenRange(int count)
+    {
+        List<TokenRange> tokens = new ArrayList<>();
+        List<BigInteger> splits = splitRange(MIN, MAX, count);
+        Iterator<BigInteger> iter = splits.iterator();
+        BigInteger current = iter.next();
+        while (iter.hasNext())
+        {
+            BigInteger next = iter.next();
+            tokens.add(new TokenRange(current, next));
+            current = next;
+        }
+        return tokens;
+    }
+    public static List<BigInteger> splitRange(BigInteger first, BigInteger last, int count)
+    {
+        List<BigInteger> tokens = new ArrayList<>();
+        tokens.add(first);
+        BigInteger delta = (last.subtract(first).divide(BigInteger.valueOf((long) count)));
+        BigInteger current = first;
+        for (int i = 0; i < count - 1; i++)
+        {
+            current = current.add(delta);
+            tokens.add(current);
+        }
+        tokens.add(last);
+        return tokens;
+    }
+}
+</pre>
+<pre class = "code">
+public class AllRowReader<T>
+{
+    private static final Logger log = LoggerFactory.getLogger(AllRowCqlReader.class);
+    private final Cluster cluster;
+    private final Session session;
+    private final static int DEFAULT_PAGE_SIZE = 100;
+    private final String tableName;
+    private final List<String> partitionKeyNames;
+    private final String realm;
+    private final Class<T> klass;
+    private int pageSize;
+    private int concurrencyLevel;
+    private final Map<String, TokenPartitioner> partitionerMap = ImmutableMap.of(
+            "org.apache.cassandra.dht.Murmur3Partitioner", new MurmurPartitioner(),
+            "org.apache.cassandra.dht.RandomPartitioner", new RandomPartitioner()
+    );
+    public static class Builder<T>
+    {
+        private final Cluster cluster;
+        private final Session session;
+        private final String tableName;
+        private final List<String> partitionKeyNames;
+        private final String realm;
+        private final Class<T> klass;
+        private int pageSize = DEFAULT_PAGE_SIZE;
+        private int concurrencyLevel = 4;
+        public Builder(Cluster cluster,
+                       Session session,
+                       String tableName,
+                       List<String> partitionKeyNames,
+                       String realm,
+                       Class<T> klass)
+        {
+            this.cluster = cluster;
+            this.Session = session;
+            this.tableName = tableName;
+            this.partitionKeyNames = partitionKeyNames;
+            this.realm = realm;
+            this.klass = klass;
+        }
+        public Builder<T> withPageSize(int pageSize)
+        {
+            this.pageSize = pageSize;
+            return this;
+        }
+        public Builder<T> withConcurrencyLevel(int level)
+        {
+            this.concurrencyLevel = level;
+            return this;
+        }
+        public AllRowReader<T> build()
+        {
+            return new AllRowCqlReader<>(cluster,
+                    session,
+                    tableName,
+                    partitionKeyNames,
+                    realm,
+                    klass,
+                    pageSize,
+                    concurrencyLevel);
+        }
+    }
+    private AllRowCqlReader(Cluster cluster,
+                            Session session,
+                            String tableName,
+                            List<String> partitionKeyNames,
+                            String realm,
+                            Class<T> klass,
+                            int pageSize,
+                            int concurrencyLevel)
+    {
+        this.cluster = cluster;
+        this.session = session;
+        this.tableName = tableName;
+        this.partitionKeyNames = partitionKeyNames;
+        this.realm = realm;
+        this.klass = klass;
+        this.pageSize = pageSize;
+        this.concurrencyLevel = concurrencyLevel;
+    }
+    public void executeWithCallback(RequestContext ctx,
+                                    Function<List<T>, Boolean> callback)
+    {
+        TokenPartitioner partitioner = findTokenPartitioner(ctx, realm);
+        List<TokenRange> tokens = partitioner.splitTokenRange(concurrencyLevel);
+        List<Callable<Boolean>> tasks = new ArrayList<>(concurrencyLevel);
+        for (TokenRange token : tokens)
+        {
+            tasks.add(createLoadTaskInRange(ctx, token, callback));
+        }
+        try
+        {
+            ExecutorService localExecutor = Executors.newFixedThreadPool(concurrencyLevel,
+                    new ThreadFactoryBuilder().setDaemon(true)
+                            .setNameFormat("AllRowCqlReaderExecutor-%d")
+                            .build());
+            try
+            {
+                List<Future<Boolean>> futures = localExecutor.invokeAll(tasks);
+                waitForTasksToFinish(futures);
+            }
+            finally
+            {
+                localExecutor.shutdownNow();
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("failed to load a table {}", tableName, e);
+        }
+    }
+    private void waitForTasksToFinish(List<Future<Boolean>> futures) throws Exception
+    {
+        for (Future<Boolean> future : futures)
+        {
+            future.get();
+        }
+    }
+    private TokenPartitioner findTokenPartitioner(RequestContext ctx, String realm)
+    {
+        String partitioner = cluster.getMetadata().getPartitioner();
+        TokenPartitioner found = partitionerMap.get(partitioner);
+        if (found == null)
+        {
+            throw new IllegalArgumentException("Not supported partitioner: " + partitioner);
+        }
+        return found;
+    }
+    private Callable<Boolean> createLoadTaskInRange(RequestContext ctx,
+                                                    TokenRange token,
+                                                    Function<List<T>, Boolean> callback)
+    {
+        return () ->
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("token(");
+                sb.append(String.join(",", partitionKeyNames));
+                sb.append(")");
+                String tokenOfKey = sb.toString();
+                BigInteger beginTokenB = token.getBeginToken();
+                BigInteger endTokenB = token.getEndToken();
+                Statement statement = QueryBuilder.select()
+                        .all()
+                        .from(tableName)
+                        .where(QueryBuilder.gte(tokenOfKey, beginTokenB.longValue()))
+                        .and(QueryBuilder.lte(tokenOfKey, endTokenB.longValue()))
+                        .setFetchSize(pageSize);
+                MappingManager mappingManager = new MappingManager(session);
+                ResultSet rs = session.execute(statement);
+                Result<T> mappedResultSet = mappingManager.mapper(klass).map(rs);
+                List<T> rows = new ArrayList<>(pageSize);
+                while (mappedResultSet.iterator().hasNext())
+                {
+                    rows.add(mappedResultSet.iterator().next());
+                    if (rows.size() >= pageSize)
+                    {
+                        callback.apply(rows);
+                        rows = new ArrayList<>(pageSize);
+                    }
+                }
+                if (rows.size() > 0)
+                {
+                    callback.apply(rows);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                log.error("failed to load rows in range: {} - {}", token.getBeginToken().toString(), token.getEndToken().toString(), e);
+            }
+            return false;
+        };
+    }
+}
+</pre>

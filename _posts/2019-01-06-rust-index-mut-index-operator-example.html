@@ -24,33 +24,33 @@ author:
   last_name: ''
 permalink: "/2019/01/06/rust-index-mut-index-operator-example/"
 ---
-<p>[code lang="c"]<br />
-use std::ops::{Index, IndexMut};<br />
-#[derive(Debug)]<br />
-pub struct ImageArray2 {<br />
-    data: Vec&lt;u8&gt;,<br />
-    rows: usize,<br />
-    cols: usize,<br />
-}</p>
-<p>impl ImageArray2 {<br />
-    pub fn new(rows: usize, cols: usize) -&gt; ImageArray2 {<br />
-        let data = Vec::with_capacity(rows * cols);<br />
-        ImageArray2 {<br />
-            data: data,<br />
-            rows: rows,<br />
-            cols: cols,<br />
-        }<br />
-    }<br />
-}</p>
-<p>impl Index&lt;usize&gt; for ImageArray2 {<br />
-    type Output = [u8];<br />
-    fn index(&amp;self, index: usize) -&gt; &amp;Self::Output {<br />
-        &amp;self.data[index * self.cols .. (index + 1) * self.cols]<br />
-    }<br />
-}</p>
-<p>impl IndexMut&lt;usize&gt; for ImageArray2 {<br />
-    fn index_mut(&amp;mut self, index: usize) -&gt; &amp;mut Self::Output {<br />
-        &amp;mut self.data[index * self.cols .. (index + 1) * self.cols]<br />
-    }<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+use std::ops::{Index, IndexMut};
+#[derive(Debug)]
+pub struct ImageArray2 {
+    data: Vec<u8>,
+    rows: usize,
+    cols: usize,
+}
+impl ImageArray2 {
+    pub fn new(rows: usize, cols: usize) -> ImageArray2 {
+        let data = Vec::with_capacity(rows * cols);
+        ImageArray2 {
+            data: data,
+            rows: rows,
+            cols: cols,
+        }
+    }
+}
+impl Index<usize> for ImageArray2 {
+    type Output = [u8];
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.data[index * self.cols .. (index + 1) * self.cols]
+    }
+}
+impl IndexMut<usize> for ImageArray2 {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.data[index * self.cols .. (index + 1) * self.cols]
+    }
+}
+</pre>

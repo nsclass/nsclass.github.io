@@ -25,26 +25,26 @@ author:
 permalink: "/2018/03/29/java-spring-to-inject-multiple-service-instances-having-same-interface/"
 ---
 <p>Create service for multiple name providers<br />
-[code lang="c"]<br />
-interface NameProvider {<br />
-    String name();<br />
-}</p>
-<p>@Service<br />
-public class SomeName implement NameProvider {<br />
-    public String name() { return &quot;SomeName&quot;; }<br />
-}</p>
-<p>@Service<br />
-public class AnotherName implement NameProvider {<br />
-    public String name() { return &quot;AnotherName&quot;; }<br />
-}</p>
-<p>[/code]</p>
+<pre class = "code">
+interface NameProvider {
+    String name();
+}
+@Service
+public class SomeName implement NameProvider {
+    public String name() { return "SomeName"; }
+}
+@Service
+public class AnotherName implement NameProvider {
+    public String name() { return "AnotherName"; }
+}
+</pre>
 <p>NameService class can inject multiple NameProviders with the following constructor injection.<br />
-[code lang="c"]<br />
-@Service<br />
-public class NameService {<br />
-    private List&lt;NameProvider&gt; nameProviders;</p>
-<p>    NameService(List&lt;NameService&gt; nameProviders) {<br />
-        this.nameProviders = nameProviders;<br />
-    }<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+@Service
+public class NameService {
+    private List<NameProvider> nameProviders;
+    NameService(List<NameService> nameProviders) {
+        this.nameProviders = nameProviders;
+    }
+}
+</pre>

@@ -24,11 +24,11 @@ author:
 permalink: "/2017/09/30/scala-by-name-parameters/"
 ---
 <p>Syntax: =&gt; A</p>
-<p>[code land="c"]<br />
-def ifElse[A](test: Boolean, whenTrue: =&gt; A, whenFalse: =&gt; A): A = test match {<br />
-   case true =&gt; whenTrue<br />
-   case false =&gt; whenFalse<br />
-}</p>
-<p>ifElse(1 == 1, println(&quot;true&quot;), println(&quot;false&quot;))<br />
-[/code]</p>
+<pre class = "code">
+def ifElse[A](test: Boolean, whenTrue: => A, whenFalse: => A): A = test match {
+   case true => whenTrue
+   case false => whenFalse
+}
+ifElse(1 == 1, println("true"), println("false"))
+</pre>
 <p>By Name parameter will be evaluated when called</p>

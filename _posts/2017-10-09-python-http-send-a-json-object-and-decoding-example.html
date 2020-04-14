@@ -23,78 +23,78 @@ author:
   last_name: ''
 permalink: "/2017/10/09/python-http-send-a-json-object-and-decoding-example/"
 ---
-<p>[code lang="c"]<br />
-import http.client<br />
-import ssl<br />
-import json<br />
-import base64<br />
-from collections import namedtuple<br />
-from optparse import OptionParser</p>
-<p>def load_input_data(input_path):<br />
-    with open(input_path) as inputFile:<br />
-        return inputFile.read()</p>
-<p>def string_to_base64(s):<br />
-    return base64.b64encode(s.encode('utf-8')).decode('utf-8')</p>
-<p>def create_json_data(s, protocol):<br />
-    class CustomRequestData(object):<br />
-        def __init__(self):<br />
-            self.version = &quot;0.1&quot;<br />
-            self.description = &quot;test&quot;<br />
-            self.enableDebug = True<br />
-            self.protocol = protocol<br />
-            self.requestPayload = string_to_base64(s)</p>
-<p>    request = CustomRequestData()<br />
-    return json.dumps(request.__dict__)</p>
-<p>def create_http_header():<br />
-    password = string_to_base64(&quot;user:password&quot;)<br />
-    headers = {<br />
-        'content-type': &quot;application/json&quot;,<br />
-        'authorization': &quot;Basic &quot; + password<br />
-    }</p>
-<p>    return headers</p>
-<p>def base64_to_string(b):<br />
-    return base64.b64decode(b).decode('utf-8')</p>
-<p>def _json_object_hook(d):<br />
-    return namedtuple('X', d.keys())(*d.values())</p>
-<p>def json_to_obj(data):<br />
-    return json.loads(data, object_hook=_json_object_hook)</p>
-<p>def connect_https_server(host_name):<br />
-    port_number = 9992<br />
-    host_end_point_address = host_name + &quot;:&quot; + str(port_number)<br />
-    return http.client.HTTPSConnection(host_end_point_address, timeout = 5, context = ssl._create_unverified_context())</p>
-<p>def send_request_save_response(host_name, protocol, input_edifact_path, output_file_path):<br />
-    json_data = create_json_data(load_input_data(input_edifact_path), protocol)<br />
-    conn = connect_https_server(host_name)<br />
-    conn.request(&quot;POST&quot;, &quot;/endpoint_data&quot;, json_data, create_http_header())</p>
-<p>    res = conn.getresponse()<br />
-    data = res.read()</p>
-<p>    result = json_to_obj(data.decode('utf-8'))</p>
-<p>    file = open(output_file_path, 'w')<br />
-    file.write(base64_to_string(result.respond_pay_load))<br />
-    file.close()</p>
-<p>def main():<br />
-    parser = OptionParser()<br />
-    parser.add_option(&quot;-s&quot;, &quot;--server&quot;,<br />
-                      dest=&quot;server_name&quot;,<br />
-                      default=&quot;localhost&quot;,<br />
-                      help=&quot;server name of service&quot;)<br />
-    parser.add_option(&quot;-p&quot;, &quot;--protocol&quot;,<br />
-                      dest=&quot;protocol_type&quot;,<br />
-                      default=&quot;tcp&quot;,<br />
-                      help=&quot;protocol type&quot;)</p>
-<p>    parser.add_option(&quot;-i&quot;, &quot;--input_path&quot;,<br />
-                      dest=&quot;input_path&quot;,<br />
-                      default=&quot;~/input.txt&quot;,<br />
-                      help=&quot;input file path&quot;)</p>
-<p>    parser.add_option(&quot;-o&quot;, &quot;--output_path&quot;,<br />
-                      dest=&quot;output_path&quot;,<br />
-                      default=&quot;~/output.txt&quot;,<br />
-                      help=&quot;output file path&quot;)</p>
-<p>    (options, args) = parser.parse_args()<br />
-    send_request_save_response(options.server_name,<br />
-                               options.protocol_type,<br />
-                               options.input_path,<br />
-                               options.output_path)</p>
-<p>if __name__ == &quot;__main__&quot;:<br />
-    main()</p>
-<p>[/code]</p>
+<pre class = "code">
+import http.client
+import ssl
+import json
+import base64
+from collections import namedtuple
+from optparse import OptionParser
+def load_input_data(input_path):
+    with open(input_path) as inputFile:
+        return inputFile.read()
+def string_to_base64(s):
+    return base64.b64encode(s.encode('utf-8')).decode('utf-8')
+def create_json_data(s, protocol):
+    class CustomRequestData(object):
+        def __init__(self):
+            self.version = "0.1"
+            self.description = "test"
+            self.enableDebug = True
+            self.protocol = protocol
+            self.requestPayload = string_to_base64(s)
+    request = CustomRequestData()
+    return json.dumps(request.__dict__)
+def create_http_header():
+    password = string_to_base64("user:password")
+    headers = {
+        'content-type': "application/json",
+        'authorization': "Basic " + password
+    }
+    return headers
+def base64_to_string(b):
+    return base64.b64decode(b).decode('utf-8')
+def _json_object_hook(d):
+    return namedtuple('X', d.keys())(*d.values())
+def json_to_obj(data):
+    return json.loads(data, object_hook=_json_object_hook)
+def connect_https_server(host_name):
+    port_number = 9992
+    host_end_point_address = host_name + ":" + str(port_number)
+    return http.client.HTTPSConnection(host_end_point_address, timeout = 5, context = ssl._create_unverified_context())
+def send_request_save_response(host_name, protocol, input_edifact_path, output_file_path):
+    json_data = create_json_data(load_input_data(input_edifact_path), protocol)
+    conn = connect_https_server(host_name)
+    conn.request("POST", "/endpoint_data", json_data, create_http_header())
+    res = conn.getresponse()
+    data = res.read()
+    result = json_to_obj(data.decode('utf-8'))
+    file = open(output_file_path, 'w')
+    file.write(base64_to_string(result.respond_pay_load))
+    file.close()
+def main():
+    parser = OptionParser()
+    parser.add_option("-s", "--server",
+                      dest="server_name",
+                      default="localhost",
+                      help="server name of service")
+    parser.add_option("-p", "--protocol",
+                      dest="protocol_type",
+                      default="tcp",
+                      help="protocol type")
+    parser.add_option("-i", "--input_path",
+                      dest="input_path",
+                      default="~/input.txt",
+                      help="input file path")
+    parser.add_option("-o", "--output_path",
+                      dest="output_path",
+                      default="~/output.txt",
+                      help="output file path")
+    (options, args) = parser.parse_args()
+    send_request_save_response(options.server_name,
+                               options.protocol_type,
+                               options.input_path,
+                               options.output_path)
+if __name__ == "__main__":
+    main()
+</pre>

@@ -26,45 +26,45 @@ permalink: "/2014/11/05/tomcat-logging-all-http-traffic-with-logback/"
    logback-core-1.1.2.jar</p>
 <p>2. Create a logback-access.xml in a tomcat\conf foler<br />
 Example)<br />
-[code]<br />
-&lt;configuration&gt;<br />
-  &lt;appender name=&quot;cgFileRoller&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;<br />
-    &lt;file&gt;c:/logs/logback.log&lt;/file&gt;<br />
-    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;<br />
-      &lt;fileNamePattern&gt;cg-logback.%d{yyyy-MM-dd}.log.zip&lt;/fileNamePattern&gt;<br />
-    &lt;/rollingPolicy&gt;</p>
-<p>    &lt;encoder&gt;<br />
-      &lt;pattern&gt;%fullRequest%n%n%fullResponse&lt;/pattern&gt;<br />
-    &lt;/encoder&gt;<br />
-  &lt;/appender&gt;</p>
-<p>  &lt;appender-ref ref=&quot;cgFileRoller&quot; /&gt;<br />
-&lt;/configuration&gt;<br />
-[/code]</p>
+<pre class = "code">
+<configuration>
+  <appender name="cgFileRoller" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>c:/logs/logback.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>cg-logback.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%fullRequest%n%n%fullResponse</pattern>
+    </encoder>
+  </appender>
+  <appender-ref ref="cgFileRoller" />
+</configuration>
+</pre>
 <p>3. Modify server.xml in a tomcat/conf folder<br />
 Example)<br />
-[code]<br />
-      &lt;Host appBase=&quot;webapps&quot; autoDeploy=&quot;true&quot; name=&quot;localhost&quot; unpackWARs=&quot;true&quot;&gt;</p>
-<p>        &lt;!-- SingleSignOn valve, share authentication between web applications<br />
-             Documentation at: /docs/config/valve.html --&gt;<br />
-        &lt;!--<br />
-        &lt;Valve className=&quot;org.apache.catalina.authenticator.SingleSignOn&quot; /&gt;<br />
-        --&gt;</p>
-<p>        &lt;!-- Access log processes all example.<br />
-             Documentation at: /docs/config/valve.html<br />
-             Note: The pattern used is equivalent to using pattern=&quot;common&quot; --&gt;<br />
-        &lt;Valve className=&quot;org.apache.catalina.valves.AccessLogValve&quot; directory=&quot;logs&quot; pattern=&quot;%h %l %u %t &amp;quot;%r&amp;quot; %s %b&quot; prefix=&quot;localhost_access_log.&quot; suffix=&quot;.txt&quot;/&gt;<br />
-        &lt;Valve className=&quot;ch.qos.logback.access.tomcat.LogbackValve&quot;/&gt;</p>
-<p>&lt;/Host&gt;<br />
-[/code]</p>
+<pre class = "code">
+      <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true">
+        <!-- SingleSignOn valve, share authentication between web applications
+             Documentation at: /docs/config/valve.html -->
+        <!--
+        <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
+        -->
+        <!-- Access log processes all example.
+             Documentation at: /docs/config/valve.html
+             Note: The pattern used is equivalent to using pattern="common" -->
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log." suffix=".txt"/>
+        <Valve className="ch.qos.logback.access.tomcat.LogbackValve"/>
+</Host>
+</pre>
 <p>4. Modify web.xml to register filer<br />
 Example)<br />
-[code]<br />
-&lt;filter&gt;<br />
-  &lt;filter-name&gt;TeeFilter&lt;/filter-name&gt;<br />
-  &lt;filter-class&gt;ch.qos.logback.access.servlet.TeeFilter&lt;/filter-class&gt;<br />
-&lt;/filter&gt;</p>
-<p>&lt;filter-mapping&gt;<br />
-  &lt;filter-name&gt;TeeFilter&lt;/filter-name&gt;<br />
-  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br />
-&lt;/filter-mapping&gt;<br />
-[/code]</p>
+<pre class = "code">
+<filter>
+  <filter-name>TeeFilter</filter-name>
+  <filter-class>ch.qos.logback.access.servlet.TeeFilter</filter-class>
+</filter>
+<filter-mapping>
+  <filter-name>TeeFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>
+</pre>

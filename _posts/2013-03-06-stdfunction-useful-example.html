@@ -24,34 +24,34 @@ author:
   last_name: ''
 permalink: "/2013/03/06/stdfunction-useful-example/"
 ---
-<p>[sourcecode language="c"]<br />
-struct Wanderer<br />
-{<br />
-    explicit Wanderer(std::vector&lt;std::function&gt;&amp; update_loop)<br />
-    {<br />
-        update_loop.emplace_back([this](float dt) { update(dt); });<br />
-    }<br />
-    void update(float dt);<br />
-};</p>
-<p>struct Diver<br />
-{<br />
-    explicit Diver(std::vector&lt;std::function&gt;&amp; update_loop)<br />
-    {<br />
-        update_loop.emplace_back([this](float dt) { update(dt); });<br />
-    }<br />
-    void update(float dt);<br />
-};</p>
-<p>int main()<br />
-{<br />
-    std::vector&lt;std::function&gt; update_loop;<br />
-    Wanderer wanderer{update_loop};<br />
-    Diver diver{update_loop};</p>
-<p>    while (true)<br />
-    {<br />
-        for (auto &amp; function : update_loop)<br />
-        {<br />
-            function(0.016f);<br />
-        }<br />
-    }<br />
-}<br />
-[/sourcecode]</p>
+<pre class = "code">
+struct Wanderer
+{
+    explicit Wanderer(std::vector<std::function>& update_loop)
+    {
+        update_loop.emplace_back([this](float dt) { update(dt); });
+    }
+    void update(float dt);
+};
+struct Diver
+{
+    explicit Diver(std::vector<std::function>& update_loop)
+    {
+        update_loop.emplace_back([this](float dt) { update(dt); });
+    }
+    void update(float dt);
+};
+int main()
+{
+    std::vector<std::function> update_loop;
+    Wanderer wanderer{update_loop};
+    Diver diver{update_loop};
+    while (true)
+    {
+        for (auto & function : update_loop)
+        {
+            function(0.016f);
+        }
+    }
+}
+</pre>

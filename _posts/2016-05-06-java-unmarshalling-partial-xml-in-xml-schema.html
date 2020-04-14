@@ -23,45 +23,45 @@ author:
   last_name: ''
 permalink: "/2016/05/06/java-unmarshalling-partial-xml-in-xml-schema/"
 ---
-<p>[code lang="c"]</p>
-<p>public class XmlPartialMarshaller&lt;T&gt; {<br />
-    private static final Logger LOGGER = LoggerFactory.getLogger(XmlPartialMarshaller.class);<br />
-    private DocumentBuilder documentBuilder;<br />
-    private DocumentBuilderFactory documentBuilderFactory;<br />
-    private Binder&lt;Node&gt; binderPartialXml;<br />
-    private JAXBContext contextPartialXml;</p>
-<p>    private Class partialSchemaClass;</p>
-<p>    public XmlPartialMarshaller(Class&lt;T&gt; partialSchemaClass) {<br />
-        this.partialSchemaClass = partialSchemaClass;</p>
-<p>        try {<br />
-            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();<br />
-            this.documentBuilder = documentBuilderFactory.newDocumentBuilder();</p>
-<p>            this.contextPartialXml = JAXBContext.newInstance(partialSchemaClass);<br />
-            this.binderPartialXml = contextPartialXml.createBinder();<br />
-        } catch (Exception e) {<br />
-            LOGGER.error(e.getMessage(), e);<br />
-        }<br />
-    }</p>
-<p>    public T marshalPartialXml(String xml) {<br />
-       try {<br />
-            InputStream inputStream = null;<br />
-            try {<br />
-                inputStream = IOUtils.toInputStream(xml);<br />
-                Document document = documentBuilder.parse(inputStream);<br />
-                Node xmlNode = document.getDocumentElement();<br />
-                JAXBElement&lt;T&gt; element = binderPartialXml.unmarshal(xmlNode,<br />
-                        partialSchemaClass);</p>
-<p>                return element.getValue();<br />
-            } catch (Exception e) {<br />
-                LOGGER.error(e.getMessage(), e);<br />
-            } finally {<br />
-                if (inputStream != null)<br />
-                    inputStream.close();<br />
-            }<br />
-        } catch (Exception e) {<br />
-            LOGGER.error(e.getMessage(), e);<br />
-        }</p>
-<p>        return null;<br />
-    }<br />
-}<br />
-[/code]</p>
+<pre class = "code">
+public class XmlPartialMarshaller<T> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlPartialMarshaller.class);
+    private DocumentBuilder documentBuilder;
+    private DocumentBuilderFactory documentBuilderFactory;
+    private Binder<Node> binderPartialXml;
+    private JAXBContext contextPartialXml;
+    private Class partialSchemaClass;
+    public XmlPartialMarshaller(Class<T> partialSchemaClass) {
+        this.partialSchemaClass = partialSchemaClass;
+        try {
+            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            this.contextPartialXml = JAXBContext.newInstance(partialSchemaClass);
+            this.binderPartialXml = contextPartialXml.createBinder();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    public T marshalPartialXml(String xml) {
+       try {
+            InputStream inputStream = null;
+            try {
+                inputStream = IOUtils.toInputStream(xml);
+                Document document = documentBuilder.parse(inputStream);
+                Node xmlNode = document.getDocumentElement();
+                JAXBElement<T> element = binderPartialXml.unmarshal(xmlNode,
+                        partialSchemaClass);
+                return element.getValue();
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            } finally {
+                if (inputStream != null)
+                    inputStream.close();
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return null;
+    }
+}
+</pre>

@@ -24,30 +24,30 @@ author:
   last_name: ''
 permalink: "/2015/09/16/apachecxf-an-example-of-web-xml/"
 ---
-<p>[code lang="c"]<br />
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />
-&lt;web-app xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;<br />
-	xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:web=&quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;<br />
-	xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;<br />
-	id=&quot;WebApp_ID&quot; version=&quot;2.5&quot;&gt;</p>
-<p>	&lt;context-param&gt;<br />
-		&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;<br />
-		&lt;param-value&gt;classpath:config/applicationContext.xml&lt;/param-value&gt;<br />
-	&lt;/context-param&gt;</p>
-<p>	&lt;display-name&gt;Application Name&lt;/display-name&gt;</p>
-<p>	&lt;welcome-file-list&gt;<br />
-		&lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;<br />
-	&lt;/welcome-file-list&gt;</p>
-<p>	&lt;servlet&gt;<br />
-		&lt;servlet-name&gt;CXFServlet&lt;/servlet-name&gt;<br />
-		&lt;servlet-class&gt;org.apache.cxf.transport.servlet.CXFServlet&lt;/servlet-class&gt;<br />
-	&lt;/servlet&gt;</p>
-<p>	&lt;servlet-mapping&gt;<br />
-		&lt;servlet-name&gt;CXFServlet&lt;/servlet-name&gt;<br />
-		&lt;url-pattern&gt;/services/*&lt;/url-pattern&gt;<br />
-	&lt;/servlet-mapping&gt;</p>
-<p>	&lt;listener&gt;<br />
-		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;<br />
-	&lt;/listener&gt;</p>
-<p>&lt;/web-app&gt;</p>
-<p>[/code]</p>
+<pre class = "code">
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:config/applicationContext.xml</param-value>
+	</context-param>
+	<display-name>Application Name</display-name>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+</web-app>
+</pre>

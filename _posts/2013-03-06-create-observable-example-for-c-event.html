@@ -24,30 +24,30 @@ author:
   last_name: ''
 permalink: "/2013/03/06/create-observable-example-for-c-event/"
 ---
-<p>[sourcecode language="c"]<br />
- public class ValueChangeData<br />
- {<br />
-        public object oldValue;<br />
-        public object newValue;<br />
- }</p>
-<p> public IObservable&lt;ValueChangeData&gt; CreateObservableSourceChange()<br />
- {<br />
-     return Observable.Create&lt;ValueChangeData&gt;(<br />
-             observer =&gt;<br />
-             {<br />
-                 DelegateValueChanged changedFunc = new DelegateValueChanged((oldValue, newValue) =&gt;<br />
-                 {<br />
-                       ValueChangeData data = new ValueChangeData();<br />
-                       data.oldValue = oldValue;<br />
-                       data.newValue = newValue;<br />
-                       observer.OnNext(data);<br />
-                  });<br />
-                  OnValueChanged += changedFunc;</p>
-<p>                  return () =&gt;<br />
-                  {<br />
-                      OnValueChanged -= changedFunc;<br />
-                  };<br />
-              }<br />
-        );<br />
-   }<br />
-[/sourcecode]</p>
+<pre class = "code">
+ public class ValueChangeData
+ {
+        public object oldValue;
+        public object newValue;
+ }
+ public IObservable<ValueChangeData> CreateObservableSourceChange()
+ {
+     return Observable.Create<ValueChangeData>(
+             observer =>
+             {
+                 DelegateValueChanged changedFunc = new DelegateValueChanged((oldValue, newValue) =>
+                 {
+                       ValueChangeData data = new ValueChangeData();
+                       data.oldValue = oldValue;
+                       data.newValue = newValue;
+                       observer.OnNext(data);
+                  });
+                  OnValueChanged += changedFunc;
+                  return () =>
+                  {
+                      OnValueChanged -= changedFunc;
+                  };
+              }
+        );
+   }
+</pre>

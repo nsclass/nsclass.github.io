@@ -26,40 +26,40 @@ permalink: "/2013/07/08/c-wcf-instance-configuration/"
 ---
 <p>WCF has the confusing mechanism for management of instance on RPC call. The following separating shows an example of this situation. If you are more interested in this, you can find details from the book called Programming WCF Services 3rd edition.</p>
 <p>1. InstanceContextMode<br />
-[sourcecode language="c"]<br />
-public enum InstanceContextMode<br />
-{<br />
-    PerCall,<br />
-    PerSession,<br />
-    Single<br />
-}</p>
-<p>[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]<br />
-class MyService : IMyContract<br />
-{...}<br />
-[/sourcecode]</p>
+<pre class = "code">
+public enum InstanceContextMode
+{
+    PerCall,
+    PerSession,
+    Single
+}
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
+class MyService : IMyContract
+{...}
+</pre>
 <p>2. SessionMode<br />
-[sourcecode language="c"]<br />
-public enum SessionMode<br />
-{<br />
-    Allowed,<br />
-    Required,<br />
-    NotAllowed<br />
-}</p>
-<p>[ServiceContract(SessionMode = SessionMode.Allowed)]<br />
-interface IMyContract<br />
-{...}<br />
-[/sourcecode]</p>
+<pre class = "code">
+public enum SessionMode
+{
+    Allowed,
+    Required,
+    NotAllowed
+}
+[ServiceContract(SessionMode = SessionMode.Allowed)]
+interface IMyContract
+{...}
+</pre>
 <p>3. Binding<br />
 BasicHttpBinding cannot support Session mode. But NetTcpBinding and NetNamedPipeBinding can support this.</p>
 <p>Therefor if you want to have PerCall InstanceContextMode, it is recommended that Session mode should be NotAllowed as shown the following example. Also you can use this strategy for PerSession InstanceContextMode with considering the WCF bindings.</p>
-<p>[sourcecode language="c"]<br />
-[ServiceContract(SessionMode = SessionMode.NotAllowed)]<br />
-interface IMyContract<br />
-{...}<br />
-[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]<br />
-class MyService : IMyContract<br />
-{...}<br />
-[/sourcecode]</p>
+<pre class = "code">
+[ServiceContract(SessionMode = SessionMode.NotAllowed)]
+interface IMyContract
+{...}
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
+class MyService : IMyContract
+{...}
+</pre>
 <p>The following table summarize the combination of above cases.</p>
 <table>
 <tr>

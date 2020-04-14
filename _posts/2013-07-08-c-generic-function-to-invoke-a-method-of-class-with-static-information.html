@@ -24,22 +24,22 @@ author:
   last_name: ''
 permalink: "/2013/07/08/c-generic-function-to-invoke-a-method-of-class-with-static-information/"
 ---
-<p>[sourcecode language="c"]<br />
-class Invoker&lt;T&gt; where T : class<br />
-{<br />
-      static void Invoke(T invokeClass, string methodName, object[] args)<br />
-      {<br />
-         Debug.Assert(invokeClass != null);<br />
-         Type type = typeof(T);<br />
-         MethodInfo methodInfo = type.GetMethod(methodName);<br />
-         try<br />
-         {<br />
-            methodInfo.Invoke(invokeClass, args);<br />
-         }<br />
-         catch(Exception e)<br />
-         {<br />
-            Trace.WriteLine(e.Message);<br />
-         }<br />
-      }<br />
-}<br />
-[/sourcecode]</p>
+<pre class = "code">
+class Invoker<T> where T : class
+{
+      static void Invoke(T invokeClass, string methodName, object[] args)
+      {
+         Debug.Assert(invokeClass != null);
+         Type type = typeof(T);
+         MethodInfo methodInfo = type.GetMethod(methodName);
+         try
+         {
+            methodInfo.Invoke(invokeClass, args);
+         }
+         catch(Exception e)
+         {
+            Trace.WriteLine(e.Message);
+         }
+      }
+}
+</pre>

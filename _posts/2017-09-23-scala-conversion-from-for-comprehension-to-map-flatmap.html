@@ -23,20 +23,20 @@ author:
   last_name: ''
 permalink: "/2017/09/23/scala-conversion-from-for-comprehension-to-map-flatmap/"
 ---
-<p>[code lang="c"]</p>
-<p>def getProduct(id: String): Try[Product]<br />
-def getPrice(product: Product): Try[Price]<br />
-def calculateProductPrice(product: Product, price: Price): Try[Price]</p>
-<p>for {<br />
-  product &lt;- getProduct(&quot;1234&quot;)<br />
-  price &lt;- getPrice(product)<br />
-  calculatedPrice &lt;- calculateProductPrice(product, price)<br />
-  if (calculatedPrice &gt; 1000)<br />
-} yield (product, calculatedPrice)</p>
-<p>getProduct(&quot;1234&quot;).flatMap{ product =&gt;<br />
-  getPrice(product).flatMap{ price =&gt;<br />
-    calculateProductPrice(product, price).filter { p =&gt; p &gt; 1000 }<br />
-      .map{ p =&gt; (product, p) }<br />
-  }<br />
-}</p>
-<p>[/code]</p>
+<pre class = "code">
+def getProduct(id: String): Try[Product]
+def getPrice(product: Product): Try[Price]
+def calculateProductPrice(product: Product, price: Price): Try[Price]
+for {
+  product <- getProduct("1234")
+  price <- getPrice(product)
+  calculatedPrice <- calculateProductPrice(product, price)
+  if (calculatedPrice > 1000)
+} yield (product, calculatedPrice)
+getProduct("1234").flatMap{ product =>
+  getPrice(product).flatMap{ price =>
+    calculateProductPrice(product, price).filter { p => p > 1000 }
+      .map{ p => (product, p) }
+  }
+}
+</pre>

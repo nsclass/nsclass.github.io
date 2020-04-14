@@ -24,29 +24,29 @@ author:
   last_name: ''
 permalink: "/2014/12/08/java-a-generic-java-class-instantiation-example/"
 ---
-<p>[code lang="c"]<br />
-public class CommandFactory {<br />
-    public static &lt;T extends Command&lt;R&gt;, R extends CommandResult&gt; T createCommand(Class&lt;T&gt; classObject, Object... params) {<br />
-        try {<br />
-            T newInstance = classObject.newInstance();<br />
-            if (newInstance.initialize(params)) {<br />
-                return newInstance;<br />
-            }<br />
-        } catch (Exception e) {</p>
-<p>        }<br />
-        assert false;<br />
-        return null;<br />
-    }<br />
-}</p>
-<p>public class TestCommandResult extends CommandResult {<br />
-}</p>
-<p>public class TestCommand extends Command&lt;TestCommandResult&gt; {<br />
-    private int index;<br />
-    public TestCommand() {<br />
-    }</p>
-<p>    public bool initialize(int idx) {<br />
-        this.index = idx;<br />
-    }<br />
-}</p>
-<p>TestCommand testCmd = CommandFactory.&lt;TestCommand, TestCommandResult&gt;createCommand(TestCommand.class, 1);</p>
-<p>[/code]</p>
+<pre class = "code">
+public class CommandFactory {
+    public static <T extends Command<R>, R extends CommandResult> T createCommand(Class<T> classObject, Object... params) {
+        try {
+            T newInstance = classObject.newInstance();
+            if (newInstance.initialize(params)) {
+                return newInstance;
+            }
+        } catch (Exception e) {
+        }
+        assert false;
+        return null;
+    }
+}
+public class TestCommandResult extends CommandResult {
+}
+public class TestCommand extends Command<TestCommandResult> {
+    private int index;
+    public TestCommand() {
+    }
+    public bool initialize(int idx) {
+        this.index = idx;
+    }
+}
+TestCommand testCmd = CommandFactory.<TestCommand, TestCommandResult>createCommand(TestCommand.class, 1);
+</pre>

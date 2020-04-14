@@ -24,14 +24,14 @@ author:
   last_name: ''
 permalink: "/2013/06/11/udp-multicast-enabledisable-loopback-message-on-sending-a-message/"
 ---
-<p>[sourcecode language="c"]<br />
-bool EC_EnableMulticastLoopBack(SOCKET socket, bool IPv6, bool enable)<br />
-{<br />
-    // enable/disable loop<br />
-    char loop = enable ? 1 : 0;<br />
-    if (IPv6) {<br />
-        return setsockopt(socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &amp;loop, sizeof(loop)) == 0;<br />
-    } else<br />
-        return setsockopt(socket, IPPROTO_IP, IP_MULTICAST_LOOP, &amp;loop, sizeof(loop)) == 0;<br />
-}<br />
-[/sourcecode]</p>
+<pre class = "code">
+bool EC_EnableMulticastLoopBack(SOCKET socket, bool IPv6, bool enable)
+{
+    // enable/disable loop
+    char loop = enable ? 1 : 0;
+    if (IPv6) {
+        return setsockopt(socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, &loop, sizeof(loop)) == 0;
+    } else
+        return setsockopt(socket, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop)) == 0;
+}
+</pre>

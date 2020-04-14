@@ -25,12 +25,12 @@ author:
 permalink: "/2018/01/20/java-guava-api-to-implement-compareto-with-considering-sorting-ordering/"
 ---
 <p>Example of a chained comparison statement.<br />
-[code lang="c"]<br />
-   public int compareTo(Foo that) {<br />
-     return ComparisonChain.start()<br />
-         .compare(this.aString, that.aString)<br />
-         .compare(this.anInt, that.anInt)<br />
-         .compare(this.anEnum, that.anEnum, Ordering.natural().nullsLast())<br />
-         .result();<br />
-   }<br />
-[/code]</p>
+<pre class = "code">
+   public int compareTo(Foo that) {
+     return ComparisonChain.start()
+         .compare(this.aString, that.aString)
+         .compare(this.anInt, that.anInt)
+         .compare(this.anEnum, that.anEnum, Ordering.natural().nullsLast())
+         .result();
+   }
+</pre>

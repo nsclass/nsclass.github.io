@@ -33,32 +33,32 @@ author:
 permalink: "/2015/07/21/java-maven-build-plugin-configuration-to-create-a-jar-package/"
 ---
 <p>Make a package to be runnable including all dependent libs in a jar file</p>
-<p>[code lang="c"]</p>
-<p>    &lt;build&gt;<br />
-        &lt;plugins&gt;<br />
-            &lt;plugin&gt;<br />
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;<br />
-                &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;<br />
-                &lt;version&gt;2.6&lt;/version&gt;<br />
-                &lt;executions&gt;<br />
-                    &lt;execution&gt;<br />
-                        &lt;phase&gt;package&lt;/phase&gt;<br />
-                        &lt;goals&gt;<br />
-                            &lt;goal&gt;single&lt;/goal&gt;<br />
-                        &lt;/goals&gt;<br />
-                    &lt;/execution&gt;<br />
-                &lt;/executions&gt;</p>
-<p>                &lt;configuration&gt;<br />
-                    &lt;archive&gt;<br />
-                        &lt;manifest&gt;<br />
-                            &lt;mainClass&gt;com.app.demo.MainApp&lt;/mainClass&gt;<br />
-                        &lt;/manifest&gt;<br />
-                    &lt;/archive&gt;<br />
-                    &lt;descriptorRefs&gt;<br />
-                        &lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;<br />
-                    &lt;/descriptorRefs&gt;</p>
-<p>                &lt;/configuration&gt;<br />
-            &lt;/plugin&gt;<br />
-        &lt;/plugins&gt;<br />
-    &lt;/build&gt;</p>
-<p>[/code]</p>
+<pre class = "code">
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.app.demo.MainApp</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</pre>

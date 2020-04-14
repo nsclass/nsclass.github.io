@@ -24,15 +24,15 @@ author:
   last_name: ''
 permalink: "/2015/01/16/java-log4j-fixed-file-size-setting-example/"
 ---
-<p>[code lang="c"]<br />
-log4j.rootLogger=INFO, loggerId<br />
-log4j.appender.loggerId=org.apache.log4j.rolling.RollingFileAppender<br />
-log4j.appender.loggerId.rollingPolicy=org.apache.log4j.rolling.FixedWindowRollingPolicy<br />
-log4j.appender.loggerId.rollingPolicy.maxIndex=5<br />
-log4j.appender.loggerId.triggeringPolicy=org.apache.log4j.rolling.SizeBasedTriggeringPolicy<br />
-log4j.appender.loggerId.triggeringPolicy.MaxFileSize=10000000<br />
-log4j.appender.loggerId.rollingPolicy.FileNamePattern=app-%i.log.zip<br />
-log4j.appender.loggerId.rollingPolicy.ActiveFileName=app.log<br />
-log4j.appender.loggerId.layout=org.apache.log4j.PatternLayout<br />
-log4j.appender.loggerId.layout.ConversionPattern=%d [%t] %-5p (%F:%L) - %m%n<br />
- [/code]</p>
+<pre class = "code">
+log4j.rootLogger=INFO, loggerId
+log4j.appender.loggerId=org.apache.log4j.rolling.RollingFileAppender
+log4j.appender.loggerId.rollingPolicy=org.apache.log4j.rolling.FixedWindowRollingPolicy
+log4j.appender.loggerId.rollingPolicy.maxIndex=5
+log4j.appender.loggerId.triggeringPolicy=org.apache.log4j.rolling.SizeBasedTriggeringPolicy
+log4j.appender.loggerId.triggeringPolicy.MaxFileSize=10000000
+log4j.appender.loggerId.rollingPolicy.FileNamePattern=app-%i.log.zip
+log4j.appender.loggerId.rollingPolicy.ActiveFileName=app.log
+log4j.appender.loggerId.layout=org.apache.log4j.PatternLayout
+log4j.appender.loggerId.layout.ConversionPattern=%d [%t] %-5p (%F:%L) - %m%n
+</pre>

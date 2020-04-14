@@ -24,15 +24,15 @@ author:
 permalink: "/2016/02/15/rxjava-execute-the-custom-operation-when-unsubscribing/"
 ---
 <p>The following example will show how to perform the custom operation when unsubscribing</p>
-<p>[code lang="c"]<br />
-Service service = new Service();<br />
-Observable&lt;String&gt; ob = Observable.create(subscriber -&gt; {<br />
-          subscriber.onNext(&quot;test&quot;);<br />
-          service.register();</p>
-<p>          subscriber.add(Subscriptions.create(() -&gt; {<br />
-          // do custom operation<br />
-          service.unregister();<br />
-      }));<br />
-    }<br />
-);<br />
-[/code]</p>
+<pre class = "code">
+Service service = new Service();
+Observable<String> ob = Observable.create(subscriber -> {
+          subscriber.onNext("test");
+          service.register();
+          subscriber.add(Subscriptions.create(() -> {
+          // do custom operation
+          service.unregister();
+      }));
+    }
+);
+</pre>

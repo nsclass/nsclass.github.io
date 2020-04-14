@@ -22,42 +22,42 @@ author:
   last_name: ''
 permalink: "/2014/01/30/c-hash-combine-example-for-hash-function-in-unordered_map/"
 ---
-<p>[code lang="c"]<br />
-template &lt;class T&gt;<br />
-inline void hash_combine(std::size_t &amp; seed, const T &amp; v)<br />
-{<br />
-  std::hash&lt;T&gt; hasher;<br />
-  seed ^= hasher(v) + 0x9e3779b9 + (seed &lt;&lt; 6) + (seed &gt;&gt; 2);<br />
-}<br />
-[/code]</p>
-<p>[code lang="c"]<br />
-class Item<br />
-{<br />
-public:<br />
-    std::string name;<br />
-    int age;<br />
-    int code;</p>
-<p>    Item(std::string n, int age, int code)<br />
-	: name(std::move(n)), age(age), code(code)<br />
-    {<br />
-    }</p>
-<p>    bool operator == (Item const&amp; item) const<br />
-    {<br />
-	return name == item.name &amp;&amp;<br />
-		age == item.age &amp;&amp;<br />
-		code == item.code;<br />
-    }<br />
-};</p>
-<p>struct ItemHasher<br />
-{<br />
-    std::size_t operator()(Item const&amp; item) const<br />
-    {<br />
-	std::size_t seed = 0;<br />
-	hash_combine(seed, item.name);<br />
-	hash_combine(seed, item.age);<br />
-	hash_combine(seed, item.code);<br />
-	return seed;<br />
-    }<br />
-};</p>
-<p>std::unordered_map&lt;Item, std::string, ItemHasher&gt; testHash;<br />
-[/code]</p>
+<pre class = "code">
+template <class T>
+inline void hash_combine(std::size_t & seed, const T & v)
+{
+  std::hash<T> hasher;
+  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+</pre>
+<pre class = "code">
+class Item
+{
+public:
+    std::string name;
+    int age;
+    int code;
+    Item(std::string n, int age, int code)
+	: name(std::move(n)), age(age), code(code)
+    {
+    }
+    bool operator == (Item const& item) const
+    {
+	return name == item.name &&
+		age == item.age &&
+		code == item.code;
+    }
+};
+struct ItemHasher
+{
+    std::size_t operator()(Item const& item) const
+    {
+	std::size_t seed = 0;
+	hash_combine(seed, item.name);
+	hash_combine(seed, item.age);
+	hash_combine(seed, item.code);
+	return seed;
+    }
+};
+std::unordered_map<Item, std::string, ItemHasher> testHash;
+</pre>

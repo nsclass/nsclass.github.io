@@ -24,54 +24,54 @@ author:
 permalink: "/2012/01/25/setting-up-boost-unit-testing-visual-studio-project/"
 ---
 <p>1. Header<br />
-[sourcecode language="cpp"]<br />
-#define BOOST_TEST_MODULE TestExample<br />
-#include<br />
-using namespace boost::unit_test;<br />
-[/sourcecode]<br />
+<pre class = "code">
+#define BOOST_TEST_MODULE TestExample
+#include
+using namespace boost::unit_test;
+</pre>
 2. Linked library<br />
-[sourcecode language="cpp"]<br />
-libboost_unit_test_framework-vc100-mt-sgd-1_46_1.lib<br />
-[/sourcecode]</p>
+<pre class = "code">
+libboost_unit_test_framework-vc100-mt-sgd-1_46_1.lib
+</pre>
 <p>3. Global fixture<br />
-[sourcecode language="cpp"]<br />
-struct TestGlobalInitFixture<br />
-{<br />
-	TestGlobalInitFixture()<br />
-	{<br />
-		BOOST_TEST_MESSAGE(&quot;### Global initialization for testing ###&quot;);<br />
-	}</p>
-<p>	~TestGlobalInitFixture()<br />
-	{<br />
-		BOOST_TEST_MESSAGE(&quot;### Global deinitialization for testing ###&quot;);<br />
-	}<br />
-};<br />
-BOOST_GLOBAL_FIXTURE(TestGlobalInitFixture);<br />
-[/sourcecode]</p>
+<pre class = "code">
+struct TestGlobalInitFixture
+{
+	TestGlobalInitFixture()
+	{
+		BOOST_TEST_MESSAGE("### Global initialization for testing ###");
+	}
+	~TestGlobalInitFixture()
+	{
+		BOOST_TEST_MESSAGE("### Global deinitialization for testing ###");
+	}
+};
+BOOST_GLOBAL_FIXTURE(TestGlobalInitFixture);
+</pre>
 <p>4. Fixture<br />
-[sourcecode language="cpp"]<br />
-struct BuisnessLogicTestSuiteFixture<br />
-{<br />
-	BuisnessLogicTestSuiteFixture()<br />
-	{<br />
-	}</p>
-<p>	~BuisnessLogicTestSuiteFixture()<br />
-	{<br />
-	}<br />
-};</p>
-<p>BOOST_FIXTURE_TEST_SUITE(TestSuite_BusinessLogic, BuisnessLogicTestSuiteFixture)<br />
-[/sourcecode]</p>
+<pre class = "code">
+struct BuisnessLogicTestSuiteFixture
+{
+	BuisnessLogicTestSuiteFixture()
+	{
+	}
+	~BuisnessLogicTestSuiteFixture()
+	{
+	}
+};
+BOOST_FIXTURE_TEST_SUITE(TestSuite_BusinessLogic, BuisnessLogicTestSuiteFixture)
+</pre>
 <p>5. Test case example<br />
-[sourcecode language="cpp"]<br />
-BOOST_AUTO_TEST_CASE(test_should_check_xxx)<br />
-{<br />
-}<br />
-[/sourcecode]<br />
+<pre class = "code">
+BOOST_AUTO_TEST_CASE(test_should_check_xxx)
+{
+}
+</pre>
 6. run a specific test case example</p>
-<p>[sourcecode language="cpp"]<br />
---run_test=*/test_should_check_xxx<br />
-[/sourcecode]</p>
+<pre class = "code">
+--run_test=*/test_should_check_xxx
+</pre>
 <p>7. change log level<br />
-[sourcecode language="cpp"]<br />
---result_code=no --report_level=no<br />
-[/sourcecode]</p>
+<pre class = "code">
+--result_code=no --report_level=no
+</pre>

@@ -23,25 +23,25 @@ author:
   last_name: ''
 permalink: "/2014/04/14/c-changing-log4net-logging-path-at-runtime/"
 ---
-<p>[code lang="c"]<br />
-        private static void InitLoggingPath()<br />
-        {<br />
-            string progDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);<br />
-            string dataPath = progDataPath + Resource.DATA_FILES_PATH;<br />
-            if (!Directory.Exists(dataPath))<br />
-                Directory.CreateDirectory(dataPath);</p>
-<p>            if (Directory.Exists(dataPath))<br />
-            {<br />
-                string configPath = Path.Combine(dataPath, &quot;Test.txt&quot;);</p>
-<p>                ILoggerRepository repository = LogManager.GetRepository();<br />
-                IAppender[] appenders = repository.GetAppenders();<br />
-                var rollingAppender = appenders.Where(p =&gt; p is RollingFileAppender).ToList();<br />
-                foreach (IAppender appender in rollingAppender)<br />
-                {<br />
-                    RollingFileAppender fileAppender = appender as RollingFileAppender;<br />
-                    fileAppender.File = configPath;<br />
-                    fileAppender.ActivateOptions();<br />
-                }<br />
-            }<br />
-        }<br />
-[/code]</p>
+<pre class = "code">
+        private static void InitLoggingPath()
+        {
+            string progDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            string dataPath = progDataPath + Resource.DATA_FILES_PATH;
+            if (!Directory.Exists(dataPath))
+                Directory.CreateDirectory(dataPath);
+            if (Directory.Exists(dataPath))
+            {
+                string configPath = Path.Combine(dataPath, "Test.txt");
+                ILoggerRepository repository = LogManager.GetRepository();
+                IAppender[] appenders = repository.GetAppenders();
+                var rollingAppender = appenders.Where(p => p is RollingFileAppender).ToList();
+                foreach (IAppender appender in rollingAppender)
+                {
+                    RollingFileAppender fileAppender = appender as RollingFileAppender;
+                    fileAppender.File = configPath;
+                    fileAppender.ActivateOptions();
+                }
+            }
+        }
+</pre>

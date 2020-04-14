@@ -24,9 +24,9 @@ author:
   last_name: ''
 permalink: "/2013/05/31/c11-a-example-of-trailing-return-type/"
 ---
-<p>[sourcecode language="c"]<br />
-template&lt;typename T, typename S&gt;<br />
-auto multiply(T lhs, S rhs) -&gt; decltype(lhs * rhs) {<br />
-  return lhs * rhs;<br />
-}<br />
-[/sourcecode]</p>
+<pre class = "code">
+template<typename T, typename S>
+auto multiply(T lhs, S rhs) -> decltype(lhs * rhs) {
+  return lhs * rhs;
+}
+</pre>

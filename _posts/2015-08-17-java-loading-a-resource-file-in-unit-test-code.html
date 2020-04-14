@@ -24,28 +24,28 @@ author:
   last_name: ''
 permalink: "/2015/08/17/java-loading-a-resource-file-in-unit-test-code/"
 ---
-<p>[code lang="c"]<br />
-    String xml = getResourceString(&quot;/test_files/TestProperties.xml&quot;);</p>
-<p>    private String getResourceString(String resourcePath) {</p>
-<p>        InputStream inputStream = null;<br />
-        try {<br />
-            URL url = getClass().getResource(resourcePath);<br />
-            File file = new File(url.toURI());<br />
-            boolean exist = file.exists();<br />
-            org.junit.Assert.assertTrue(exist);</p>
-<p>            inputStream = this.getClass().getResourceAsStream(resourcePath);<br />
-            String xmlResult = IOUtils.toString(inputStream, &quot;UTF-8&quot;);</p>
-<p>            return xmlResult;</p>
-<p>        } catch (Exception e) {<br />
-            logger.error(e.getMessage(), e);<br />
-        } finally {<br />
-            try {<br />
-                if (inputStream != null)<br />
-                    inputStream.close();<br />
-            } catch (Exception ex) {<br />
-                logger.error(ex.getMessage(), ex);<br />
-            }<br />
-        }</p>
-<p>        return null;<br />
-    }<br />
-[/code]</p>
+<pre class = "code">
+    String xml = getResourceString("/test_files/TestProperties.xml");
+    private String getResourceString(String resourcePath) {
+        InputStream inputStream = null;
+        try {
+            URL url = getClass().getResource(resourcePath);
+            File file = new File(url.toURI());
+            boolean exist = file.exists();
+            org.junit.Assert.assertTrue(exist);
+            inputStream = this.getClass().getResourceAsStream(resourcePath);
+            String xmlResult = IOUtils.toString(inputStream, "UTF-8");
+            return xmlResult;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+            } catch (Exception ex) {
+                logger.error(ex.getMessage(), ex);
+            }
+        }
+        return null;
+    }
+</pre>

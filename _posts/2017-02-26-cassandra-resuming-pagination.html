@@ -24,31 +24,31 @@ author:
 permalink: "/2017/02/26/cassandra-resuming-pagination/"
 ---
 <p>Cassandra provides the page state information and it can be reused to get next iteration.</p>
-<p>[code lang="c"]<br />
-Statement stmt = QueryBuilder<br />
-                    .select()<br />
-                    .all()<br />
-                    .from(&quot;users&quot;)<br />
-                    .where(eq(&quot;email&quot;, emailUpper));</p>
-<p>ResultSet resultSet = getSession().execute(stmt);<br />
-PagingState pagingState = resultSet.getExecutionInfo().getPagingState();<br />
-[/code]</p>
+<pre class = "code">
+Statement stmt = QueryBuilder
+                    .select()
+                    .all()
+                    .from("users")
+                    .where(eq("email", emailUpper));
+ResultSet resultSet = getSession().execute(stmt);
+PagingState pagingState = resultSet.getExecutionInfo().getPagingState();
+</pre>
 <p>Then it can be serialized in below way<br />
-[code lang="c"]<br />
-String savedStringState = pagingState.toString();<br />
-byte[] savedBytesState = pagingState.toBytes();<br />
-[/code]</p>
+<pre class = "code">
+String savedStringState = pagingState.toString();
+byte[] savedBytesState = pagingState.toBytes();
+</pre>
 <p>It can be reconstructed and resume the query as shown following example.<br />
-[code lang="c"]<br />
-PagingState pagingState = PagingState.fromString(string);</p>
-<p>Statement stmt = QueryBuilder<br />
-                    .select()<br />
-                    .all()<br />
-                    .from(&quot;users&quot;)<br />
-                    .where(eq(&quot;email&quot;, emailUpper));</p>
-<p>PagingState pagingState = resultSet.getExecutionInfo().getPagingState();</p>
-<p>// restore state from the saved string<br />
-PagingState pagingState = PagingState.fromString(savedStringState);<br />
-stmt.setPagingState(pagingState);<br />
-ResultSet resultSet = getSession().execute(stmt);<br />
-[/code]</p>
+<pre class = "code">
+PagingState pagingState = PagingState.fromString(string);
+Statement stmt = QueryBuilder
+                    .select()
+                    .all()
+                    .from("users")
+                    .where(eq("email", emailUpper));
+PagingState pagingState = resultSet.getExecutionInfo().getPagingState();
+// restore state from the saved string
+PagingState pagingState = PagingState.fromString(savedStringState);
+stmt.setPagingState(pagingState);
+ResultSet resultSet = getSession().execute(stmt);
+</pre>

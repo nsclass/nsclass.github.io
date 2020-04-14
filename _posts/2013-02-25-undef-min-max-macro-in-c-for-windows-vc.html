@@ -24,12 +24,12 @@ author:
   last_name: ''
 permalink: "/2013/02/25/undef-min-max-macro-in-c-for-windows-vc/"
 ---
-<p>[sourcecode language="c"]<br />
-#pragma push_macro(&quot;min&quot;)<br />
-#pragma push_macro(&quot;max&quot;)<br />
-#undef min<br />
-#undef max</p>
-<p>// call min, max</p>
-<p>#pragma pop_macro(&quot;min&quot;)<br />
-#pragma pop_macro(&quot;max&quot;)<br />
-[/sourcecode]</p>
+<pre class = "code">
+#pragma push_macro("min")
+#pragma push_macro("max")
+#undef min
+#undef max
+// call min, max
+#pragma pop_macro("min")
+#pragma pop_macro("max")
+</pre>
