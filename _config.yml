@@ -5,3 +5,4 @@ plugins: [github-pages]
 exclude:
   - Gemfile
   - Gemfile.lock
+paginate: 5

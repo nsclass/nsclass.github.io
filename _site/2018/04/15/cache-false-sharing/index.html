@@ -1,3 +1,0 @@
-<p>As modern CPU shared memory architecture, false sharing is the major performance bottleneck on multi-thread application.<br />
-False sharing is caused by sharing the same cache line with multiple thread. In order to avoid this problem, it is important that local thread data should be away enough to data used by another thread.<br />
-The best way to achieve this is not to spread out data used by a thread. If all data used by a thread is close enough, processor will try to load them on the same cache line which each thread can localize the memory access on their cache line.</p>

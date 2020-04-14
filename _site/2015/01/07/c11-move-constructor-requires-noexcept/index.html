@@ -1,9 +1,0 @@
-<p>If a class having move constructor needs to be in the container class, it should have "noexcept" qualification. If move constructor may throw exceptions, it will try to use copy constructor instead of move constructor.</p>
-<p>[code lang="c"]<br />
-class Manager<br />
-{<br />
-   ...<br />
-   Manager(Manager&amp;&amp; other) noexcept;<br />
-   ...<br />
-}<br />
-[/code]</p>

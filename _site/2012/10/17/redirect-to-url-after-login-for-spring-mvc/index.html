@@ -1,9 +1,0 @@
-<p>Fortunately, Spring Security has built-in functionality for remembering the URL that was originally requested, and redirecting your users there after they successfully login. The quick answer to your question is that you need to enable this functionality by setting the always-use-default-target option to false in your Spring Security configuration.</p>
-<p>For example, here's a common line from the Spring Security config:</p>
-<p>[sourcecode language="html"]<br />
-&lt;form-login<br />
-login-page=&quot;/login.html&quot;<br />
-authentication-failure-url=&quot;/login.html?status=LOGIN_FAILURE&quot;<br />
-default-target-url=&quot;/secure/index.html&quot;<br />
-always-use-default-target=&quot;false /&gt;<br />
-[/sourcecode]</p>

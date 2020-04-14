@@ -12,4 +12,4 @@ categories:
 - JavaScript
 permalink: "2020/04/09/fp-functional-programming-with-javascript"
 ---
-JavaScript FP book [https://mostly-adequate.gitbooks.io/mostly-adequate-guide/]
+<a href="https://mostly-adequate.gitbooks.io/mostly-adequate-guide/">JavaScript FP book</a>
