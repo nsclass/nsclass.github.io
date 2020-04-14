@@ -1,5 +1,4 @@
-
-## All Posts
-<article>
-    <a href="/posts">
-</article>
+---
+layout: home
+author_profile: true
+---
