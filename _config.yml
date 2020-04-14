@@ -1,5 +1,7 @@
-title: Nam Seob Seo
 theme: jekyll-theme-slate
+title: Nam Seob Seo
+url: http://nsclass.github.io
+plugins: [github-pages]
 exclude:
   - Gemfile
   - Gemfile.lock
