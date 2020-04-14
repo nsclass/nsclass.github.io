@@ -1,9 +1,7 @@
 ---
 layout: posts
-title: Nam Seob Seo Blog
-author_profile: true
 ---
 
 <h3>
-  <a href="/posts">All Blog Posts</a>
+  <a href="/posts">Recent Blog Posts</a>
 </h3>
