@@ -1,7 +1,7 @@
 # main links
 main:
-  - title: "Search"
-    url: /search/
+  # - title: "Search"
+  #   url: /search/
   - title: "About"
     url: /about/
   # - title: "Sample Collections"
