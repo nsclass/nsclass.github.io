@@ -26,7 +26,7 @@ permalink: "/2020/03/18/java-dropwizard-http-request-accessing-log-customizing-e
 ---
 <p>Dropwizard can allow to access the attributes in a request as shown in below example.<br />
 Full layout logback format details can be found from <a href="http://logback.qos.ch/manual/layouts.html">http://logback.qos.ch/manual/layouts.html</a></p>
-<pre class="code">
+{% highlight wl linenos %}
 server:
   rootPath: /test/services/rest
   requestLog:
@@ -37,4 +37,4 @@ server:
       archivedFileCount: 5
       timeZone: UTC
       logFormat: "%h %l %u [%t{dd/MMM/yyyy:HH:mm:ss Z,UTC}] %reqAttribute{attributeName} \"%r\" %s %b \"%i{Referer\"%ier-Agent}\"
-</pre>
+{% endhighlight %}
