@@ -26,7 +26,7 @@ permalink: "/2015/08/12/maven-log4j-setting-for-maven-with-springframework/"
 ---
 <p>In order to enable log4j settings in maven compilation, log4j.properties file should be in the test/resources directory.</p>
 <p>Sample unit test class<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:config/test-applicationContext.xml")
 public class SimpleTestExampleTest extends AbstractJUnit4SpringContextTests {
@@ -35,9 +35,9 @@ public class SimpleTestExampleTest extends AbstractJUnit4SpringContextTests {
         logger.debug("Executing before");
     }
 }
-</xmp
+{% endhighlight %}
 <p>Sample log4j.properties file<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 log4j.rootLogger=ERROR, A1
 # A1 is set to be a ConsoleAppender.
 log4j.appender.A1=org.apache.log4j.ConsoleAppender
@@ -46,4 +46,4 @@ log4j.appender.A1.layout=org.apache.log4j.PatternLayout
 log4j.appender.A1.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n
 # An alternative logging format:
 # log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n
-</xmp
+{% endhighlight %}

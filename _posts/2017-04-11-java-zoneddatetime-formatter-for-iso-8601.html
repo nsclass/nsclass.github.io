@@ -24,7 +24,7 @@ author:
 permalink: "/2017/04/11/java-zoneddatetime-formatter-for-iso-8601/"
 ---
 <p>Parse example<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();
 DateTimeFormatter formatter = builder
         .parseCaseInsensitive()
@@ -32,9 +32,9 @@ DateTimeFormatter formatter = builder
         .appendOffsetId()
         .toFormatter();
 ZonedDateTime.parse("2015-08-18T00:00+01:00", formatter);
-</xmp
+{% endhighlight %}
 <p>toString example<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();
 DateTimeFormatter formatter = builder
         .parseCaseInsensitive()
@@ -43,4 +43,4 @@ DateTimeFormatter formatter = builder
         .toFormatter();
 ZonedDateTime zoneTime = new ZonedDatTime();
 String date = zoneTime.format(formatter);
-</xmp
+{% endhighlight %}

@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2015/08/17/java-loading-a-resource-file-in-unit-test-code/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
     String xml = getResourceString("/test_files/TestProperties.xml");
     private String getResourceString(String resourcePath) {
         InputStream inputStream = null;
@@ -48,4 +48,4 @@ permalink: "/2015/08/17/java-loading-a-resource-file-in-unit-test-code/"
         }
         return null;
     }
-</xmp
+{% endhighlight %}

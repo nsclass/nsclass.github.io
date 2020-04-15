@@ -25,7 +25,7 @@ author:
 permalink: "/2015/09/17/java-initialize-web-app-with-springframework/"
 ---
 <p>In order to initialize the Web application with Springframework, it is required to detect when context has been initialized. You can achieve it by defining a subclass with deriving ApplicationListener</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 public class ApplicationListenerBean implements
 		ApplicationListener<ContextRefreshedEvent> {
 	@Override
@@ -33,14 +33,14 @@ public class ApplicationListenerBean implements
              // add initialization code
 	}
 }
-</xmp
+{% endhighlight %}
 <p>Then it is required to define this class in application context xml file as shown below example<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 	<bean id="applicationContextListener" class="com.demo.app.ApplicationListenerBean">
 	</bean>
-</xmp
+{% endhighlight %}
 <p>If you would like to capture the ApplicationContext in Springframework, you can achieve by subclassing ApplicationContextAware<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 public class ApplicationContextProvider implements ApplicationContextAware {
 	private static ApplicationContext ctx = null;
 	@Override
@@ -55,4 +55,4 @@ public class ApplicationContextProvider implements ApplicationContextAware {
 }
 // in xml
 	<bean id="applicationContextProvider" class="com.demo.app.ApplicationContextProvider"/>
-</xmp
+{% endhighlight %}

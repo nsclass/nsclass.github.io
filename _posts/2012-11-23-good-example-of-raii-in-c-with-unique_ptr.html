@@ -25,11 +25,11 @@ author:
   last_name: ''
 permalink: "/2012/11/23/good-example-of-raii-in-c-with-unique_ptr/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 class FileDeleter {
 void operator()(FILE* fp) { fclose(fp); }
 };
 unique_ptr<FILE, FileDeleter> fp = fopen("blah");
 or even
 unique_ptr<FILE, int(*)(FILE*)> fp( fopen("blah"), fclose)
-</xmp
+{% endhighlight %}

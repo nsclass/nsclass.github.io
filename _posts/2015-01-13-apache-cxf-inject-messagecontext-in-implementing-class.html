@@ -31,7 +31,7 @@ author:
 permalink: "/2015/01/13/apache-cxf-inject-messagecontext-in-implementing-class/"
 ---
 <p>It is common to get a Servlet context on implementing WEB API. Apache CXF has a little different approach to get this instance. The following code show how to get ServletContext instance for RS.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 public interface IServiceInterface {
     void SampleFunction();
 }
@@ -42,4 +42,4 @@ public class ImplementClass implement IServiceInterface {
         ServletContext servletContext = messgeContext.getServletContext();
     }
 }
-</xmp
+{% endhighlight %}

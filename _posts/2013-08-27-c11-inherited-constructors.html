@@ -25,7 +25,7 @@ author:
 permalink: "/2013/08/27/c11-inherited-constructors/"
 ---
 <p>Now C++11 allow that derived class can inherit the constructors of base class as the following.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 class A
 {
 public:
@@ -37,5 +37,5 @@ class B : public A
 {
     using base::A;
 };
-</xmp
+{% endhighlight %}
 <p>However, you need to be careful when if B has any member variable, they will be initialized with random values unless you initialize specifically.</p>

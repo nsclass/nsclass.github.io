@@ -24,14 +24,14 @@ author:
 permalink: "/2014/03/09/c-how-raisepropertychanged-works-in-mvvm-light/"
 ---
 <p>MVVM light provides an easy way of the strong typed RaisePropertyChanged with lambda. The following code shows how this can find the correct string for member of ViewModel.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 public void RaisePropertyChanged<T>(Expression<Func<T>> property)
 {
     PropertyChanged(this, new PropertyChangedEventArgs(property.GetMemberInfo().Name);
 }
-</xmp
+{% endhighlight %}
 <p>so you can use the following code safely.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 public class ViewModel : ViewModelBase
 {
     private string _name;
@@ -45,4 +45,4 @@ public class ViewModel : ViewModelBase
       }
     }
 }
-</xmp
+{% endhighlight %}

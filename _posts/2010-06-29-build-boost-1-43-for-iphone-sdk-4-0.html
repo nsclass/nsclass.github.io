@@ -27,7 +27,7 @@ author:
 permalink: "/2010/06/29/build-boost-1-43-for-iphone-sdk-4-0/"
 ---
 <p>1. modify user.config.jam in tools/build/v2 directory<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 using darwin : 4.2.1~iphone
 : /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/g++ -arch armv7
 : <striper>
@@ -38,10 +38,10 @@ using darwin : 4.2.1~iphonesim
 : <striper>
 : <architecture>x86 <target-os>iphone
 ;
-</xmp
+{% endhighlight %}
 <p>2. compile<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 ./bootstrap.sh
 ./bjam --prefix=${HOME}/usr/boost-1.43/iphone toolset=darwin architecture=arm target-os=iphone macosx-version=iphone-4.0 define=_LITTLE_ENDIAN link=static install
-</xmp
+{% endhighlight %}
 </pre>

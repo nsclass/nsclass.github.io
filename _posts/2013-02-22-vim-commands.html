@@ -25,7 +25,7 @@ author:
 permalink: "/2013/02/22/vim-commands/"
 ---
 <p>Cursor movement<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     h - move left
     j - move down
     k - move up
@@ -40,10 +40,10 @@ permalink: "/2013/02/22/vim-commands/"
     ^ - first non-blank character of line
     $ - end of line
     G - Go To command (prefix with number - 5G goes to line 5)
-</xmp
+{% endhighlight %}
 Note: Prefix a cursor movement command with a number to repeat it. For example, 4j moves down 4 lines.<br />
 Insert Mode - Inserting/Appending text<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     i - start insert mode at cursor
     I - insert at the beginning of the line
     a - append after the cursor
@@ -52,9 +52,9 @@ Insert Mode - Inserting/Appending text<br />
     O - open blank line above current line
     ea - append at end of word
     Esc - exit insert mode
-</xmp
+{% endhighlight %}
 Editing<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     r - replace a single character (does not use insert mode)
     J - join line below to the current one
     cc - change (replace) an entire line
@@ -65,9 +65,9 @@ Editing<br />
     xp - transpose two letters (delete and paste, technically)
     u - undo
     . - repeat last command
-</xmp
+{% endhighlight %}
 Marking text (visual mode)<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     v - start visual mode, mark lines, then do command (such as y-yank)
     V - start Linewise visual mode
     o - move to other end of marked area
@@ -79,17 +79,17 @@ Marking text (visual mode)<br />
     ib - inner () block
     iB - inner {} block
     Esc - exit visual mode
-</xmp
+{% endhighlight %}
 Visual commands<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     > - shift right
     < - shift left
     y - yank (copy) marked text
     d - delete marked text
     ~ - switch case
-</xmp
+{% endhighlight %}
 Cut and Paste<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     yy - yank (copy) a line
     2yy - yank 2 lines
     yw - yank word
@@ -99,25 +99,25 @@ Cut and Paste<br />
     dd - delete (cut) a line
     dw - delete (cut) the current word
     x - delete (cut) current character
-</xmp
+{% endhighlight %}
 Exiting<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     :w - write (save) the file, but don't exit
     :wq - write (save) and quit
     :q - quit (fails if anything has changed)
     :q! - quit and throw away changes
-</xmp
+{% endhighlight %}
 Search/Replace<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     /pattern - search for pattern
     ?pattern - search backward for pattern
     n - repeat search in same direction
     N - repeat search in opposite direction
     :%s/old/new/g - replace all old with new throughout file
     :%s/old/new/gc - replace all old with new throughout file with confirmations
-</xmp
+{% endhighlight %}
 Working with multiple files<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     :e filename - Edit a file in a new buffer
     :bnext (or :bn) - go to next buffer
     :bprev (of :bp) - go to previous buffer
@@ -127,4 +127,4 @@ Working with multiple files<br />
     ctrl+ww - switch between windows
     ctrl+wq - Quit a window
     ctrl+wv - Split windows vertically
-</xmp
+{% endhighlight %}

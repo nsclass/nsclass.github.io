@@ -24,15 +24,15 @@ author:
 permalink: "/2018/01/01/angular-proxy-settings-to-avoid-cors/"
 ---
 <p>Create a proxy.config.json<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 {
   "/api": {
     "target": "http://localhost:8080",
     "secure": false
   }
 }
-</xmp
+{% endhighlight %}
 <p>run ng serve with a configuration file.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 ng serve --proxy-config proxy.config.json
-</xmp
+{% endhighlight %}

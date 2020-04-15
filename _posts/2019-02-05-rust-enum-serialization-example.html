@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2019/02/05/rust-enum-serialization-example/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 use serde::ser::{ Serialize, Serializer };
 use serde::de::{ Deserialize, Deserializer };
 pub enum EnumTestType {
@@ -61,4 +61,4 @@ impl <'a> Deserialize<'a> for EnumTestType {
         Ok(result)
     }
 }
-</xmp
+{% endhighlight %}

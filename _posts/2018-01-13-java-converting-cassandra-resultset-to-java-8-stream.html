@@ -25,7 +25,7 @@ author:
   last_name: ''
 permalink: "/2018/01/13/java-converting-cassandra-resultset-to-java-8-stream/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 Statement stmt = QueryBuilder().select().all().from('table');
 ResultSet rs = session.execute(stmt);
 StreamSupport.stream(
@@ -34,9 +34,9 @@ StreamSupport.stream(
 .forEach(row -> {
    ...
 });
-</xmp
+{% endhighlight %}
 <p>As input stream is sorted by partition key and input order is important, the following example can be used.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 Statement stmt = QueryBuilder().select().all().from('table');
 ResultSet rs = session.execute(stmt);
 StreamSupport.stream(
@@ -45,4 +45,4 @@ StreamSupport.stream(
 .forEach(row -> {
    ...
 });
-</xmp
+{% endhighlight %}

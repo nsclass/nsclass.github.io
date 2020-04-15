@@ -24,7 +24,7 @@ author:
 permalink: "/2019/11/27/electron-using-reach-router-for-electron-app/"
 ---
 <p>Creating a history with a memorySource will allow to work for Electron application with reach/router</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 import { Router, createMemorySource, createHistory, LocationProvider } from "@reach/router"
 let source = createMemorySource("/")
 let history = createHistory(source)
@@ -37,4 +37,4 @@ const App = () => {
       </LocationProvider>
    )
 }
-</xmp
+{% endhighlight %}

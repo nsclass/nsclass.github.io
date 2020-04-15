@@ -23,7 +23,7 @@ author:
 permalink: "/2017/08/13/c-14-optional-map-in-java-8-for-functional-programmingmonad/"
 ---
 <p>Pseudo C++ example implementation of map function of optional in Java8 for functional style programming.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 #include <type_traits>
 template <class T>
 class Optional {
@@ -46,9 +46,9 @@ public:
         return decltype(f(value))();
     }
 };
-</xmp
+{% endhighlight %}
 <p>Exampe<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     auto floatValue = value.map([](int value) -> float {
         return value * 10.0f;
     });
@@ -65,4 +65,4 @@ public:
         std::to_string(value);
     });
     std::cout << "finalValue: " << stringValue.getValue() << "\n";
-</xmp
+{% endhighlight %}

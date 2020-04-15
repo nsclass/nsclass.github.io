@@ -24,7 +24,7 @@ author:
 permalink: "/2015/07/02/java-iterate-all-class-path-with-spring-framework/"
 ---
 <p>The following code will iterate all available classpath in the application.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 try {
     Enumeration<URL> resources = ApplicationContextProvider.getApplicationContext().getClassLoader().getResources("");
     while (resources.hasMoreElements()) {
@@ -33,9 +33,9 @@ try {
     }
 } catch (Exception e) {
 }
-</xmp
+{% endhighlight %}
 <p>Iterate classpath for the jar application<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     private static void iterateClassPath() {
         try {
             Enumeration<URL> resources = MainApp.class.getClassLoader().getResources("");
@@ -48,4 +48,4 @@ try {
             System.out.println("Failed to get class path: " + e.getMessage());
         }
     }
-</xmp
+{% endhighlight %}

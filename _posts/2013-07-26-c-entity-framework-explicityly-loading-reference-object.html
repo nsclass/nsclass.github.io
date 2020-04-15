@@ -25,7 +25,7 @@ author:
   last_name: ''
 permalink: "/2013/07/26/c-entity-framework-explicityly-loading-reference-object/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 using (var context = new BreakAwayContext())
 {
   var davesDump = (from l in context.Lodgings
@@ -37,4 +37,4 @@ using (var context = new BreakAwayContext())
   davesDump.PrimaryContact = null;
   context.SaveChanges();
 }
-</xmp
+{% endhighlight %}

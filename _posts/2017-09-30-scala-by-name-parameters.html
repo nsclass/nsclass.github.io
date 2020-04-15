@@ -24,11 +24,11 @@ author:
 permalink: "/2017/09/30/scala-by-name-parameters/"
 ---
 <p>Syntax: =&gt; A</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 def ifElse[A](test: Boolean, whenTrue: => A, whenFalse: => A): A = test match {
    case true => whenTrue
    case false => whenFalse
 }
 ifElse(1 == 1, println("true"), println("false"))
-</xmp
+{% endhighlight %}
 <p>By Name parameter will be evaluated when called</p>

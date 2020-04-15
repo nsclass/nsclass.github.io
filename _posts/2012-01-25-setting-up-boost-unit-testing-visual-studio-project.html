@@ -24,17 +24,17 @@ author:
 permalink: "/2012/01/25/setting-up-boost-unit-testing-visual-studio-project/"
 ---
 <p>1. Header<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 #define BOOST_TEST_MODULE TestExample
 #include
 using namespace boost::unit_test;
-</xmp
+{% endhighlight %}
 2. Linked library<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 libboost_unit_test_framework-vc100-mt-sgd-1_46_1.lib
-</xmp
+{% endhighlight %}
 <p>3. Global fixture<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 struct TestGlobalInitFixture
 {
 	TestGlobalInitFixture()
@@ -47,9 +47,9 @@ struct TestGlobalInitFixture
 	}
 };
 BOOST_GLOBAL_FIXTURE(TestGlobalInitFixture);
-</xmp
+{% endhighlight %}
 <p>4. Fixture<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 struct BuisnessLogicTestSuiteFixture
 {
 	BuisnessLogicTestSuiteFixture()
@@ -60,18 +60,18 @@ struct BuisnessLogicTestSuiteFixture
 	}
 };
 BOOST_FIXTURE_TEST_SUITE(TestSuite_BusinessLogic, BuisnessLogicTestSuiteFixture)
-</xmp
+{% endhighlight %}
 <p>5. Test case example<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 BOOST_AUTO_TEST_CASE(test_should_check_xxx)
 {
 }
-</xmp
+{% endhighlight %}
 6. run a specific test case example</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 --run_test=*/test_should_check_xxx
-</xmp
+{% endhighlight %}
 <p>7. change log level<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 --result_code=no --report_level=no
-</xmp
+{% endhighlight %}

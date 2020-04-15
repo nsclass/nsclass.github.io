@@ -25,15 +25,15 @@ author:
 permalink: "/2015/10/07/java-try-with-resources/"
 ---
 <p>From Java7, it introduced the mechanism to release the resource automatically as C# does with using statement. In C#, you can use the using statement to release resource allocated by object which derives from IDisposable.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 using (var socket = new Socket(...)) {
 }
-</xmp
+{% endhighlight %}
 <p>Java7 can achieve same result with the following syntax. However it cannot use for any object, it can only support the instance which implements java.lang.AutoCloseable as C# does.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 try (
     File file = new FileInputStream(...);
     File output = new FileInputStream(...);
 ) {
 }
-</xmp
+{% endhighlight %}

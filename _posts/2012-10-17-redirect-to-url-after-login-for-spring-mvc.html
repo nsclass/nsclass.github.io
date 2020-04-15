@@ -26,10 +26,10 @@ permalink: "/2012/10/17/redirect-to-url-after-login-for-spring-mvc/"
 ---
 <p>Fortunately, Spring Security has built-in functionality for remembering the URL that was originally requested, and redirecting your users there after they successfully login. The quick answer to your question is that you need to enable this functionality by setting the always-use-default-target option to false in your Spring Security configuration.</p>
 <p>For example, here's a common line from the Spring Security config:</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 <form-login
 login-page="/login.html"
 authentication-failure-url="/login.html?status=LOGIN_FAILURE"
 default-target-url="/secure/index.html"
 always-use-default-target="false />
-</xmp
+{% endhighlight %}

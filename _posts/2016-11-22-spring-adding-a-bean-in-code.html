@@ -23,8 +23,8 @@ author:
   last_name: ''
 permalink: "/2016/11/22/spring-adding-a-bean-in-code/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
     AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
     Set<int> sets = new Set<int>();
     ctx.getBeanFactory().registerSingleton("test", set);
-</xmp
+{% endhighlight %}

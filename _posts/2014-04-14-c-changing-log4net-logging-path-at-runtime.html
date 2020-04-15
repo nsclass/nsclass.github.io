@@ -23,7 +23,7 @@ author:
   last_name: ''
 permalink: "/2014/04/14/c-changing-log4net-logging-path-at-runtime/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
         private static void InitLoggingPath()
         {
             string progDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
@@ -44,4 +44,4 @@ permalink: "/2014/04/14/c-changing-log4net-logging-path-at-runtime/"
                 }
             }
         }
-</xmp
+{% endhighlight %}

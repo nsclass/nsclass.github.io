@@ -24,9 +24,9 @@ author:
   last_name: ''
 permalink: "/2013/05/31/c11-a-example-of-trailing-return-type/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 template<typename T, typename S>
 auto multiply(T lhs, S rhs) -> decltype(lhs * rhs) {
   return lhs * rhs;
 }
-</xmp
+{% endhighlight %}

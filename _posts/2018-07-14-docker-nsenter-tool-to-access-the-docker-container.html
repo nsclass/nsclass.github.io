@@ -25,18 +25,18 @@ author:
 permalink: "/2018/07/14/docker-nsenter-tool-to-access-the-docker-container/"
 ---
 <p>Installing nsenter in /usr/loca/bin directory<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 $ sudo docker run -v /usr/local/bin:/target jpetazzo/nsenter
-</xmp
+{% endhighlight %}
 <p>Get the process id of container<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 PID=$(docker inspect --format {{.State.Pid}} <container>)
-</xmp
+{% endhighlight %}
 <p>Launching a shell inside the container<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 $ sudo nsenter --target $PID --mount --uts --ipc --net --pid
-</xmp
+{% endhighlight %}
 <p>Run a ls command inside the container<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 $ sudo nsenter --target $PID --mount --uts --ipc --net --pid ls
-</xmp
+{% endhighlight %}

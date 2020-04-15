@@ -25,16 +25,16 @@ permalink: "/2015/02/17/proxy-settings-for-bower-activator-and-nodejs-on-windows
 <p>1. Bower<br />
 - create a file .bowerrc in C:\Users\userId directory.<br />
 - content example<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 {
 	"proxy":"http://user:pass@host:portId",
 	"https-proxy":"http://user:pass@host:portId"
 }
-</xmp
+{% endhighlight %}
 <p>2. Activator<br />
 - create a file c:\Users\userId\.activator\activatorconfig.txt<br />
 - conent example<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 # This are the proxy settings we use for activator
 -Dhttp.proxyHost=proxy-host
 -Dhttp.proxyPort=port
@@ -43,10 +43,10 @@ permalink: "/2015/02/17/proxy-settings-for-bower-activator-and-nodejs-on-windows
 # These are commented out, but if you need to use authentication for your proxy, please fill these out.
 -Dhttp.proxyUser=username
 -Dhttp.proxyPassword=pass
-</xmp
+{% endhighlight %}
 <p>3. Nodejs<br />
 - create a file c:\Users\userId\.npmrc<br />
 - context example<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 proxy=http://userId:pass@host:portNumber
-</xmp
+{% endhighlight %}

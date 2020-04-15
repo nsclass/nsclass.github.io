@@ -27,7 +27,7 @@ author:
 permalink: "/2013/12/26/angularjs-service-for-using-asp-net-web-api2/"
 ---
 <p>The following AngularJS service code shows how to login with bearer token authentication of ASP.NET WEB API2 to access exported restful APIs.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 'use strict';
 app.factory('authService', function ($http, $q) {
     var service = {};
@@ -75,4 +75,4 @@ app.factory('authService', function ($http, $q) {
     };
     return service;
 });
-</xmp
+{% endhighlight %}

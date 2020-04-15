@@ -26,7 +26,7 @@ author:
 permalink: "/2013/07/17/c-smtp-client-using-implicity-sslssltls/"
 ---
 <p>The following code utilize the CDO service of Windows OS to send an email. In my research CDO SMTP client can only support SSL/TLS connection type for using SSL. If you want to use START TLS connection type, C# SmtpClient class can support it.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 /// <summary>
     /// Send an electronic message using the Collaboration Data Objects (CDO).
     /// </summary>
@@ -77,4 +77,4 @@ private void SendEmailWithCDO()
             }
         }
 }
-</xmp
+{% endhighlight %}

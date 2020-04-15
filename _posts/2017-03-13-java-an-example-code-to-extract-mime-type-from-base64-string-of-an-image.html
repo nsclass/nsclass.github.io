@@ -23,7 +23,7 @@ author:
   last_name: ''
 permalink: "/2017/03/13/java-an-example-code-to-extract-mime-type-from-base64-string-of-an-image/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
     private boolean isMatch(byte[] pattern, byte[] data) {
         if (pattern.length <= data.length) {
             for (int idx = 0; idx < pattern.length; ++idx) {
@@ -65,4 +65,4 @@ permalink: "/2017/03/13/java-an-example-code-to-extract-mime-type-from-base64-st
 String imageDataBytes = base64String.substring(base64String.indexOf(",") + 1);
                         byte[] bytes = Base64.decodeBase64(imageDataBytes);
                         String imageMimeType = getImageType(bytes);
-</xmp
+{% endhighlight %}

@@ -24,12 +24,12 @@ author:
   last_name: ''
 permalink: "/2013/07/04/c-11-example-of-auto-for-function-declaration/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 template <class T>
 auto add(T t, U u) -> decltype(t + u)
-</xmp
+{% endhighlight %}
 <p>is equal to</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 template <class T>
 decltype((*(T*)0) + (*(U*)0)) add(T t, U u);
-</xmp
+{% endhighlight %}

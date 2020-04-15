@@ -23,7 +23,7 @@ author:
   last_name: ''
 permalink: "/2016/11/29/cassandra-allow-filtering-example/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 create table User(
     email text,
     name text,
@@ -31,12 +31,12 @@ create table User(
     user_id uuid
     PRIMARY KEY((email), name, user_id)
 ) WITH CLUSTERING ORDER BY (name DESC, user_id ASC);
-</xmp
+{% endhighlight %}
 <p>Allow Filtering can only work with the clustering key.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 select * from user where name = 'Test' allow filtering;
-</xmp
+{% endhighlight %}
 <p>Some useful cassandra commands<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 />list users limit 3;
-</xmp
+{% endhighlight %}

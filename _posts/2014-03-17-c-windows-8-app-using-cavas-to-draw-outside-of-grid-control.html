@@ -25,10 +25,10 @@ permalink: "/2014/03/17/c-windows-8-app-using-cavas-to-draw-outside-of-grid-cont
 ---
 <p>Canvas size is always child driven so it will give infinite size for children. Also HorizontalAlignment and VerticalAlignment settings have no effect on a child of a Canvas. However even Canvas size is to zero, it does not affect to draw children.<br />
 By using this feature we can allow TextBloc to be displayed outside of Grid as shown the below example.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 <Grid Width="200" Height="100">
     <Canvas>
         <TextBlock Text="Text in a Small Grid" FontSize="144" />
     </Canvas>
 </Grid>
-</xmp
+{% endhighlight %}

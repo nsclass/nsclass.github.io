@@ -25,7 +25,7 @@ author:
   last_name: ''
 permalink: "/2018/12/08/cassandra-save-a-table-in-csv-and-loading-a-csv-to-a-table-in-cqlsh/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 cqlsh:test_keyspace> COPY test_table TO 'test_table.csv' WITH HEADER=true;
 cqlsh:test_keyspace> COPY test_table FROM 'test_table.csv' WITH HEADER=true;
-</xmp
+{% endhighlight %}

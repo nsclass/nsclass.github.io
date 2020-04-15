@@ -26,7 +26,7 @@ author:
 permalink: "/2018/05/25/java-apache-httpclient-to-access-the-self-signed-certification-and-no-host-verification/"
 ---
 <p>Below code comes from https://memorynotfound.com/ignore-certificate-errors-apache-httpclient/</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 package com.memorynotfound.httpclient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ssl.*;
@@ -73,4 +73,4 @@ public class HttpClientAcceptSelfSignedCertificate {
                 .build();
     }
 }
-</xmp
+{% endhighlight %}

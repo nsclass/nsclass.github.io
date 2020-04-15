@@ -24,6 +24,6 @@ author:
 permalink: "/2017/09/22/cassandra-import-snapshot-tablescolumn-family/"
 ---
 <p>The following command will import a table(column family) to the destination Cassandra node.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 $ sstableloader -d [destination IP address] -p [port number] [table directory(keyspace/table name)]
-</xmp
+{% endhighlight %}

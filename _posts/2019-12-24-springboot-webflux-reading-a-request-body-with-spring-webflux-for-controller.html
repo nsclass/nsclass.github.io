@@ -28,7 +28,7 @@ permalink: "/2019/12/24/springboot-webflux-reading-a-request-body-with-spring-we
 Below example will show how it can convert the json data into the expected class after loading json data with an input stream.</p>
 <p>Full source code can be found from https://github.com/nsclass/ns-svg-converter/blob/master/ns-main-service/src/main/java/com/acrocontext/reactive/rest/SvgConverterController.java</p>
 <p>Github: https://github.com/nsclass/ns-svg-converter<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     private <T> T toRequestBody(InputStream inputStream, Class<T> classValue) {
         try {
             return objectMapper.readValue(inputStream, classValue);
@@ -48,9 +48,9 @@ Below example will show how it can convert the json data into the expected class
             return this.inputStream;
         }
     }
-</xmp
+{% endhighlight %}
 <p>REST Controller<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     @PutMapping(path = "/conversion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,4 +62,4 @@ Below example will show how it can convert the json data into the expected class
                 .map(inputStream -> toRequestBody(inputStream, SvgConvertRequestView.class))
                 .map(this::convertRespondView);
     }
-</xmp
+{% endhighlight %}

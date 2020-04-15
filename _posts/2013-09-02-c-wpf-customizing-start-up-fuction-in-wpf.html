@@ -26,16 +26,16 @@ permalink: "/2013/09/02/c-wpf-customizing-start-up-fuction-in-wpf/"
 ---
 <p>When you create a WPF application with visual studio, you will always find app.xaml and app.xaml.cs file.<br />
 In app.xaml file, you can find the StartupUri attribute in Application tag. The StartupUri will indicate where the application starts. However sometimes you want to do some initialization before starting up the application then you need to modify the start up point with the following changes. As it shows you can specify the function name on start up point.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 <Application x:Class="WpfTutorialSamples.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          Startup="Application_Startup">
     <Application.Resources></Application.Resources>
 </Application>
-</xmp
+{% endhighlight %}
 <p>After modifying the xaml, your application class should include the "Application_Startup" function as shown the below code.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
         public partial class App : Application
         {
                 private void Application_Startup(object sender, StartupEventArgs e)
@@ -48,4 +48,4 @@ In app.xaml file, you can find the StartupUri attribute in Application tag. The 
                         wnd.Show();
                 }
         }
-</xmp
+{% endhighlight %}

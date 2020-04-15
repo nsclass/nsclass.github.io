@@ -21,7 +21,7 @@ author:
 permalink: "/2014/05/12/c11-good-to-know-algorithm/"
 ---
 <p>The following algorithm will make your code clean and faster<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 1. std::all_of
 bool res = std::all_of(std::begin(container), std::end(container), [](int value) { return value > 0; });
 2. std::any_of
@@ -39,4 +39,4 @@ bool res = std::is_permutation(std::begin(container), std::end(container), std::
 8. std::minmax_element
 std::vector<int>::iterator min, max;
 std::tie(min, max) = std::minmax_element(std::begin(container), std::end(container));
-</xmp
+{% endhighlight %}

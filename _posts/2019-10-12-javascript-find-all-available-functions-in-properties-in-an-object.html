@@ -26,7 +26,7 @@ permalink: "/2019/10/12/javascript-find-all-available-functions-in-properties-in
 ---
 <p>The following three functions are very useful on inspecting methods and properties in any Javascrip object.<br />
 Github code: https://github.com/nsclass/describe-javascript-object-methods/blob/master/list-object-methods.js</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 const getArgs = func => {
   // First match everything inside the function argument parens.
   let matchedItems = func.toString().match(/function\s.*?\(([^)]*)\)/)
@@ -56,14 +56,14 @@ const getProperties = obj => {
   return Object.getOwnPropertyNames(obj)
   .filter(item => typeof obj[item] !== 'function')
 }
-</xmp
+{% endhighlight %}
 <p>For instance, we can list all available functions and each function's arguemnts in fs node module.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 const fs = require('fs)
 getMethods(fs)
-</xmp
+{% endhighlight %}
 <p>Results<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 [ '_debugEnd: no args',
   '_debugProcess: no args',
   '_fatalException: no args',
@@ -119,4 +119,4 @@ getMethods(fs)
   'takeHeapSnapshot: no args',
   'umask: ...args',
   'uptime: no args' ]
-</xmp
+{% endhighlight %}

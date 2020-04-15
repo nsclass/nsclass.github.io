@@ -31,7 +31,7 @@ permalink: "/2013/09/05/c-wcf-message-traces/"
 <p>In order to diagnostic WCF communication, you can log all WCF activities by using tracing mechanism in .NET application.<br />
 You can add the following section in your [app].config file.<br />
 After you collected the all trace message you can use a tool called "SvcTraceViewer.exe" to analyse data. This tool can be found the installed SDK tools directory(such as C:\Program Files\Microsoft SDKs\Windows\v6.0\Bin).</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 <system.diagnostics>
     <trace autoflush="true" />
     <sources>
@@ -46,6 +46,6 @@ After you collected the all trace message you can use a tool called "SvcTraceVie
          </source>
     </sources>
 </system.diagnostics>
-</xmp
+{% endhighlight %}
 <p>You can get more details from the following link.<br />
 http://msdn.microsoft.com/en-us/library/ms732023.aspx</p>

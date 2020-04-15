@@ -26,7 +26,7 @@ permalink: "/2013/07/08/c-wcf-instance-configuration/"
 ---
 <p>WCF has the confusing mechanism for management of instance on RPC call. The following separating shows an example of this situation. If you are more interested in this, you can find details from the book called Programming WCF Services 3rd edition.</p>
 <p>1. InstanceContextMode<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 public enum InstanceContextMode
 {
     PerCall,
@@ -36,9 +36,9 @@ public enum InstanceContextMode
 [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
 class MyService : IMyContract
 {...}
-</xmp
+{% endhighlight %}
 <p>2. SessionMode<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 public enum SessionMode
 {
     Allowed,
@@ -48,18 +48,18 @@ public enum SessionMode
 [ServiceContract(SessionMode = SessionMode.Allowed)]
 interface IMyContract
 {...}
-</xmp
+{% endhighlight %}
 <p>3. Binding<br />
 BasicHttpBinding cannot support Session mode. But NetTcpBinding and NetNamedPipeBinding can support this.</p>
 <p>Therefor if you want to have PerCall InstanceContextMode, it is recommended that Session mode should be NotAllowed as shown the following example. Also you can use this strategy for PerSession InstanceContextMode with considering the WCF bindings.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 [ServiceContract(SessionMode = SessionMode.NotAllowed)]
 interface IMyContract
 {...}
 [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
 class MyService : IMyContract
 {...}
-</xmp
+{% endhighlight %}
 <p>The following table summarize the combination of above cases.</p>
 <table>
 <tr>

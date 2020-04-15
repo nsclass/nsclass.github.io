@@ -24,7 +24,7 @@ author:
   last_name: ''
 permalink: "/2013/03/07/c-observable-dictionary/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
     public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private const string CountString = "Count";
@@ -271,4 +271,4 @@ permalink: "/2013/03/07/c-observable-dictionary/"
             if (CollectionChanged != null) CollectionChanged(this, new NotifyCollectionChangedEventArgs(action, newItems));
         }
     }
-</xmp
+{% endhighlight %}

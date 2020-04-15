@@ -25,7 +25,7 @@ author:
 permalink: "/2013/09/02/c-wpf-mouse-over-animation-with-opacity/"
 ---
 <p>Resource XML.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 <Windows.Resources>
         <Style x:Key="FadeOutButton" TargetType="{x:Type Button}">
             <Setter Property="Template">
@@ -55,12 +55,12 @@ permalink: "/2013/09/02/c-wpf-mouse-over-animation-with-opacity/"
             </Style.Triggers>
         </Style>
 </Windows.Resources>
-</xmp
+{% endhighlight %}
 <p>Button XML.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     <Button Style="{StaticResource FadeOutButton}"
                    Name="Test"
                    Opacity="0.4">
                         <Image Stretch="None" Source="{StaticResource LoginImage}" FocusVisualStyle="{x:Null}" />
     </Button>
-</xmp
+{% endhighlight %}

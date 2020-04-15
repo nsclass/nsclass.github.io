@@ -23,7 +23,7 @@ author:
   last_name: ''
 permalink: "/2012/08/06/windows-7-memory-profiling-another-example/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 @echo off
 set _NT_SYMBOL_PATH=f:\src\Debug\;srv*c:\WebSymbol*http://msdl.microsoft.com/downloads/symbols
 xperf -on Base+Cswitch -BufferSize 1024 -MinBuffers 512 -MaxBuffers 512
@@ -37,4 +37,4 @@ echo Generating the report.
 xperf -stop HeapSession -stop -d heapUsage.etl
 echo.
 start xperfview heapUsage.etl
-</xmp
+{% endhighlight %}

@@ -25,7 +25,7 @@ author:
 permalink: "/2016/09/26/git-diff-and-merge-tool-with-intellij-idea/"
 ---
 <p>Windows<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 [merge]
     tool = intellij
 [mergetool "intellij"]
@@ -35,9 +35,9 @@ permalink: "/2016/09/26/git-diff-and-merge-tool-with-intellij-idea/"
     tool = intellij
 [difftool "intellij"]
     cmd = cmd.exe //c "\"c:/Program Files (x86)/JetBrains/IntelliJ IDEA Community Edition 2016.2.4/bin/idea.bat\" diff \"$LOCAL\" \"$REMOTE\""
-</xmp
+{% endhighlight %}
 <p>Mac<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 merge]
     tool = intellij
 [mergetool "intellij"]
@@ -47,4 +47,4 @@ merge]
     tool = intellij
 [difftool "intellij"]
     cmd = /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
-</xmp
+{% endhighlight %}

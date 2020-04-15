@@ -23,7 +23,7 @@ author:
   last_name: ''
 permalink: "/2016/04/26/java-example-of-specifying-multiple-constraints-in-generic/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 public interface Operation {
 }
 public class enum TestEnum implements Operation {
@@ -34,4 +34,4 @@ public class Test {
             System.out.printf("%f %s %f = %f%n",    x, op, y, op.apply(x, y));
     }
 }
-</xmp
+{% endhighlight %}

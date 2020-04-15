@@ -22,6 +22,7 @@ author:
 permalink: "/2020/03/27/sublime-matching-multiple-lines-with-regex/"
 ---
 <p>Start with (?s)<br />
-<pre class="highlight code">
+{% highlight wl linenos %}
 (?s)\[sometag\](.*?)\[\/sometag\]
-<pre>
+{% endhighlight %}
+

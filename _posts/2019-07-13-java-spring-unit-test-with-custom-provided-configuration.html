@@ -31,7 +31,7 @@ permalink: "/2019/07/13/java-spring-unit-test-with-custom-provided-configuration
 <p>The following example will show how to define the custom Spring configuration for unit test with @ContextConfiguration annotation.<br />
 Full example can be found the below github.</p>
 <p>https://github.com/nsclass/java-timezone/blob/master/src/test/java/com/ns/timezone/javatimezone/JavaTimezoneServiceApplicationTests.java</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = JavaTimezoneServiceApplicationTests.AppConfig.class)
@@ -54,4 +54,4 @@ public class JavaTimezoneServiceApplicationTests
 		Assert.assertEquals(627, count);
 	}
 }
-</xmp
+{% endhighlight %}

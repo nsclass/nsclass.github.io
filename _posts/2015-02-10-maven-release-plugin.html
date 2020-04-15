@@ -28,7 +28,7 @@ author:
 permalink: "/2015/02/10/maven-release-plugin/"
 ---
 <p>Useful commands<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 	1. Prepare
 	mvn release:prepare
 	2. Perform release
@@ -39,9 +39,9 @@ permalink: "/2015/02/10/maven-release-plugin/"
 	mvn versions:set -DnewVersion=1.0.CR-SNAPSHOT.
 	5. Batch release (non interactive)
 	mvn -B release:prepare
-</xmp
+{% endhighlight %}
 <p>POM configuration</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 <scm>
    <developerConnection>
        scm:svn:http://xxx/trunk
@@ -75,4 +75,4 @@ permalink: "/2015/02/10/maven-release-plugin/"
          </plugins>
     </pluginManagement>
 </build>
-</xmp
+{% endhighlight %}

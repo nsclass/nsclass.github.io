@@ -24,12 +24,12 @@ author:
 permalink: "/2017/07/04/java-9-useful-commands-to-inspect-module/"
 ---
 <p>List modules<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 $ java --list-modules
 $ java --list-modules java.base
-</xmp
+{% endhighlight %}
 <p>Diagnostic module dependencies<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 $ java -Xdiag:resolver -p mods [module name]/[class package path]
 $ jar --file [jar path] --print-module-descriptor
-</xmp
+{% endhighlight %}

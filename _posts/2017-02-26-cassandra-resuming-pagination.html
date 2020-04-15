@@ -24,7 +24,7 @@ author:
 permalink: "/2017/02/26/cassandra-resuming-pagination/"
 ---
 <p>Cassandra provides the page state information and it can be reused to get next iteration.</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 Statement stmt = QueryBuilder
                     .select()
                     .all()
@@ -32,14 +32,14 @@ Statement stmt = QueryBuilder
                     .where(eq("email", emailUpper));
 ResultSet resultSet = getSession().execute(stmt);
 PagingState pagingState = resultSet.getExecutionInfo().getPagingState();
-</xmp
+{% endhighlight %}
 <p>Then it can be serialized in below way<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 String savedStringState = pagingState.toString();
 byte[] savedBytesState = pagingState.toBytes();
-</xmp
+{% endhighlight %}
 <p>It can be reconstructed and resume the query as shown following example.<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 PagingState pagingState = PagingState.fromString(string);
 Statement stmt = QueryBuilder
                     .select()
@@ -51,4 +51,4 @@ PagingState pagingState = resultSet.getExecutionInfo().getPagingState();
 PagingState pagingState = PagingState.fromString(savedStringState);
 stmt.setPagingState(pagingState);
 ResultSet resultSet = getSession().execute(stmt);
-</xmp
+{% endhighlight %}

@@ -28,7 +28,7 @@ permalink: "/2014/06/24/c-wcf-ninject-ioc/"
 IInstanceProvider<br />
 IServiceBehavior</p>
 <p>Implement IServiceBehavior<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     public class NinjectBehaviorAttribute : Attribute, IServiceBehavior
     {
         public void AddBindingParameters(ServiceDescription serviceDescription,
@@ -53,9 +53,9 @@ IServiceBehavior</p>
         {
         }
     }
-</xmp
+{% endhighlight %}
 <p>Implement IInstanceProvider<br />
-<xmp class = "code">
+{% highlight wl linenos %}
     public class NinjectInstanceProvider : IInstanceProvider
     {
         private Type serviceType;
@@ -77,9 +77,9 @@ IServiceBehavior</p>
         {
         }
     }
-</xmp
+{% endhighlight %}
 <p>Example class<br />
-<xmp class = "code">
+{% highlight wl linenos %}
 [ServiceContract]
 public interface IExample
 {
@@ -100,4 +100,4 @@ public Example : IExample
     {
     }
 }
-</xmp
+{% endhighlight %}

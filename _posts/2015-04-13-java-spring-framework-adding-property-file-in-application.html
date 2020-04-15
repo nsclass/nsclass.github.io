@@ -25,7 +25,7 @@ author:
 permalink: "/2015/04/13/java-spring-framework-adding-property-file-in-application/"
 ---
 <p>1. Add the following code in applicationContext-config.xml</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 <bean id="myProperties"
       class="org.springframework.beans.factory.config.PropertiesFactoryBean">
   <property name="locations">
@@ -34,8 +34,8 @@ permalink: "/2015/04/13/java-spring-framework-adding-property-file-in-applicatio
     </list>
   </property>
 </bean>
-</xmp
+{% endhighlight %}
 <p>2. get an instance of myPropertes in code</p>
-<xmp class = "code">
+{% highlight wl linenos %}
 java.util.Properties properties = (java.util.Properties)ApplicationContextProvider.getApplicationContext().getBean("myProperties")
-</xmp
+{% endhighlight %}

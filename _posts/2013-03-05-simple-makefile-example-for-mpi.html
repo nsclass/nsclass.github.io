@@ -22,7 +22,7 @@ author:
   last_name: ''
 permalink: "/2013/03/05/simple-makefile-example-for-mpi/"
 ---
-<xmp class = "code">
+{% highlight wl linenos %}
 CC=mpicxx
 CFLAGS=-c -Wall
 LDFLAGS=
@@ -36,4 +36,4 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 clean:
 	rm -rf *.o $(EXECUTABLE)
-</xmp
+{% endhighlight %}
