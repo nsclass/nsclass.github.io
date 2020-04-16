@@ -21,6 +21,6 @@ def get_all_file_paths(path):
     files = []
     for r, d, f in os.walk(path):
         for file in f:
-            if '.html' in file:
-                files.append(os.path.join(r, file))
+            files.append(os.path.join(r, file))
+    return files
 ```      
