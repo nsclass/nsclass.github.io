@@ -37,5 +37,5 @@ server:
       archivedLogFilenamePattern: ./logs/requests-%d.log
       archivedFileCount: 5
       timeZone: UTC
-      logFormat: "%h %l %u [%t{dd/MMM/yyyy:HH:mm:ss Z,UTC}] %reqAttribute{attributeName} \"%r\" %s %b \"%i{Referer\"%ier-Agent}\"
+      logFormat: "%h %l %u [%t{dd/MMM/yyyy:HH:mm:ss Z,UTC}] %reqAttribute{attributeName} \"%r\" %s %b \"%i{Referer}\" \"%i{User-Agent}\" %D"
 ```
