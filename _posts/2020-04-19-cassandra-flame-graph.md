@@ -19,5 +19,8 @@ https://thelastpickle.com/blog/2018/01/16/cassandra-flame-graphs.html
 More flame graph related links
 http://www.brendangregg.com/flamegraphs.html
 
+Flame graph for Java applications
+https://medium.com/97-things/firing-on-all-engines-f33e340c3374
+
 Intellij support the flame graph with JFR and Yourkit
 https://plugins.jetbrains.com/plugin/10305-flameviewer
