@@ -14,4 +14,10 @@ permalink: "2020/04/19/cassandra-flame-graph"
 
 The following article show how to generate the flame graph for Cassandra performance but it is using a generic tools to generate flame graph any Java application.
 
-https://www.youtube.com/playlist?list=PLgGXSWYM2FpOAQjMXE9ynaV7uDrPVpGWw
+https://thelastpickle.com/blog/2018/01/16/cassandra-flame-graphs.html
+
+More flame graph related links
+http://www.brendangregg.com/flamegraphs.html
+
+Intellij support the flame graph with JFR and Yourkit
+https://plugins.jetbrains.com/plugin/10305-flameviewer
