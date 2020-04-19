@@ -8,7 +8,7 @@ published: true
 password: ''
 status: publish
 categories:
-- Python
+- Spring
 permalink: "2020/04/18/spring-live-virtual-events"
 ---
 
