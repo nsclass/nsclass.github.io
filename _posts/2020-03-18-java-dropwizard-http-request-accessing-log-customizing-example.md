@@ -18,7 +18,7 @@ meta:
   timeline_notification: '1584562149'
 author:
   login: acrocontext
-  email: nsclass@hotmail.com
+  email:  
   display_name: acrocontext
   first_name: ''
   last_name: ''
