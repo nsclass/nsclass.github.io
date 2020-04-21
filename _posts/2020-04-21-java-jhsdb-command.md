@@ -21,11 +21,12 @@ Java 9
 [https://docs.oracle.com/javase/9/tools/jhsdb.htm#JSWOR-GUID-0345CAEB-71CE-4D71-97FE-AA53A4AB028E](https://docs.oracle.com/javase/9/tools/jhsdb.htm#JSWOR-GUID-0345CAEB-71CE-4D71-97FE-AA53A4AB028E)
 
 
-show java heap summary
+Show java heap summary
 ```bash
-jhsdb jmap --pid 25224 --heap
+$ jhsdb jmap --pid 25224 --heap
 ```
 
+Result
 ```bash
 Debugger attached successfully.
 Server compiler detected.
