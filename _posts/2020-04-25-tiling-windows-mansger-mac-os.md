@@ -1,17 +1,20 @@
 ---
 layout: single
-title: Rust - Live Coding About Life Time Example
-date: 2020-04-24 06:30:00.000000000 -05:00
+title: Mac - Tiling Windows Manager Mac OS
+date: 2020-04-25 19:30:00.000000000 -05:00
 type: post
 parent_id: '0'
 published: true
 password: ''
 status: publish
 categories:
-- Rust
-permalink: "2020/04/24/rust-live-coding-lifetime"
+- MacOS
+permalink: "2020/04/25/mac-os-tiling-windows-manager"
 ---
 
-The following youtube video will show how rust life time logic works for reference
+Tiling Windows Manager for Mac OS
 
-[https://www.youtube.com/watch?v=rAl-9HwD858](https://www.youtube.com/watch?v=rAl-9HwD858)
+[https://ianyh.com/amethyst/](https://ianyh.com/amethyst/)
+
+Github
+[https://github.com/ianyh/Amethyst](https://github.com/ianyh/Amethyst)
