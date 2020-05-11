@@ -14,6 +14,12 @@ permalink: "2020/04/19/flame-graph-java-applications"
 
 The following article show how to generate the flame graph for Cassandra performance but it is using a generic tools to generate flame graph any Java application.
 
+Simple command to generate a flamegraph with an async profiler
+```bash
+./profiler.sh -d <duration> -f flamegraph.svg -s -o svg <pid> && \
+open flamegraph.svg  -a "Google Chrome"
+```
+
 [https://thelastpickle.com/blog/2018/01/16/cassandra-flame-graphs.html](https://thelastpickle.com/blog/2018/01/16/cassandra-flame-graphs.html)
 
 More flame graph related links
