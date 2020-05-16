@@ -1,7 +1,7 @@
 ---
 layout: single
 title: Intellij - Multi Cursors All Occurence
-date: 2020-05-20 07:30:00.000000000 -05:00
+date: 2020-05-02 07:30:00.000000000 -05:00
 type: post
 parent_id: '0'
 published: true

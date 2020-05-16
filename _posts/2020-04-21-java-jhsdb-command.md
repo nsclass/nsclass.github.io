@@ -12,7 +12,7 @@ categories:
 permalink: "2020/04/21/jhsdb-command"
 ---
 
-jhsdb tool to attach to a Java process or to launch a postmortem debugger to analyze the content of a core dump from a crashed Java Virtual Machine (JVM).
+jhsdb is a tool which can attach a Java process or launch a postmortem debugger to analyze the content of a core dump from a crashed Java Virtual Machine (JVM).
 
 Java 14
 [https://docs.oracle.com/en/java/javase/14/docs/specs/man/jhsdb.html](https://docs.oracle.com/en/java/javase/14/docs/specs/man/jhsdb.html)
