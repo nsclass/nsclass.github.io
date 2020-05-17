@@ -20,7 +20,8 @@ const [state, setState] = useState(null)
 useEffect(() => {
   let cancelled = false
   // do something
-  // if there is any async code in her, we use cancelled flag to detect whether user left this page
+  // if there is any async code in here, 
+  // we can use the cancelled flag to detect whether user left this page
 
   return () => {cancelled = true}
 }, [state])
