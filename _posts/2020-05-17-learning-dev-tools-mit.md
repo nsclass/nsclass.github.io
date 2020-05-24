@@ -8,7 +8,7 @@ published: true
 password: ''
 status: publish
 categories:
-- React
+- tools
 permalink: "2020/05/17/dev-tools-mit"
 ---
 
