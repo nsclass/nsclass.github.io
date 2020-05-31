@@ -12,7 +12,7 @@ categories:
 permalink: "2020/05/31/java-nio-flip-buffer"
 ---
 
-The flip function in Buffer is equivalent to the following operation.
+The flip function in Buffer is equivalent to the following operation which means that it will set limit with current position and set current position to zero.
 
 ```java
 buffer.limit(buffer.position()).position(0);
