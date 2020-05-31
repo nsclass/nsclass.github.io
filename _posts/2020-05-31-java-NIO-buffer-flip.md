@@ -21,3 +21,4 @@ buffer.limit(buffer.position()).position(0);
 The rewind function will set the current position to zero but it does not change the limit value.
 So rewind can be used to reread the data from the beginning.
 
+If the flip is called twice, it will make the size zero. The current position will be zero and limit will be zero too.
