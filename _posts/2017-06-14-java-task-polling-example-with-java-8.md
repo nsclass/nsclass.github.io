@@ -24,7 +24,8 @@ author:
   last_name: ''
 permalink: "/2017/06/14/java-task-polling-example-with-java-8/"
 ---
-{% highlight wl linenos %}
+
+```java
 public void completionService(ExecutorService executor) {
     CompletionService<CustomTaskResult> completionService =
         new ExecutorCompletionService<CustomTaskResult>(executor);
@@ -36,4 +37,4 @@ public void completionService(ExecutorService executor) {
     	// do something
     }
 }
-{% endhighlight %}
+```
