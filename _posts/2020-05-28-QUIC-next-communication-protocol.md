@@ -1,35 +1,28 @@
 ---
 layout: single
 title: Git Merge Command
-date: 2020-05-23 22:30:00.000000000 -05:00
+date: 2020-05-28 09:30:00.000000000 -05:00
 type: post
 parent_id: '0'
 published: true
 password: ''
 status: publish
 categories:
-- Git
-permalink: "2020/05/23/git-merge-command"
+- QUIC
+permalink: "2020/05/28/quic-transport-protocol"
 ---
 
-Git commands when merge conflicts happened.
+QUIC is a multiplexed stream transport over UDP.
 
-We can abort merging with the following command
-```bash
-$ git merge --abort
-```
+It stands for the following.
+Q: Quick
+U: UDP
+I: Internet
+C: Connection
 
-Resolving merge conflict with merge tool
-```bash
-$ git mergetool
-```
+[https://www.chromium.org/quic](https://www.chromium.org/quic)
 
-Adding all changes after resolving merge conflicts with merge tool.
-```bash
-$ git add -A
-```
+GitHub project
+Stellite: client and server library
+[https://github.com/line/stellite](https://github.com/line/stellite)
 
-With the following command, we can finish the merge conflict.
-```bash
-$ git merge --continue
-```
