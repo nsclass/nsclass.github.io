@@ -12,7 +12,7 @@ categories:
 permalink: "2020/05/28/quic-transport-protocol"
 ---
 
-QUIC is a multiplexed stream transport over UDP.
+QUIC is a multiplexed stream transport over UDP. By using this protocol, it can dramatically reduce the connection establishment time for TCP+TLS.
 
 It stands for the following.
 Q: Quick
