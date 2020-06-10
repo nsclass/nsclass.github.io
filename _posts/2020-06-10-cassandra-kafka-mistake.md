@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Common mistakes on using Cassandra/Kafka
+title: Common mistakes on using Cassandra and Kafka
 date: 2020-06-10 15:30:00.000000000 -05:00
 type: post
 parent_id: "0"
