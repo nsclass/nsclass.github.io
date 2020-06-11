@@ -36,4 +36,4 @@ permalink: "/2019/11/08/vscode-improving-productivity-with-vs-code/"
 
 # Visual Studio Code tips and tricks
 
-https://channel9.msdn.com/Events/Build/2020/BOD103?ocid=AID3012654&WT.mc_id=build2020-azuredevtips-micrum
+[https://channel9.msdn.com/Events/Build/2020/BOD103?ocid=AID3012654&WT.mc_id=build2020-azuredevtips-micrum](https://channel9.msdn.com/Events/Build/2020/BOD103?ocid=AID3012654&WT.mc_id=build2020-azuredevtips-micrum)
