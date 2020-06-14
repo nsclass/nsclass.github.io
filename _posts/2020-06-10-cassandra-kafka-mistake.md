@@ -30,11 +30,11 @@ permalink: "2020/06/14/vim-basic-command"
 - Scroll: `Ctrl-u` (up), `Ctrl-d` (down)
 - File: `gg` (beginning of file), `G` (end of file)
 - Line numbers: `:{number}<CR>` or `{number}G` (line {number})
-- Misc: % (corresponding item)
+- Misc: `%` (corresponding item)
 - Find: `f{character}`, `t{character}`, `F{character}`, `T{character}`
-- find/to forward/backward {character} on the current line
+  - find/to forward/backward {character} on the current line
   - `,` / `;` for navigating matches
-  - Search: `/{regex}`, `n / N` for navigating matches
+- Search: `/{regex}`, `n` / `N` for navigating matches
 
 # Edits
 
