@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Container - Base Technology
+title: Linux Container - Base Technologies
 date: 2020-07-03 09:30:00.000000000 -05:00
 type: post
 parent_id: "0"
@@ -9,8 +9,10 @@ password: ""
 status: publish
 categories:
   - Container
-permalink: "2020/07/03/container-base-technology"
+permalink: "2020/07/03/linux-container-base-technology"
 ---
+
+As we all know, Docker didn't invent a new technology for Linux container. But they provided a really convenient way to utilize the existing Linux container technology.
 
 Linux container is made of the following three technologies.
 
