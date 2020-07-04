@@ -38,7 +38,7 @@ Linux container is made of the following three technologies.
 # cgclassify -g cpu,memory,blkio,devices,freezer:sandbox <PID>
 ```
 
-- The following command will list tasks associated to the sandbox cpu group, we should see the above PID
+- The following command will list tasks associated to the sandbox cpu group
 
   ```
   # cat /sys/fs/cgroup/cpu/sandbox/tasks
