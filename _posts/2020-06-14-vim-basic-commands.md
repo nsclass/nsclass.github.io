@@ -84,3 +84,6 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   ```
   :%s/foo/bar/gc
   ```
+
+- Indent multiple lines
+  select lines with visual mode then type `>`
