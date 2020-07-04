@@ -87,3 +87,12 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 
 - Indent multiple lines
   select lines with visual mode then type `>`
+
+- Repeat last changes
+  The `.` command repeats the last change made in normal mode.
+
+  - `dw` can be repeated
+
+  The `@:` command repeats the last command-line change
+
+  - `:s/old/new/` can be repeated
