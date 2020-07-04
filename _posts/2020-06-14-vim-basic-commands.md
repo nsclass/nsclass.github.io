@@ -76,3 +76,11 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 
 - Or turn off highlighting completely:
   `set nohlsearch`
+
+- Search replace in an interactive mode
+
+  - adding the flag `c` in command prompt
+
+  ```
+  :%s/foo/bar/gc
+  ```
