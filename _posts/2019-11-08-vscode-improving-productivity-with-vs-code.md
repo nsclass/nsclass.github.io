@@ -12,15 +12,7 @@ categories:
   - vscode
 tags: []
 meta:
-  _edit_last: "14827209"
-  _oembed_ad9810dc56601923cce134bf70994923: "{{unknown}}"
-  geo_public: "0"
-  _publicize_job_id: "37229091574"
-  _oembed_b796b606ba957c8a7690521694a24531: "{{unknown}}"
-  timeline_notification: "1573269672"
-  _oembed_54d1c795866246a6831afc86640757ab: "{{unknown}}"
-  _oembed_18473cae7c2a4671d6620cb8ccb87fb4: "{{unknown}}"
-  _oembed_98417c20ff8c69b668efda05f1036237: "{{unknown}}"
+
 author:
   login: acrocontext
   email:
