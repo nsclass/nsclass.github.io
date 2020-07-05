@@ -12,6 +12,9 @@ categories:
 permalink: "2020/06/14/vim-basic-command"
 ---
 
+Cheat sheet
+[https://vim.rtorr.com/](https://vim.rtorr.com/)
+
 # Changing mode
 
 - Insert mode: `i`
