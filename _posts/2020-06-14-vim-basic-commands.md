@@ -68,6 +68,7 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 - `ci(` change the contents inside the current pair of parentheses
 - `ci[` change the contents inside the current pair of square brackets
 - `da'` delete a single-quoted string, including the surrounding single quotes
+- `yiw` copy the current word
 
 # Etc
 
@@ -96,3 +97,7 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   The `@:` command repeats the last command-line change
 
   - `:s/old/new/` can be repeated
+
+- Replacing a word with a copied word
+  - `yiw` -> move cursor to another location -> `ciw<C-r>0<Esc>`: replacing a word with a copied word.
+  - we can repeat with `.` command
