@@ -102,5 +102,10 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   - `:s/old/new/` can be repeated
 
 - Replacing a word with a copied word
+
   - `yiw` -> move cursor to another location -> `ciw<C-r>0<Esc>`: replacing a word with a copied word.
   - we can repeat with `.` command
+
+- Search the current word
+  - `*` to search the word
+  - `#` to search the word in backward direction
