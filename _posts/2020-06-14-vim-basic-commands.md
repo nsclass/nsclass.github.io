@@ -107,5 +107,10 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   - we can repeat with `.` command
 
 - Search the current word
+
   - `*` to search the word
   - `#` to search the word in backward direction
+
+- Adding double quotes for selected with a visual mode
+
+  - Select text with a visual mode then press `S"`
