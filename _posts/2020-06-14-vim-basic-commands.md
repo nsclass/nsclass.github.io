@@ -111,6 +111,6 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   - `*` to search the word
   - `#` to search the word in backward direction
 
-- Adding double quotes for selected with a visual mode
+- Adding double quotes for selected text with a visual mode
 
   - Select text with a visual mode then press `S"`
