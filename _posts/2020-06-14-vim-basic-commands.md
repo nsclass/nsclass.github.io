@@ -113,4 +113,5 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 
 - Adding double quotes for selected text with a visual mode
 
-  - Select text with a visual mode then press `S"`
+  - If vim support the surround, select text with a visual mode then press `S"`
+  - surround mode, `:set surround`
