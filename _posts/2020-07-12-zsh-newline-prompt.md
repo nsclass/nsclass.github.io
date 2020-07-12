@@ -23,7 +23,7 @@ export PROMPT='%(?:%{%}➜ :%{%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prom
 
 Example
 
-```zsh
+```bash
 ➜  ~/dev/src/rust/rust-cell git:(master) ✗
 $
 ```
