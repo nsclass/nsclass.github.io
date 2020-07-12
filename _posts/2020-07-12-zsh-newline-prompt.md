@@ -18,7 +18,7 @@ Update the `.zshrc` file with below environment variable. Please remove backslas
 
 ```
 NEWLINE=$'\n'
-export PROMPT="%(?:%{\%}➜ :%{\%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)${NEWLINE}$ "
+export PROMPT='%(?:%{\%}➜ :%{\%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)${NEWLINE}$ '
 ```
 
 Example
