@@ -14,11 +14,11 @@ permalink: "2020/07/12/zsh-newline-prompt"
 
 The following example will show how to add a newline in zsh prompt.
 
-Update the `.zshrc` file with below environment variable.
+Update the `.zshrc` file with below environment variable. Please remove backslash on `%`, Jekyll cannot parse without a back slash.
 
 ```
 NEWLINE=$'\n'
-export PROMPT="%(?:%{%}➜ :%{%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)${NEWLINE}$ "
+export PROMPT="%(?:%{\%}➜ :%{\%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)${NEWLINE}$ "
 ```
 
 Example
