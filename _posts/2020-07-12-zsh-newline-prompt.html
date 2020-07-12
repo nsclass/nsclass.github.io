@@ -12,17 +12,18 @@ categories:
 permalink: "2020/07/12/zsh-newline-prompt"
 ---
 
-The following example will show how to add a newline in zsh prompt.
+The following example will show how to add a newline in zsh prompt.<br>
 
-Update the `.zshrc` file with below environment variable.
-{% raw  %}
+Update the `.zshrc` file with below environment variable.<br>
+
+{% highlight wl linenos %}
 NEWLINE=$'\n'
 export PROMPT="%(?:%{%}➜ :%{%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)${NEWLINE}$ "
-{% endraw %}
+{% highlight %}
 
-Example
+Example<br>
 
-{% raw  %}
+{% highlight wl linenos %}
 ➜ ~/dev/src/rust/rust-cell git:(master) ✗
 $
-{% endraw %}
+{% highlight %}
