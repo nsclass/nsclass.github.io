@@ -27,3 +27,10 @@ Example
 ➜ ~/dev/src/rust/rust-cell git:(master) ✗
  $
 ```
+
+vim mode in `.zshrc`
+
+```
+bindkey -v
+bindkey '^R' history-incremental-search-backward
+```
