@@ -15,8 +15,8 @@ permalink: "2020/07/12/zsh-newline-prompt"
 The following example will show how to add a newline in zsh prompt
 
 ```bash
- export NEWLINE=$'\n'
- export PROMPT='%(?:%{%}➜ :%{%}➜ ) %{$fg[cyan]%}%~%{$reset_color%}                           $(git_prompt_info)${NEWLINE}$ '
+NEWLINE=$'\n'
+export PROMPT='%(?:%{%}➜ :%{%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)${NEWLINE}$ '
 ```
 
 Example
