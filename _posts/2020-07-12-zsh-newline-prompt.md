@@ -12,7 +12,9 @@ categories:
 permalink: "2020/07/12/zsh-newline-prompt"
 ---
 
-The following example will show how to add a newline in zsh prompt
+The following example will show how to add a newline in zsh prompt.
+
+Update the `.zshrc` file with below environment variable.
 
 ```bash
 NEWLINE=$'\n'
