@@ -23,8 +23,15 @@ for (v : vs) {
 
 ```rust
 let vs = vec![1, 2, 3];
-for (v : vs.iter()) {
+for (v : &vs) {
   // borrows vs, & v
+}
+```
+
+```rust
+let vs = vec![1, 2, 3];
+for (v : vs.iter()) {
+  // this is equivalent to for (v: &vs)
 }
 ```
 
@@ -32,12 +39,5 @@ for (v : vs.iter()) {
 let vs = vec![1, 2, 3];
 for (v : vs.into_iter()) {
   // this is equivalent to for (v: vs)
-}
-```
-
-```rust
-let vs = vec![1, 2, 3];
-for (v : &vs) {
-  // this is equivalent to vs.iter()
 }
 ```
