@@ -3,12 +3,12 @@ layout: single
 title: Rust vector iteration
 date: 2020-06-07 09:30:00.000000000 -05:00
 type: post
-parent_id: '0'
+parent_id: "0"
 published: true
-password: ''
+password: ""
 status: publish
 categories:
-- Rust
+  - Rust
 permalink: "2020/06/07/rust-vector-iteration"
 ---
 
@@ -30,7 +30,14 @@ for (v : vs.iter()) {
 
 ```rust
 let vs = vec![1, 2, 3];
-for (v : vs) {
-  // this is equivalent to vs.iter() 
+for (v : &vs) {
+  // this is equivalent to vs.iter()
+}
+```
+
+```rust
+let vs = vec![1, 2, 3];
+for (v : vs.into_iter()) {
+  // this is equivalent to for (v: vs)
 }
 ```
