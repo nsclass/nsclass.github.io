@@ -121,3 +121,4 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   - after search, type `zz` will display in the middle of screen
   - `:set scrolloff=10` will always have 10 lines before and after.
   - `:set so=10` is shortcut
+  - [https://vim.fandom.com/wiki/Make_search_results_appear_in_the_middle_of_the_screen](https://vim.fandom.com/wiki/Make_search_results_appear_in_the_middle_of_the_screen)
