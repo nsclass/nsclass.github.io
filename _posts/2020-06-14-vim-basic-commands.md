@@ -115,3 +115,9 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 
   - If vim support the surround, select text with a visual mode then press `S"`
   - surround mode, `:set surround`
+
+- Display searching a result in the middle of screen
+
+  - after search, type `zz` will display in the middle of screen
+  - `:set scrolloff=10` will always have 10 lines before and after.
+  - `:set so=10` is shortcut
