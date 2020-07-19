@@ -8,11 +8,11 @@ published: true
 password: ""
 status: publish
 categories:
-  - zsh
+  - python
 permalink: "2020/07/17/python-requests-retry"
 ---
 
-The following example will show how to create a request session including setting retries up
+The following example will show how to create a request session with retries.
 
 ```python
 def create_session(retry, back_off):
