@@ -14,10 +14,15 @@ permalink: "2020/07/19/rust-error-handling-thiserror"
 
 One of the most difficult decision to make on developing an application is how we can handle errors. The thiserror crate provide an easy way to handle errors for Rust application.
 
+If we do not care of detailed error, anyhow can be one of candidate to consider too.
+[https://github.com/dtolnay/anyhow](https://github.com/dtolnay/anyhow)
+
 ```rust
 [dependencies]
 thiserror = "1.0.20"
 ```
+
+Defining an error enum.
 
 ```rust
 use thiserror::Error;
