@@ -15,6 +15,7 @@ permalink: "2020/07/17/python-requests-retry"
 The following example will show how to create a request session with retries.
 
 ```python
+import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
