@@ -124,5 +124,9 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   - [https://vim.fandom.com/wiki/Make_search_results_appear_in_the_middle_of_the_screen](https://vim.fandom.com/wiki/Make_search_results_appear_in_the_middle_of_the_screen)
 
 - Copy in a different buffer
+
   - `"ayy`: copy the current line in buffer a.
   - `"ap`: paste the contents in a buffer a at the cursor.
+
+- Add indentation from the current line until the end of the file
+  - `>G`
