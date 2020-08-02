@@ -1,0 +1,17 @@
+---
+layout: single
+title: Rust - Json parser implementation with functional way
+date: 2020-08-02 09:30:00.000000000 -05:00
+type: post
+parent_id: "0"
+published: true
+password: ""
+status: publish
+categories:
+  - rust
+permalink: "2020/08/02/rust-json-parser-functional-programming"
+---
+
+The following git hub shows how Rust can implement Json parser by applying functional programming approach.
+
+[https://github.com/davidpdrsn/json-parser](https://github.com/davidpdrsn/json-parser)
