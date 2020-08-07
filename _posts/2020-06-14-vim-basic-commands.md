@@ -15,6 +15,16 @@ permalink: "2020/06/14/vim-basic-command"
 Cheat sheet
 [https://vim.rtorr.com/](https://vim.rtorr.com/)
 
+# Vim's Automatic Marks
+
+`“` Position before the last jump within current file
+`‘.` Location of last change
+`‘^` Location of last insertion
+`‘[` Start of last change or yank
+`‘]` End of last change or yank
+`‘<` Start of last visual selection
+`‘>` End of last visual selection
+
 # Changing mode
 
 - Insert mode: `i`
