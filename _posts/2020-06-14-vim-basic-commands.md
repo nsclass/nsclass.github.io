@@ -17,7 +17,7 @@ Cheat sheet
 
 # Vim's Automatic Marks
 
-`“` Position before the last jump within current file
+` `` ` Position before the last jump within current file
 `‘.` Location of last change
 `‘^` Location of last insertion
 `‘[` Start of last change or yank
@@ -140,3 +140,7 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 
 - Add indentation from the current line until the end of the file
   - `>G`
+
+```
+
+```
