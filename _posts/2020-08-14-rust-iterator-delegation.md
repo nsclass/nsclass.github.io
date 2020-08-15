@@ -53,3 +53,7 @@ impl BatchInterpolation {
 
 Full source code can be found from the following url.
 [https://github.com/nsclass/rust-svg-converter](https://github.com/nsclass/rust-svg-converter)
+
+## More Detailed Explanation
+
+[https://depth-first.com/articles/2020/06/22/returning-rust-iterators/](https://depth-first.com/articles/2020/06/22/returning-rust-iterators/)
