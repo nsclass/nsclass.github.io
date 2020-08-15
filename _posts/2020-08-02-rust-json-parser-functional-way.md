@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Rust - Json parser implementation with functional way
+title: Rust - Json parser implementation in a functional way
 date: 2020-08-02 09:30:00.000000000 -05:00
 type: post
 parent_id: "0"
