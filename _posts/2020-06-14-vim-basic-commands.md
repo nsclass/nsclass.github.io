@@ -139,8 +139,8 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
   - `"ap`: paste the contents in a buffer a at the cursor.
 
 - Add indentation from the current line until the end of the file
+
   - `>G`
 
-```
-
-```
+- Show search history
+  - `q\`
