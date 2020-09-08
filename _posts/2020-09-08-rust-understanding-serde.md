@@ -12,5 +12,5 @@ categories:
 permalink: "2020/09/08/rust-understanding-serde"
 ---
 
-How Rust serde ibrary works.
+How Rust serde library works.
 [https://www.joshmcguigan.com/blog/understanding-serde/](https://www.joshmcguigan.com/blog/understanding-serde/)
