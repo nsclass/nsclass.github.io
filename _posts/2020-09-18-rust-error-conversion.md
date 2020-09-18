@@ -93,3 +93,49 @@ fn foo() -> Result<String, MyAppError> {
   Ok(format!("final result: {}", lib_res))
 }
 ```
+
+Defining application specific error enum type is another hustle so there are some libraries to remove duplicated work.
+
+`thiserror` is for library project. `anyhow` or `eyre` for application project.
+
+`thiserror` example on defining a custom error type.
+
+```rust
+use thiserror::Error;
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error(transparent)]
+    ImageError(image::error::ImageError),
+
+    #[error("not valid base64 image string")]
+    NotValidBase64,
+    #[error("failed to convert an image")]
+    ImageConvertFailure,
+    #[error("out of index on finding gaussian")]
+    GaussianIndexError,
+
+    #[error("failed to create a color quantization")]
+    FailureColorQuantization,
+
+    #[error("maximum supported number of quantization color is 256")]
+    NotSupportedNumberOfColorForQuantization,
+
+    #[error("failed to generate layers")]
+    LayerGenerationFailure,
+
+    #[error("failed to generate scan paths")]
+    ScanPathGenerationFailure,
+
+    #[error("failed to generate batch interpolation list")]
+    BatchInterpolationGenerationFailure,
+
+    #[error("failed image path tracing")]
+    ImagePathTracingFailure,
+
+    #[error("failed to generate svg string")]
+    FailureGeneratingSvgString,
+
+    #[error("unknown error")]
+    Unknown,
+}
+```
