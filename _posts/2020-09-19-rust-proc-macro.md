@@ -12,8 +12,11 @@ categories:
 permalink: "2020/09/19/rust-proc-macro"
 ---
 
-Rust Procedural macros.
+Rust procedural macros.
 
 [https://github.com/dtolnay/proc-macro-workshop](https://github.com/dtolnay/proc-macro-workshop)
 
 [https://www.youtube.com/watch?v=geovSK3wMB8](https://www.youtube.com/watch?v=geovSK3wMB8)
+
+Internationalization using procedural macros.
+[https://www.youtube.com/watch?v=8nuu61807EY](https://www.youtube.com/watch?v=8nuu61807EY)
