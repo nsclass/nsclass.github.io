@@ -16,6 +16,7 @@ Rust procedural macros.
 
 [https://github.com/dtolnay/proc-macro-workshop](https://github.com/dtolnay/proc-macro-workshop)
 
+Workshop implementation.
 [https://www.youtube.com/watch?v=geovSK3wMB8](https://www.youtube.com/watch?v=geovSK3wMB8)
 
 Internationalization using procedural macros.
