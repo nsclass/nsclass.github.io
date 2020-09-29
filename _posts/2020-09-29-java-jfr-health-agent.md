@@ -26,6 +26,6 @@ $ jcmd JFR.dump
 Details can be found
 [https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/run.htm#JFRUH177](https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/run.htm#JFRUH177)
 
-There is a nice agent which can report the health of Java application at realtime.
+There is a nice agent which can report the health of Java application at realtime but it requires Java 14.
 
 [https://github.com/flight-recorder/health-report](https://github.com/flight-recorder/health-report)
