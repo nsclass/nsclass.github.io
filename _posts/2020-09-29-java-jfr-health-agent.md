@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Java - JFR health reporting agent
+title: Java - JFR start/dump and health reporting agent
 date: 2020-09-29 09:30:00.000000000 -05:00
 type: post
 parent_id: "0"
@@ -23,7 +23,7 @@ Dump recording
 $ jcmd JFR.dump
 ```
 
-Details can be found
+Details can be found from below.
 [https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/run.htm#JFRUH177](https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/run.htm#JFRUH177)
 
 There is a nice agent which can report the health of Java application at realtime but it requires Java 14.
