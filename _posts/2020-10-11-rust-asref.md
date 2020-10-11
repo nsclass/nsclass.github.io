@@ -12,7 +12,8 @@ categories:
 permalink: "2020/10/11/rust-asref-usage"
 ---
 
-`AsRef` is useful for generic function on accepting specific reference such as `str` or `Path`.
+`AsRef` is useful for generic function on accepting specific reference such as `str` or `Path` as trait bounds.
+
 Please see the below example.
 ```rust
 fn format_str(s: str) {
