@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - git`
+  - rust
 permalink: "2020/10/15/rust-idiomatic-api-design"
 ---
 
