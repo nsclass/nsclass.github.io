@@ -20,5 +20,5 @@ Most common misconception on Rust programming language. One of favorite explanat
 For Rust unsafe code guidance.
 [The Rustonomicon](https://doc.rust-lang.org/nomicon/index.html)
 
-Rust drop check part is good to know area.
+Rust drop check part that is worth to read for Rust programmer.
 [https://doc.rust-lang.org/nomicon/dropck.html](https://doc.rust-lang.org/nomicon/dropck.html)
