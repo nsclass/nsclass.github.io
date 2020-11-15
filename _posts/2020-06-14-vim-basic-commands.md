@@ -38,7 +38,7 @@ Cheat sheet
 
 - Basic movement: `hjkl` (left, down, up, right)
 - Words: `w` (next word), `b` (beginning of word), `e` (end of word)
-- Lines: `0` (beginning of line), `^` (first non-blank character), `$` (end of line)
+- Lines: `0` (beginning of line), `^` or `_` (first non-blank character), `$` (end of line)
 - Screen: `H` (top of screen), `M` (middle of screen), `L` (bottom of screen)
 - Scroll: `Ctrl-u` (up), `Ctrl-d` (down)
 - File: `gg` (beginning of file), `G` (end of file)
