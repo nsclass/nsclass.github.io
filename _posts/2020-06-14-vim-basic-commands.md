@@ -67,6 +67,7 @@ Cheat sheet
 - `y` to copy / “yank” (some other commands like d also copy)
 - `p` to paste
 - Lots more to learn: e.g. `~` flips the case of a character
+- `dG` will delete all lines until end of file.
 
 # Count
 
@@ -82,6 +83,11 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 - `ci[` change the contents inside the current pair of square brackets
 - `da'` delete a single-quoted string, including the surrounding single quotes
 - `yiw` copy the current word
+
+# Shell
+Open shell from vim
+- `:shell` open shell window
+- `:ter[minal]` will open shell in a separated window(Neovim)
 
 # Etc
 
