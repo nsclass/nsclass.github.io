@@ -16,6 +16,7 @@ C++ lock free programming in Youtube video
 
 C++ memory order in Youtube video
 [https://www.youtube.com/watch?v=A_vAG6LIHwQ](https://www.youtube.com/watch?v=A_vAG6LIHwQ)
+[https://www.youtube.com/watch?v=VP-5fizCUbw](https://www.youtube.com/watch?v=VP-5fizCUbw)
 
 
 Resource related concurrent programming in Rust and C++
