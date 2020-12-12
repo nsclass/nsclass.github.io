@@ -15,7 +15,7 @@ permalink: "2020/06/22/rust-https-self-signed-certificate"
 `reqwest` is a HTTP client in Rust.
 [https://github.com/seanmonstar/reqwest](https://github.com/seanmonstar/reqwest)
 
-It supports to send a HTTP request for self signed cerificate site as shown in below.
+It supports to send a HTTP request for self signed certificate site as shown in below.
 
 Full source code can be found from the below github including http server/client.
 
