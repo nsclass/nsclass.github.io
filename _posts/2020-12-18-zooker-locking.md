@@ -30,7 +30,7 @@ void acquire_lock() {
 Another way to lock with a sequential file type in ZooKeeper.
 ```
 void acquire_lock() {
-  create seq('f')
+  create seq('f', ephem=true)
   while (true) {
     list 'f*'
     if no lower #file
