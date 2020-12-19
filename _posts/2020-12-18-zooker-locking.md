@@ -12,8 +12,7 @@ categories:
 permalink: "2020/12/18/zookeeper-lock-support"
 ---
 
-The following logic shows how ZooKeeper is supporting a lock.
-
+The following pseudo logic shows how ZooKeeper is supporting a lock.
 ```
 void acquire_lock() {
   while (true) {
@@ -23,6 +22,22 @@ void acquire_lock() {
 
     if exist('f', watch=true) {
       wait until file f has gone
+    }
+  }
+}
+```
+
+Another way to lock with sequential file type in ZooKeeper.
+```
+void acquire_lock() {
+  create seq('f')
+  while (true) {
+    list 'f*'
+    if no lower #file
+      return;
+    
+    if exists(lower file, watch=true) {
+      wait
     }
   }
 }
