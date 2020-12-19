@@ -12,16 +12,18 @@ categories:
 permalink: "2020/12/18/zookeeper-lock-support"
 ---
 
-The following example shows how ZooKeeper is supporting a lock.
+The following logic shows how ZooKeeper is supporting a lock.
 
 ```
-while (true) {
-  if create('f', ephem=true) {
-    return;
-  }
+void acquire_lock() {
+  while (true) {
+    if create('f', ephem=true) {
+      return;
+    }
 
-  if exist('f', watch=true) {
-    wait until file f has gone
+    if exist('f', watch=true) {
+      wait until file f has gone
+    }
   }
 }
 ```
