@@ -27,7 +27,7 @@ void acquire_lock() {
 }
 ```
 
-Another way to lock with sequential file type in ZooKeeper.
+Another way to lock with a sequential file type in ZooKeeper.
 ```
 void acquire_lock() {
   create seq('f')
