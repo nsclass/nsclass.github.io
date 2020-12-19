@@ -36,7 +36,7 @@ void acquire_lock() {
     if no lower #file
       return;
     
-    if exists(lower file, watch=true) {
+    if exists(next lower #file, watch=true) {
       wait
     }
   }
