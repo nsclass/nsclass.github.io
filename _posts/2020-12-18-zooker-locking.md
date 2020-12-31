@@ -13,7 +13,7 @@ permalink: "2020/12/18/zookeeper-lock-support"
 ---
 
 The following pseudo logic shows how ZooKeeper is supporting a lock.
-```
+```java
 void acquire_lock() {
   while (true) {
     if create('f', ephem=true) {
@@ -28,7 +28,7 @@ void acquire_lock() {
 ```
 
 Another way to lock with a sequential file type in ZooKeeper.
-```
+```java
 void acquire_lock() {
   create seq('f', ephem=true)
   while (true) {
@@ -42,3 +42,5 @@ void acquire_lock() {
   }
 }
 ```
+
+Even though Zookeeper provides a locking mechanism it does not support transaction so if one of clients modified state then crashed, there is no easy way to recover the modified invariant by next client which acquired lock.
