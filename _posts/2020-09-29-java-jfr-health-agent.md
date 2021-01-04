@@ -13,13 +13,12 @@ permalink: "2020/09/29/java-jfr-health-reporting"
 ---
 
 From JDK 11, the following command will start recording JFR
-```
+```bash
 $ jcmd [pid] JFR.start duration=60s filename=myrecording.jfr
-
 ```
 
 Dump recording
-```
+```bash
 $ jcmd JFR.dump
 ```
 
