@@ -8,12 +8,12 @@ published: true
 password: ""
 status: publish
 categories:
-  - git`
+  - git
 permalink: "2020/10/13/git-tag-commit-date"
 ---
 
 Adding a git tag with the latest commit date.
-```
+```bash
 $ GIT_COMMITTER_DATE=$(git log -n1 --pretty=%aD) git tag -a -m "Release 0.0.1" 0.0.1
 $ git push --tags
 ```
