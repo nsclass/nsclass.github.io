@@ -14,7 +14,7 @@ permalink: "2020/12/18/zookeeper-mini-transaction"
 
 ZooKeeper mini transaction logic
 
-The following example shows how to increase value x with version number information.
+The following pseudo code shows how to increase value x with version number information.
 
 ```
 while (true) {
