@@ -16,21 +16,21 @@ The following example will show how to add a newline in zsh prompt.
 
 Update the `.zshrc` file with below environment variable. Please remove backslash on `%`, Jekyll cannot parse without a back slash.
 
-```
+```bash
 NEWLINE=$'\n'
 export PROMPT='%(?:%{\%}➜ :%{\%}➜ ) %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)${NEWLINE}$ '
 ```
 
 Example
 
-```
+```bash
 ➜ ~/dev/src/rust/rust-cell git:(master) ✗
  $
 ```
 
 vim mode in `.zshrc`
 
-```
+```bash
 bindkey -v
 bindkey '^R' history-incremental-search-backward
 ```
