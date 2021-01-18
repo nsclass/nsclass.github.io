@@ -17,5 +17,5 @@ Introduction React Server Component
 
 Recoil - React State Management Library
 React is introducing a new state management library by using context API under the hood.
-Main benefits for using Recoil is that it fully support React.Suspense feature for asynchronous operations.
+Main benefits of using Recoil is that it fully supports React.Suspense feature for asynchronous operations.
 [https://recoiljs.org/](https://recoiljs.org/)
