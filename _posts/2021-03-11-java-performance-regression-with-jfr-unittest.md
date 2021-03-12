@@ -11,7 +11,7 @@ categories:
   - java
 permalink: "2021/03/11/performance-regression-jfr-unit-test"
 ---
-JFR unit test framework allow to have a performance regression test.
+JFR unit test framework allow to have a performance regression test by using JFR events.
 
 Github: [https://github.com/moditect/jfrunit](https://github.com/moditect/jfrunit)
 
