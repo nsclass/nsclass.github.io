@@ -13,7 +13,7 @@ permalink: "2021/03/11/performance-regression-jfr-unit-test"
 ---
 JFR unit test framework allow to have a performance regression test.
 
-Github[https://github.com/moditect/jfrunit](https://github.com/moditect/jfrunit)
+Github: [https://github.com/moditect/jfrunit](https://github.com/moditect/jfrunit)
 
 Article about jfrUnit framework.
 [https://www.morling.dev/blog/towards-continuous-performance-regression-testing/](https://www.morling.dev/blog/towards-continuous-performance-regression-testing/)
