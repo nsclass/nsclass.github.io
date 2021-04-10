@@ -10,16 +10,6 @@ status: publish
 categories:
 - Java
 - Programming
-tags: []
-meta:
-  _edit_last: '14827209'
-  geo_public: '0'
-  _publicize_job_id: '10810713850'
-  _oembed_eb854f6f99fc879708a4b13b1789cd53: "{{unknown}}"
-  _oembed_c808d97a6ef7d8579d0166239a67e3ed: "{{unknown}}"
-  _oembed_e2d2ffdfbf04c7ac8843ba1c202c751e: "{{unknown}}"
-  _oembed_17895690201adbe2a9e4a26d74973e35: "{{unknown}}"
-  _oembed_073007e0aebd21ea4c72cd94184e5256: "{{unknown}}"
 author:
   login: acrocontext
   email:  
