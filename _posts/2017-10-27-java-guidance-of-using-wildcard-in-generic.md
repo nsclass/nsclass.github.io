@@ -33,7 +33,7 @@ This will force client to use wildcard types
 
 # PECS(Produce Extends Consumer Super)
 ```java
-public void pushAll(Collection<? extend E> src) {
+public void pushAll(Collection<? extends E> src) {
   for (E e : src) {
     push(e)
   }
