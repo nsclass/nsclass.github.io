@@ -38,5 +38,8 @@ public void popAll(Collections<? super E> dst) {
 }
 ```
 
+# Comparable are always consumer
+`Comparable<T>` can be replaced by `Comparable<? super T>` and this is true for comparator
+
 # The basic guidance of using wildcard in Java generic
 https://docs.oracle.com/javase/tutorial/java/generics/wildcardGuidelines.html
