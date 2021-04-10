@@ -28,5 +28,25 @@ author:
   last_name: ''
 permalink: "/2017/10/27/java-guidance-of-using-wildcard-in-generic/"
 ---
-<p>The basic guidance of using wildcard in Java generic</p>
-<p>https://docs.oracle.com/javase/tutorial/java/generics/wildcardGuidelines.html</p>
+# Do not use bounded wildcard as a return value
+This will force client to use wildcard types
+
+# PECS(Produce Extends Consumer Super)
+```java
+public void pushAll(Collection<? extend E> src) {
+  for (E e : src) {
+    push(e)
+  }
+}
+```
+
+```java
+public void popAll(Collections<? super E> dst) {
+  while (!isEmpty()) {
+    dst.add(pop())
+  }
+}
+```
+
+# The basic guidance of using wildcard in Java generic
+https://docs.oracle.com/javase/tutorial/java/generics/wildcardGuidelines.html
