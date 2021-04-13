@@ -22,4 +22,4 @@ Pessimistic distributed transaction will use the following concepts to achieve A
 
 ## Two phase commits
 - Prepare commit will log all required modification and changes in write ahead logs.
-- Perform commit will apply all changes to the database.
+- Perform commit will apply all changes written in the write ahead log to the database.
