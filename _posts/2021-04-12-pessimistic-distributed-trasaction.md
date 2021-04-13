@@ -11,7 +11,7 @@ categories:
   - distributed
 permalink: "2021/04/12/distributed-transaction"
 ---
-Pessimistic distributed transaction will use the following concepts.
+Pessimistic distributed transaction will use the following concepts to achieve ACID(Atomic, Consistency, Isolation, Durable).
 
 1. Two phase locking
 2. Two phase commits
