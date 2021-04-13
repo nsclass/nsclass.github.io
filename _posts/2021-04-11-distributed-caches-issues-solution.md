@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - zookeeper
+  - cache
 permalink: "2021/04/11/distributed-cache-issues-solution"
 ---
 In order to build distributed caches, we need to solve the following three problems.
