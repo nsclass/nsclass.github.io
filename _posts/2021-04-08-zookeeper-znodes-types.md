@@ -20,4 +20,4 @@ regular
 ephemeral
 sequential
 ```
-ephemeral znode will be removed automatically if zookeeper cannot reach the client. Client can create a znode as regular or sequential with ephemeral true of false.
+ephemeral znode will be removed automatically if zookeeper cannot reach the client. Client can create a znode as regular or sequential with ephemeral true or false.
