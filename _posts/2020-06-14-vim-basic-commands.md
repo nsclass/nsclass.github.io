@@ -150,3 +150,6 @@ Open shell from vim
 
 - Show search history
   - `q\`
+
+- Scroll off 8 lines
+ - `set scrolloff=8`
