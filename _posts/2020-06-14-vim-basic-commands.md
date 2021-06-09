@@ -149,17 +149,22 @@ Open shell from vim
   - `>G`
 
 - Show search history
+
   - `q\`
 
 - Scroll off 8 lines
+
  - `set scrolloff=8`
 
 - Do not lose the yanked buffer on visual mode
+
  - `vnoremap <leader>p "_dP`
 
 - Always copy into system clipboard
+
  - `vnoremap <leader>y "+y`
 
 - Moving selected text up/down
+
  - `vnoremap J :m '>+1<CR>gv=gv`
  - `vnoremap K :m '<-2<CR>gv=gv`
