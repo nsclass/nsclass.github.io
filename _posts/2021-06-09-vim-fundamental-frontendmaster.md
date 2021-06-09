@@ -13,5 +13,5 @@ permalink: "2021/06/09/vim-fundamental-frontendmaster"
 ---
 Vim fundamental from FrontEndMaster course
 
-[https://theprimeagen.github.io/vim-fundamentals/)(https://theprimeagen.github.io/vim-fundamentals/)
+[https://theprimeagen.github.io/vim-fundamentals/](https://theprimeagen.github.io/vim-fundamentals/)
 
