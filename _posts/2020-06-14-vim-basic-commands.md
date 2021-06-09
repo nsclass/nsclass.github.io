@@ -17,7 +17,7 @@ Cheat sheet
 
 # Vim's Automatic Marks
 
-` `` ` Position before the last jump within current file
+``` `` ``` Position before the last jump within current file
 `‘.` Location of last change
 `‘^` Location of last insertion
 `‘[` Start of last change or yank
