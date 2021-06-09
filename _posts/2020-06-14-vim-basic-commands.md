@@ -153,3 +153,9 @@ Open shell from vim
 
 - Scroll off 8 lines
  - `set scrolloff=8`
+
+- Do not lose the yanked buffer on visual mode
+ - `vnoremap <leader>p "_dP`
+
+- Always copy into system clipboard
+ - `vnoremap <leader>y "+y`
