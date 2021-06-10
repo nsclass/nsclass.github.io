@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - cache
+  - distributed
 permalink: "2021/04/11/distributed-cache-issues-solution"
 ---
 In order to build distributed caches, we need to solve the following three problems.
@@ -26,3 +26,6 @@ In order to build distributed caches, we need to solve the following three probl
 ## Crash recovery
 - Write Ahead Log mechanism will provide a solution for crash recovery.
 - Every operation should have version information to prevent unexpected recovery result such as restoring already removed items.
+
+
+
