@@ -17,7 +17,7 @@ Cheat sheet
 
 # Vim's Automatic Marks
 
-``` `` ``` Position before the last jump within current file
+` `` ` Position before the last jump within current file
 `‘.` Location of last change
 `‘^` Location of last insertion
 `‘[` Start of last change or yank
@@ -85,7 +85,9 @@ You can use modifiers to change the meaning of a noun. Some modifiers are `i`, w
 - `yiw` copy the current word
 
 # Shell
+
 Open shell from vim
+
 - `:shell` open shell window
 - `:ter[minal]` will open shell in a separated window(Neovim)
 
@@ -154,17 +156,17 @@ Open shell from vim
 
 - Scroll off 8 lines
 
- - `set scrolloff=8`
+  - `set scrolloff=8`
 
 - Do not lose the yanked buffer on visual mode
 
- - `vnoremap <leader>p "_dP`
+  - `vnoremap <leader>p "_dP`
 
 - Always copy into system clipboard
 
- - `vnoremap <leader>y "+y`
+  - `vnoremap <leader>y "+y`
 
 - Moving selected text up/down
 
- - `vnoremap J :m '>+1<CR>gv=gv`
- - `vnoremap K :m '<-2<CR>gv=gv`
+  - `vnoremap J :m '>+1<CR>gv=gv`
+  - `vnoremap K :m '<-2<CR>gv=gv`
