@@ -167,6 +167,5 @@ Open shell from vim
   - `vnoremap <leader>y "+y`
 
 - Moving selected text up/down
-
   - `vnoremap J :m '>+1<CR>gv=gv`
   - `vnoremap K :m '<-2<CR>gv=gv`
