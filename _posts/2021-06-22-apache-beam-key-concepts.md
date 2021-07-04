@@ -14,40 +14,40 @@ permalink: "2021/06/22/apache-beam-key-concepts"
 
 Apache Beam has the following key concepts.
 
-## Pipeline
+1. Pipeline
 
-Modeling processing data
+- Modeling processing data
 
-## PCollection
+2. PCollection
 
-Immutable dataset
+- Immutable dataset
 
-## PTransform
+3. PTransform
 
-Various transforming functions
+- Various transforming functions
 
-- ParDo
-- GroupBy
-- Combine
-- Flatten
-- Partition
+  - ParDo
+  - GroupBy
+  - Combine
+  - Flatten
+  - Partition
 
-## Side Input
+4. Side Input
 
-Additional data to support transformation
+- Additional data to support transformation
 
-## Runner
+5. Runner
 
-Selecting platform to run logics such as Spark, Flink and etc
+- Selecting platform to run logics such as Spark, Flink and etc
 
-## Windowing
+6. Windowing
 
-Defining time windows - What
+- Defining time windows - What
 
-## Triggers
+7. Triggers
 
-When aggregation will run - When
+- When aggregation will run - When
 
-## Schema
+8. Schema
 
-Defining data format
+- Defining data format
