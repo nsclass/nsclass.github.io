@@ -13,7 +13,7 @@ permalink: "2021/06/25/gradle-java-library-plugin"
 ---
 
 Gradle 7+ removed `compile` configuration so all existing gradle projects using `compile` configuration should be migrated.
-Instead `java-library` plugin was introduced to fine grain control of dependencies on compile classpath and runtime classpath.
+Instead `java-library` plugin was introduced for the fine grained control of dependencies on compile classpath and runtime classpath.
 
 `api` configuration will allow to have both compile/runtime classpath but `implementation` configuration will affect the dependency at runtime.
 This fine grain control will allow us to prevent transitive dependency problem.
