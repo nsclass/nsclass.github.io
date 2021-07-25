@@ -30,6 +30,10 @@ Github real world example.
 [https://github.com/nsclass/ns-svg-converter/blob/master/ns-main-service/build.gradle](https://github.com/nsclass/ns-svg-converter/blob/master/ns-main-service/build.gradle)
 [https://github.com/nsclass/ns-svg-converter/blob/master/ns-cassandra/build.gradle](https://github.com/nsclass/ns-svg-converter/blob/master/ns-cassandra/build.gradle)
 
-More details can be found the below link.
+The following Gradle(7.x) init project shows how it will generate multiple projects with `api` and `implementation`
+
+[https://docs.gradle.org/current/samples/sample_building_java_applications_multi_project.html](https://docs.gradle.org/current/samples/sample_building_java_applications_multi_project.html)
+
+The following article explains how `api` and `implementation` will handle compile/runtime classpath for gradle project.
 
 [https://tomgregory.com/how-to-use-gradle-api-vs-implementation-dependencies-with-the-java-library-plugin/](https://tomgregory.com/how-to-use-gradle-api-vs-implementation-dependencies-with-the-java-library-plugin/)
