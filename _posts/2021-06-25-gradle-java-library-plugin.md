@@ -34,6 +34,10 @@ The following Gradle(7.x) init project shows how it will generate multiple proje
 
 [https://docs.gradle.org/current/samples/sample_building_java_applications_multi_project.html](https://docs.gradle.org/current/samples/sample_building_java_applications_multi_project.html)
 
+Gradle documentation
+
+[https://docs.gradle.org/current/userguide/java_library_plugin.html](https://docs.gradle.org/current/userguide/java_library_plugin.html)
+
 The following article explains how `api` and `implementation` will handle compile/runtime classpath for gradle project.
 
 [https://tomgregory.com/how-to-use-gradle-api-vs-implementation-dependencies-with-the-java-library-plugin/](https://tomgregory.com/how-to-use-gradle-api-vs-implementation-dependencies-with-the-java-library-plugin/)
