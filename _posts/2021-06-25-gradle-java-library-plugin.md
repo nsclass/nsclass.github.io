@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Gradle - java-library plugin
+title: Gradle - java-library plugin from 7.x version
 date: 2021-06-25 07:00:00.000000000 -05:00
 type: post
 parent_id: "0"
