@@ -1,7 +1,7 @@
 ---
 layout: single
 title: Gradle - java-library plugin from 7.x version
-date: 2021-06-25 07:00:00.000000000 -05:00
+date: 2021-07-25 07:00:00.000000000 -05:00
 type: post
 parent_id: "0"
 published: true
@@ -9,7 +9,7 @@ password: ""
 status: publish
 categories:
   - gradle
-permalink: "2021/06/25/gradle-java-library-plugin"
+permalink: "2021/07/25/gradle-java-library-plugin"
 ---
 
 Gradle 7+ removed `compile` configuration so all existing gradle projects using `compile` configuration should be migrated.
