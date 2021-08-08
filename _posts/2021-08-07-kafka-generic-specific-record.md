@@ -132,3 +132,6 @@ while (true) {
 }
 
 ```
+
+Kafka resources
+[https://codingharbour.com/blog/](https://codingharbour.com/blog/)
