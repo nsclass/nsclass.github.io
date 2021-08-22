@@ -13,5 +13,5 @@ permalink: "2021/08/21/apache-beam-on-spark-runner"
 ---
 
 Apache beam with Spark runner on Youtube
-
-[https://www.youtube.com/watch?v=oEehQwOEFvg](https://www.youtube.com/watch?v=oEehQwOEFvg)
+[Update Apache Beam with Spark Structure Streaming Runner](https://www.youtube.com/watch?v=BlU7ywcncnw)
+[Apache Beam With Spark Structure Streaming Runner](https://www.youtube.com/watch?v=oEehQwOEFvg)
