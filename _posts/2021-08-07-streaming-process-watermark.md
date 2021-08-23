@@ -25,4 +25,4 @@ The following Youtube link is explaining how watermark works on streaming proces
 
 There is a difference between Spark watermark and Apache Beam.
 
-Spark watermark is a global but Apache Beam watermark applies on each transform.
+Spark watermark is a global but Apache Beam watermark applies on each transform. And Spark watermark is the max event time but Apache Beam is the oldest event time.
