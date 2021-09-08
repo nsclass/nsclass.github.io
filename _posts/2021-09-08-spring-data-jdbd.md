@@ -14,5 +14,5 @@ permalink: "2021/09/08/spring-data-jdbc"
 
 Spring Data JDBC
 
-[blog](https://spring.io/blog/2018/09/24/spring-data-jdbc-references-and-aggregates)
-[youtube](https://www.youtube.com/watch?v=SJlKBkZ2yAU)
+[Spring Data JDBC blog](https://spring.io/blog/2018/09/24/spring-data-jdbc-references-and-aggregates)
+[Spring Data JDBC youtube](https://www.youtube.com/watch?v=SJlKBkZ2yAU)
