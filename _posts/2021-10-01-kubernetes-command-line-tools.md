@@ -1,7 +1,7 @@
 ---
 layout: single
 title: Kubernetes command line tools(kubectl, kubectx, kubens, stern)
-date: 2021-10-01 09:00:00.000000000 -05:00
+date: 2021-10-01 19:00:00.000000000 -05:00
 type: post
 parent_id: "0"
 published: true
