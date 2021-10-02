@@ -12,6 +12,6 @@ categories:
 permalink: "2021/10/01/kubernetes-using-external-service"
 ---
 
-There are often times to use the external services inside of Kubernetes. The following article explain how to set up in Kubernertes.
+There are often times to use the external services inside of Kubernetes. The following article explain how to set up in Kubernetes.
 
 [https://medium.com/@ManagedKube/kubernetes-access-external-services-e4fd643e5097](https://medium.com/@ManagedKube/kubernetes-access-external-services-e4fd643e5097)
