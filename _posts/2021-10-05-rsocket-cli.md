@@ -16,6 +16,8 @@ Rsocket CLI
 
 [https://github.com/making/rsc](https://github.com/making/rsc)
 
+[https://github.com/making/learning-rsocket-using-rsc](https://github.com/making/learning-rsocket-using-rsc)
+
 Youtube demo
 
 [https://www.youtube.com/watch?v=cFYUAzYypeM](https://www.youtube.com/watch?v=cFYUAzYypeM)
