@@ -27,3 +27,9 @@ Spring boot provides a integration testing framework with docker in Junit tests.
   [https://www.youtube.com/watch?v=COcR23FlgqE](https://www.youtube.com/watch?v=COcR23FlgqE)
 
   [https://github.com/springone-2021-testcontainers/testcontainers-demo](https://github.com/springone-2021-testcontainers/testcontainers-demo)
+
+The following demo shows the full context of using Testcontainers with a SpringBoot application
+
+[https://www.youtube.com/watch?v=gMvAp_qGyyE](https://www.youtube.com/watch?v=gMvAp_qGyyE)
+
+[https://github.com/ThomasVitale/springone-2021-spring-boot-production-boost](https://github.com/ThomasVitale/springone-2021-spring-boot-production-boost)
