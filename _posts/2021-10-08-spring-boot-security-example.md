@@ -15,3 +15,7 @@ permalink: "2021/10/09/spring-boot-security-example"
 Spring boot security example
 
 [https://github.com/sjohnr/springone-2021](https://github.com/sjohnr/springone-2021)
+
+Youtube
+
+[https://www.youtube.com/watch?v=5tlU_Vjv8Ns](https://www.youtube.com/watch?v=5tlU_Vjv8Ns)
