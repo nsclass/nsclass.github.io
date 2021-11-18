@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - spring
+  - python
 permalink: "2021/11/11/pyspark-kafka-schema-registry"
 ---
 
