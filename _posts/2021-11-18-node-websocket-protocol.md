@@ -17,3 +17,7 @@ WebSocket server implementation with Node JS.
 The following git hub will show how WebSocket protocol is working in Node JS
 
 [https://github.com/btholt/realtime-exercises/tree/main/websockets/exercise-raw/backend](https://github.com/btholt/realtime-exercises/tree/main/websockets/exercise-raw/backend)
+
+Socket IO for Java example with SpringBoot
+
+[https://github.com/jamesjieye/netty-socketio.spring](https://github.com/jamesjieye/netty-socketio.spring)
