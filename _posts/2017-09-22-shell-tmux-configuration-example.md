@@ -24,19 +24,6 @@ author:
 permalink: "/2017/09/22/shell-tmux-configuration-example/"
 ---
 
-```bash
-# Make mouse useful in copy mode
-# setw -g mode-mouse on
-# Allow mouse to select which pane to use
-# set -g mouse-select-pane on
-set -g terminal-overrides 'xterm*:smcup@:rmcup@'
-# Set ability to capture on start and restore on exit window data when running an application
-setw -g alternate-screen on
-# Lower escape timing from 500ms to 50ms for quicker response to scroll-buffer access.
-set -s escape-time 50
-set-option -g history-limit 5000
-```
-
 Tmux switcher with fzf
 
 [https://eioki.eu/2021/01/12/tmux-and-fzf-fuzzy-tmux-session-window-pane-switcher](https://eioki.eu/2021/01/12/tmux-and-fzf-fuzzy-tmux-session-window-pane-switcher)
@@ -59,4 +46,11 @@ LINE=$(tmux list-panes -a -F "$TARGET_SPEC $LIST_DATA" | $FZF_COMMAND) || exit 0
 args=(${LINE//:/ })
 # activate session/window/pane
 tmux select-pane -t ${args[2]} && tmux select-window -t ${args[1]} && tmux switch-client -t ${args[0]}
+```
+
+Tmux key binding configuration
+
+```
+# Key binding
+bind-key ` run-shell -b $HOME/.local/bin/tmux-fzf-switcher.sh
 ```
