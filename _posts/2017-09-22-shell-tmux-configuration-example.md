@@ -1,6 +1,6 @@
 ---
 layout: single
-title: SHELL - tmux configuration example
+title: tmux switcher with fzf
 date: 2017-09-22 22:19:11.000000000 -05:00
 type: post
 parent_id: "0"
@@ -8,20 +8,9 @@ published: true
 password: ""
 status: publish
 categories:
-  - Programming
   - tmux
 tags: []
-meta:
-  _edit_last: "14827209"
-  geo_public: "0"
-  _publicize_job_id: "9551195662"
-author:
-  login: acrocontext
-  email:
-  display_name: acrocontext
-  first_name: ""
-  last_name: ""
-permalink: "/2017/09/22/shell-tmux-configuration-example/"
+permalink: "/2017/09/22/tmx-fzf-switcher/"
 ---
 
 Tmux switcher with fzf
