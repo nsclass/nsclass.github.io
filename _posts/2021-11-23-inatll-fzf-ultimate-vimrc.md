@@ -18,18 +18,18 @@ By default ultimate vimrc does not include the fzf/lsp vim plugin so we have to 
 
 - FZF installation
 
-```bash
-$ cd .vim_runtime
-$ git clone https://github.com/junegunn/fzf.git ./my_plugins/fzf
-$ git clone https://github.com/junegunn/fzf.vim.git my_plugins/fzf.vim
-```
+  ```bash
+  $ cd .vim_runtime
+  $ git clone https://github.com/junegunn/fzf.git ./my_plugins/fzf
+  $ git clone https://github.com/junegunn/fzf.vim.git my_plugins/fzf.vim
+  ```
 
 - LSP plugin installation
 
   Since Ultimate vim rc includes the ale, we need to install vim-lsp-ale plugin too.
 
-```bash
- $ git clone https://github.com/prabirshrestha/vim-lsp.git my_plugins/vim-lsp
- $ git clone https://github.com/mattn/vim-lsp-settings.git my_plugins/vim-lsp-settings
- $ git clone https://github.com/rhysd/vim-lsp-ale.git my_plugins/vim-lsp-ale
-```
+  ```bash
+  $ git clone https://github.com/prabirshrestha/vim-lsp.git my_plugins/vim-lsp
+  $ git clone https://github.com/mattn/vim-lsp-settings.git my_plugins/vim-lsp-settings
+  $ git clone https://github.com/rhysd/vim-lsp-ale.git my_plugins/vim-lsp-ale
+  ```
