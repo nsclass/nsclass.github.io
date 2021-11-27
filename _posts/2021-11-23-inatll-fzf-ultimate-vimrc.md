@@ -25,6 +25,7 @@ $ git clone https://github.com/junegunn/fzf.vim.git my_plugins/fzf.vim
 ```
 
 - LSP plugin installation
+
   Since Ultimate vim rc includes the ale, we need to install vim-lsp-ale plugin too.
 
 ```bash
