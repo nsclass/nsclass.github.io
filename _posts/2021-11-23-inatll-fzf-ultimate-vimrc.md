@@ -19,7 +19,7 @@ By default ultimate vimrc does not include the fzf/lsp vim plugin so we have to 
 - FZF installation
 
   ```bash
-  $ cd .vim_runtime
+  $ cd ~/.vim_runtime
   $ git clone https://github.com/junegunn/fzf.git ./my_plugins/fzf
   $ git clone https://github.com/junegunn/fzf.vim.git my_plugins/fzf.vim
   ```
