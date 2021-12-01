@@ -14,9 +14,10 @@ permalink: "2021/11/21/frontendmaster-developer-productivity"
 
 Another great front end master course for developer productivity.
 
-Every topic in the course are really helpful for me but I can pick the following two topics as the best.
+Every topic in the course are really helpful for me but I can pick the following topics as the best.
 
 - tmux
+- https://cheat.sh/
 - git worktree
 
 Course github
