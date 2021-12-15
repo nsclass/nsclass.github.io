@@ -15,3 +15,7 @@ permalink: "2021/12/06/fontendmaster-css"
 Frontend master brilliant course for CSS
 
 [Github](https://github.com/FrontendMasters/grid-flexbox-v2)
+
+CSS variables
+
+[CSS variables](https://fmasters--dynamic-css.netlify.app/#intro)
