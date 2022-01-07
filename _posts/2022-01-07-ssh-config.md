@@ -75,4 +75,5 @@ $ ssh ubuntu
 ```
 
 You can find more details about ssh config example from the below link.
+
 [SSH config](https://linuxize.com/post/using-the-ssh-config-file/)
