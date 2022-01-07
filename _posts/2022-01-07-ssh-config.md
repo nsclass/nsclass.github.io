@@ -73,3 +73,6 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9vmTjzHpBVLZMn5IlFs/DOIIjZWUUDh0ohewfA6cD
 ```
 $ ssh ubuntu
 ```
+
+You can find more details about ssh config example from the below link.
+[SSH config](https://linuxize.com/post/using-the-ssh-config-file/)
