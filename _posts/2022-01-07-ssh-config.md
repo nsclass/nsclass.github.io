@@ -50,7 +50,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9vmTjzHpBVLZMn5IlFs/DOIIjZWUUDh0ohewfA6cD
 connect the remote server and change the directory to .ssh
 
 ```bash
-$ ssh ubunto@192168.64.2
+$ ssh ubunto@192.168.64.2
 $ cd .ssh
 ```
 
