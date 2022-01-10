@@ -26,7 +26,7 @@ $ ssh-keygen -t rsa -P ""
   user: ubuntu
 
 ```bash
-$ cd ~.ssh
+$ cd ~/.ssh
 $ touch config
 ```
 
@@ -43,7 +43,7 @@ Host ubuntu
 copy the public key from the local host. You can find the public key from the below command.
 
 ```bash
-$ cat ~.ssh/id_rsa.pub
+$ cat ~/.ssh/id_rsa.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9vmTjzHpBVLZMn5IlFs/DOIIjZWUUDh0ohewfA6cDpAxpZI3QjR07pmU7xU6qny1vLokl19hi0sMpVUKYsX/c8gmgoxCjRK0SQcxICnLy4UTu6aNRHrONRsnd+z/JiEI0JMSU4gTKaS1GYyuWLB7fHHiT8OmmuleKOC18SXyOIi1CKjInt7E1omSf2ezbYVl7qpeA1ywHcER5OSVrNxntQTtAVuR6i/dZi3aUvTT8S2w7CeWJLcKw21l9EieAXh1Nn/hQVBUrDUCfSl4GTwS2cfKW4F3gS8JH/5xS3z53ABKkljxEOUou1kLZTUHoyxOaw9EGL/9mFwdmVlOynbNt OpenShift-Key
 ```
 
