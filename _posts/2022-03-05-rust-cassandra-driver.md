@@ -12,7 +12,7 @@ categories:
 permalink: "2022/03/05/rust-cassandra-driver"
 ---
 
-Rust Cassandra driver is not matured enough so far.
+Rust Cassandra driver is not matured enough so far but the blogger recommended the C++ driver for production.
 
 The following blog will show how to use most popular Rust Cassandra driver and the current status of development in open source world.
 
