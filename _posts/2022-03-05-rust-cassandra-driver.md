@@ -14,6 +14,7 @@ permalink: "2022/03/05/rust-cassandra-driver"
 
 Rust Cassandra driver is not matured enough so far.
 
-The following DataStax blog will show how to use most popular Rust Cassandra driver and the current status of development in open source world.
+The following blog will show how to use most popular Rust Cassandra driver and the current status of development in open source world.
 
-[https://www.datastax.com/blog/2021/03/developing-high-performance-apache-cassandra-applications-rust-part-1](https://www.datastax.com/blog/2021/03/developing-high-performance-apache-cassandra-applications-rust-part-1)
+[Part 1](https://www.datastax.com/blog/2021/03/developing-high-performance-apache-cassandra-applications-rust-part-1)
+[Part 2](https://medium.com/building-the-open-data-stack/developing-high-performance-cassandra-applications-in-rust-part-2-10448858f29)
