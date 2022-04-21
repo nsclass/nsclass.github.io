@@ -21,7 +21,7 @@ df = df_raw \
   .withColumn('new_col', fn.concat_ws('_', df_raw.col1, df_raw.col2))
 ```
 
-Pyspark can also create the json column
+Pyspark can also create a json column with other columns
 
 ```python
 
