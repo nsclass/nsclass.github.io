@@ -28,6 +28,7 @@ Pyspark can also create a json column with other columns
 import pyspark.sql.functions as fn
 from pyspark.sql.functions import to_json, struct
 
+json_columns = ["col1", "col2"]
 df = df_raw \
-  .withColumn('json', fn.to_json(fn.struct([df_raw[x] for x in jsonColumns])))
+  .withColumn('json', fn.to_json(fn.struct([df_raw[x] for x in json_columns])))
 ```
