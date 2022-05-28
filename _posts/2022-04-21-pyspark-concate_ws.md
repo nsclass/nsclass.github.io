@@ -41,5 +41,5 @@ import pyspark.sql.functions as fn
 from pyspark.sql.functions import to_json, struct
 
 df = df_raw \
-  .withColumn('json', fn.to_json(fn.col(*)))
+  .withColumn('json', fn.to_json(fn.struct(fn.col(*))))
 ```
