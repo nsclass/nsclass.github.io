@@ -9,7 +9,7 @@ password: ""
 status: publish
 categories:
   - typescript
-permalink: "2022/06/10/pyspark-confluent-kafka"
+permalink: "2022/06/10/type-checking-format-checking"
 ---
 
 Run type script compiler to check types only.
