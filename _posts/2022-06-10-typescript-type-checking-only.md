@@ -1,6 +1,6 @@
 ---
 layout: single
-title: TypeScript - type checking only
+title: TypeScript - type checking only and prettier format checking
 date: 2022-06-10 08:00:00.000000000 -05:00
 type: post
 parent_id: "0"
@@ -13,7 +13,11 @@ permalink: "2022/06/10/pyspark-confluent-kafka"
 ---
 
 Run type script compiler to check types only.
+Format checking with prettier
 
-```bash
-$ tsc --noEmit
+```json
+{
+  "format:check": "prettier check \"src/**/*.{js,ts,tsx}\"",
+  "typecheck": "tsc --noEmit"
+}
 ```
