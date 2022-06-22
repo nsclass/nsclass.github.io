@@ -17,7 +17,8 @@ Format checking with prettier
 
 ```json
 {
-  "format:check": "prettier check \"src/**/*.{js,ts,tsx}\"",
+  "format:check": "prettier --check \"src/**/*.{js,ts,tsx}\"",
+  "format": "prettier --write \"src/**/*.{js,ts,tsx}\"",
   "typecheck": "tsc --noEmit"
 }
 ```
