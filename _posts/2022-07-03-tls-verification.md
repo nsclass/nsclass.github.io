@@ -17,3 +17,5 @@ openssl command to verify TLS connection
 ```bash
 $ openssl s_client -state -CAfile root.ca.crt -connect igvita.com:443
 ```
+
+[Networking 101 - TLS](https://hpbn.co/transport-layer-security-tls/)
