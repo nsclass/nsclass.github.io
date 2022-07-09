@@ -12,4 +12,6 @@ categories:
 permalink: "2022/07/09/typescript-graphql-full-stack"
 ---
 
+Please switch the branch named `fed` for a final solution.
+
 [Typescript and GraphQL full stack example](https://github.com/mike-north/full-stack-ts/tree/master)
