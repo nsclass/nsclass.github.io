@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - typescript
+  - redux
 permalink: "2022/07/28/react-redux-fundamentals"
 ---
 
