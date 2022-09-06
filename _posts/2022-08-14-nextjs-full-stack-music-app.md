@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - redux
+  - javascript
 permalink: "2022/08/14/nextjs-full-stack-music-app"
 ---
 

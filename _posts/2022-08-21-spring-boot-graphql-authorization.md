@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - redux
+  - springboot
 permalink: "2022/08/21/spring-boot-graphql-authorization"
 ---
 
