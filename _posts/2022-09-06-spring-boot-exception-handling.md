@@ -12,7 +12,7 @@ categories:
 permalink: "2022/09/06/spring-boot-exception-handling"
 ---
 
-SpringBoot allow to define the exception handler inside of Controller.
+SpringBoot allow to define the exception handler inside of Controller. The following code shows an example.
 
 ```java
 @Controller
