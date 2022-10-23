@@ -1,40 +1,21 @@
 ---
 layout: single
-title: Spring boot - Exception handling
-date: 2022-09-06 08:00:00.000000000 -05:00
+title: Java - improving launching time with CDS(class data sharing)
+date: 2022-10-23 08:00:00.000000000 -05:00
 type: post
 parent_id: "0"
 published: true
 password: ""
 status: publish
 categories:
-  - stringboot
-permalink: "2022/09/06/spring-boot-exception-handling"
+  - java
+permalink: "2022/10/23/java-improving-launching-time-cds"
 ---
 
-SpringBoot allow to define the exception handler inside of Controller. The following code shows an example.
+JDK 10+ has introduced a feature called CDS(class data sharing) which will improve the launching time of Java application.
 
-```java
-@Controller
-@ResponseBody
-public class RestController {
+The following article shows details how it works
 
-  @ExceptionHandler
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<?> exceptionHandler(Exception e) {
-    return ResponseEntity.badRequest().build()
-  }
+[Java CDS](https://nipafx.dev/java-application-class-data-sharing/)
 
-  @GetMapping("/hello/{name}")
-  public Mono<Item> hello(@PathVariable String name) {
-    return Mono.just(new Item(name));
-  }
-
-  @GetMapping(value = "/stream/{name}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-  public Flux<Item> Flux.fromStream(stream.generate(() -> new Item(name)))
-                          .take(10)
-                          .delayElements(Duration.ofSeconds(1));
-}
-
-record Item(String name) {}
-```
+[Youtube CDS](https://www.youtube.com/watch?v=NE9euFxr2-A)
