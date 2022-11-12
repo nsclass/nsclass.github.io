@@ -14,4 +14,4 @@ permalink: "2022/11/12/structure-concurrency"
 
 Java virtual threads applies structured concurrency concepts. The following blog explains what structure concurrency is.
 
-[Structure Concurrency](https://250bpm.com/blog:146/index.html)
+[Structure Concurrency](https://250bpm.com/blog:71/index.html)
