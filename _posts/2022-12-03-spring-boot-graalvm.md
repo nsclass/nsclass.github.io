@@ -12,6 +12,6 @@ categories:
 permalink: "2022/12/03/springboot-graalvm-support"
 ---
 
-SpringBoot for supporting GraalVM
+SpringBoot for supporting GraalVM. The following youtube video will explain how SpringBoot 3.0 is working. The basic idea is that we need to provide hints for non discoverable information during compile time such as reflection and resources.
 
 [SpringBoot GraalVm support - SpringIO](https://www.youtube.com/watch?v=oTn8SHz5Ux8&list=PLe6FX2SlkJdTVSt4D3bBCOkVeXB0qGdEY&index=8)
