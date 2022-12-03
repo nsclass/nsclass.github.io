@@ -1,0 +1,17 @@
+---
+layout: single
+title: SpringBoot - GraalVM support
+date: 2022-12-03 08:00:00.000000000 -05:00
+type: post
+parent_id: "0"
+published: true
+password: ""
+status: publish
+categories:
+  - spring
+permalink: "2022/12/03/springboot-graalvm-support"
+---
+
+SpringBoot for supporting GraalVM
+
+[SpringBoot GraalVm support - SpringIO](https://www.youtube.com/watch?v=oTn8SHz5Ux8&list=PLe6FX2SlkJdTVSt4D3bBCOkVeXB0qGdEY&index=8)
