@@ -12,7 +12,7 @@ categories:
 permalink: "2022/12/15/spring-gateway"
 ---
 
-Spring gateway provides multiple features such as routing, circuit breaker and security(OpenID, OAuth2). The following Youtube will show details and Github project shows working samples.
+Spring gateway provides multiple features such as routing, observability, circuit breaker and security(OpenID, OAuth2). The following Youtube will show details and Github project shows working samples.
 
 - [Spring IO Youtube](https://www.youtube.com/watch?v=jkP199zzknw&list=PLe6FX2SlkJdTVSt4D3bBCOkVeXB0qGdEY&index=21)
 
