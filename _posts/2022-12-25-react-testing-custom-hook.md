@@ -12,7 +12,7 @@ categories:
 permalink: "2022/12/25/react-testing-custom-hook"
 ---
 
-React testing library provide a way to test a custom hook by using `renderHook` from `@testing-library/react`.
+React testing library provides a way to test a custom hook by using `renderHook` from `@testing-library/react`.
 
 [Github code](https://github.com/nsclass/ns-svg-converter/blob/master/ns-svg-converter-react/src/__tests__/ImageDropZone.test.jsx)
 
