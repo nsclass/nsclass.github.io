@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - data
+  - javascript
 permalink: "2022/12/25/react-testing-custom-hook"
 ---
 
