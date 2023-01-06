@@ -14,10 +14,10 @@ permalink: "2022/01/07/ssh-configuration"
 
 The following steps will show how to config ssh connection.
 
-- generate the ssh keys
+- generate the ssh keys with PEM format with a provided filename
 
 ```bash
-$ ssh-keygen -t rsa -P ""
+$ ssh-keygen -t rsa -P "" -m PEM -f filename
 ```
 
 - add a new remote host configuration
