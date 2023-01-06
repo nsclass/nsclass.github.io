@@ -20,6 +20,12 @@ The following steps will show how to config ssh connection.
 $ ssh-keygen -t rsa -P "" -m PEM -f filename
 ```
 
+- generate the ssh keys in .ssh directory
+
+```bash
+$ ssh-keygen -t rsa -P ""
+```
+
 - add a new remote host configuration
   Let's assume that we have the following host IP and username on a remote server
   IP: 192.168.64.2
