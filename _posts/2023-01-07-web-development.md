@@ -15,3 +15,5 @@ permalink: "2023/01/07/web-development"
 The following course will be one of good material for web development beginner. Especially, I strongly recommend to see CSS part.
 
 [Web development course](https://btholt.github.io/complete-intro-to-web-dev-v3/)
+
+[Flexbox Guide](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
