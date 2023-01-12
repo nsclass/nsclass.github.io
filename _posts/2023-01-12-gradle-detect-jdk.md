@@ -19,3 +19,27 @@ org.gradle.java.installations.auto-detect=false
 org.gradle.java.installations.auto-download=false
 org.gradle.java.installations.fromEnv=ENV_VALUE
 ```
+
+```gradle
+java {
+  toolChain {
+    languageVersion = JavaLanguageVersion.of(19)
+  }
+}
+
+dependencies {
+  testImplementation libs.junit.platform
+}
+
+tasks.withType(Test).configureEach {
+  useJUnitPlatform()
+  jvmArgs['--enable-preview']
+}
+
+tasks.withType(JavaCompile).configureEach {
+  useJUnitPlatform()
+  options.compileArgs.add('--enable--preview')
+}
+
+
+```
