@@ -41,5 +41,4 @@ tasks.withType(JavaCompile).configureEach {
   options.compileArgs.add('--enable--preview')
 }
 
-
 ```
