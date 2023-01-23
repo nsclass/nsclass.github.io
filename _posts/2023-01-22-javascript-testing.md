@@ -9,9 +9,9 @@ password: ""
 status: publish
 categories:
   - web
-permalink: "2023/01/22/javascript-testing basics"
+permalink: "2023/01/22/javascript-testing-basics"
 ---
 
-Javascript testing basics
+Javascript testing basics. The following link will show how Javascript testing framework works and provide very useful resources to master Javascript testing.
 
 [Testing Principles](https://slides.com/kentcdodds/testing-principles)
