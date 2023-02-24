@@ -27,6 +27,6 @@ type Task = {
     desc: string;
 }
 
-type DraftTask = RequireOnly<T, 'title'>
+type DraftTask = RequireOnly<T, 'title' | 'id'>
 ```
 
