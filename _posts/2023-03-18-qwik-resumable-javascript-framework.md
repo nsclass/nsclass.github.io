@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Qwik - resumable JavaScript framework
+title: Qwik - Resumable JavaScript framework
 date: 2023-03-18 08:00:00.000000000 -05:00
 type: post
 parent_id: "0"
