@@ -17,3 +17,5 @@ Cassandra5 is going to fully support ACID by using Accord protocol(leaderless co
 [Youtube - Cassandra5 ACID](https://www.youtube.com/watch?v=MX0ewD3o5wk&ab_channel=DataStaxDevelopers)
 
 [Blog - Cassandra5 ACID](https://thenewstack.io/an-apache-cassandra-breakthrough-acid-transactions-at-scale/)
+
+[Datanami - Cassandra5 ACID](https://www.datanami.com/2022/10/14/cassandra-to-get-acid-transactions-via-new-accord-consensus-protocol/)
