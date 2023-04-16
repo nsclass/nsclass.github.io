@@ -16,8 +16,8 @@ The following should be the first line of css styling.
 
 ```css
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
 }
 ```
