@@ -18,6 +18,6 @@ The following should be the first line of css styling.
 *,
 *:before,
 *:after {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 ```
