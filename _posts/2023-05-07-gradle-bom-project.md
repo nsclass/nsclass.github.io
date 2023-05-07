@@ -32,4 +32,6 @@ dependencies {
 }
 ```
 
+[Gradle BOM in Youtube](https://www.youtube.com/watch?v=8044F5gc1dE)
+
 [Gradle BOM in Medium article](https://medium.com/mwm-io/generate-bill-of-material-bom-with-maven-publish-plugin-f30b44ab5436)
