@@ -9,7 +9,7 @@ password: ""
 status: publish
 categories:
   - java
-permalink: "2023/07/13/java-structured concurrency"
+permalink: "2023/07/13/java-structured-concurrency"
 ---
 
 As a part of loom project, JDK21 will support the structured concurrency to handle multiple concurrent tasks in a structured way.
