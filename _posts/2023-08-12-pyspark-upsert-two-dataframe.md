@@ -25,6 +25,10 @@ def upsert(target: DataFrame, source: DataFrame, columns: List[str]) -> DataFram
 
   # assuming the first column is a key column for outer join
   key_column = columns[0]
+
+  # if key_column matched, it will take a value from source,
+  # if not matched, it will take a value from source if not null,
+  # otherwise it will take a value from target
   replace_f = (F.when(F.col("target." + key_column) == F.col("source." + key_column), F.col("source." + col))
                 .otherwise(F.coalesce("source." + col, "target." + col)).alias(col) for col in columns)
   
