@@ -23,6 +23,7 @@ from pyspark.sql import functions as F
 
 def upsert(target: DataFrame, source: DataFrame, columns: List[str]) -> DataFrame:
 
+  # assuming the first column is a key column for outer join
   key_column = columns[0]
   replace_f = (F.when(F.col("target." + key_column) == F.col("source." + key_column), F.col("source." + col))
                 .otherwise(F.coalesce("source." + col, "target." + col)).alias(col) for col in columns)
