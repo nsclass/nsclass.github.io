@@ -14,5 +14,7 @@ permalink: "2023/08/27/pandas-dataframe-operations"
 
 The following Youtube videos show useful operations with pandas dataframe.
 
-[Pandas dataframe operations](https://www.youtube.com/watch?v=RlIiVeig3hc&ab_channel=DataSchool)
+[1. Pandas dataframe operations](https://www.youtube.com/watch?v=RlIiVeig3hc&ab_channel=DataSchool)
+
+[2. Pandas dataframe operations](https://www.youtube.com/watch?v=tWFQqaRtSQA&ab_channel=DataSchool)
 
