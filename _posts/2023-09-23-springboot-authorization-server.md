@@ -20,3 +20,6 @@ permalink: "2023/09/23/spring-boot-authorization-server"
 Another talk about OpenID with Spring
 [OpenID with Spring](https://www.youtube.com/watch?v=ZIS4273AAGI&ab_channel=LaurSpilca)
 
+
+Work flow of OpenId demo
+[OpenId Authorization](https://www.youtube.com/watch?v=wP4TVTvYL0Y&ab_channel=Devoxx)
