@@ -15,3 +15,5 @@ permalink: "2023/11/05/async-api-event-driven"
 Open Async API standard similar to Open API
 
 [Event driven Async API](https://www.youtube.com/watch?v=cIU1Rl1cZjA&ab_channel=Devoxx)
+
+[Async API](https://www.asyncapi.com/)
