@@ -19,7 +19,7 @@ After generating matrix(X), we can define the output(y) for each sample(row) the
 
 ### Training data
 ```python
-simple_train = ['hello', 'hi', 'good morning', 'good afternoon']
+simple_train = ['hello', 'hi', 'good morning', 'good afternoon', 'it is raining', 'I am playing baseball', 'watching tv']
 ```
 
 ### Training model
