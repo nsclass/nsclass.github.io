@@ -30,7 +30,7 @@ vect = CountVectorizer()
 vect.fit(simple_train)
 ```
 
-### Transform to vector data
+### Transform to vectorize data
 ```python
 simple_train_dtm = vect.transform(simple_train)
 ```
