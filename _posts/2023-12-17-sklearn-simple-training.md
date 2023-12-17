@@ -34,6 +34,11 @@ vect.fit(simple_train)
 ```python
 simple_train_dtm = vect.transform(simple_train)
 ```
+#### Note
+we can do train and transform in a single function.
+```python
+simple_train_dtm vect.fit_transform(simple_train)
+```
 
 ### Model testing by transforming to vector data
 ```python
