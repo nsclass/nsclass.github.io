@@ -46,3 +46,4 @@ simple_test = ["hi there"]
 simple_test_dtm = vect.transform(simple_test)
 ```
 
+[SK learn - You tube link](https://www.youtube.com/watch?v=ZiKMIuYidY0)
