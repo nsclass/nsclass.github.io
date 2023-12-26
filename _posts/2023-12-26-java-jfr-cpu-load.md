@@ -12,7 +12,7 @@ categories:
 permalink: "2023/12/26/jfr-cpu-pressure"
 ---
 
-A quick tip for checking CPU pressure with JFR in JDK21.
+A quick tip for checking CPU pressure with JFR in JDK21. It can support a JFR file recorded in JDK17.
 
 ```bash
 jfr view thread thread-cpu-load [file]
