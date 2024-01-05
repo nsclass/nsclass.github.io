@@ -27,8 +27,10 @@ For this solution, the following expression is always better
 const res = val.value ?? 10
 ```
 
-than
+than 
 
 ```ts
 const res = val.value || 10
 ```
+
+This is because if `val.value = 0`, it will return 10, which is not intended.
