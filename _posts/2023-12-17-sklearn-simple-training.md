@@ -14,7 +14,7 @@ permalink: "2023/12/17/sk-learn-simple-training"
 
 Main point of training data is to generate matrix(X) having features(columns) and samples(rows) from provided data which can be text or any form of data.
 
-After generating matrix(X), we can define the output(y) for each sample(row) then we can predict output from input data. Input data should have a same number of features in training data.
+After generating matrix(X), we can define the output(y) for each sample(row) then we can predict output from input data. Input data should have same number of features in training data.
 
 
 ### Training data
@@ -77,6 +77,6 @@ test_xtm = vect.transform(test)
 test_pred = nb.predict(test_xtm)
 test_pred
 ```
-[Git hub jupyter notebook](https://github.com/nsclass/jupyter-pyspark-notebook/blob/main/data/sklearn-test.ipynb)
+[Github jupyter notebook](https://github.com/nsclass/jupyter-pyspark-notebook/blob/main/data/sklearn-test.ipynb)
 
-[SK learn - You tube link](https://www.youtube.com/watch?v=ZiKMIuYidY0)
+[SK learn - Youtube link](https://www.youtube.com/watch?v=ZiKMIuYidY0)
