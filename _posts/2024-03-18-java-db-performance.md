@@ -15,3 +15,9 @@ permalink: "2024/03/18/java-db-performance"
 Nice youtube video for Java DB performance
 
 [Java DB performance in Youtube](2024-03-04-openapi-data-loader.md)
+
+[Flexy Pool](https://github.com/vladmihalcea/flexy-pool)
+
+[spring-boot-data-source-decorator](https://github.com/gavlyukovskiy/spring-boot-data-source-decorator)
+
+
