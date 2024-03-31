@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Langchain-js with llama cpp for embeddings and prompt example
+title: LangChain(JS) with Llama cpp for embeddings and prompt example
 date: 2024-03-31 08:00:00.000000000 -05:00
 type: post
 parent_id: "0"
@@ -12,7 +12,7 @@ categories:
 permalink: "2024/03/31/langchain-js-llama-cpp-embeddings-prompt"
 ---
 
-Langchain JS example with Llama cpp for embeddings and prompt.
+LangChain JS example with Llama cpp for embeddings and prompt.
 
 ```ts
 import 'dotenv/config'
