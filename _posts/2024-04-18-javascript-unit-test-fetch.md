@@ -14,4 +14,6 @@ permalink: "2024/04/18/javascript-unit-test-fetch"
 
 Nice example how Javascript can have a unit test with fetch call by mocking.
 
-[Github link](https://github.com/mhevery/testing-fundamentals/blob/main/src/routes/github/api.spec.ts)
+[Unit test for fetch](https://github.com/mhevery/testing-fundamentals/blob/main/src/routes/github/api.spec.ts)
+
+[Guide to testable code](https://github.com/mhevery/guide-to-testable-code)
