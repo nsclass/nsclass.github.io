@@ -12,7 +12,7 @@ categories:
 permalink: "2024/07/07/armeria"
 ---
 
-Armeria can provide services for HTTP, HTTP2, gRPC, Thrift 
+Armeria can provide services for HTTP, HTTP2, gRPC, Thrift etc.
 
 [Github - Armeria](https://github.com/line/armeria?tab=readme-ov-file)
 
