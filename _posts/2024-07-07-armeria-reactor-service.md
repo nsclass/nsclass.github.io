@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Armeria - Netty based service provider for HTTP2, gRPC, Thrift etc
+title: Armeria - Netty based reactive microservice framework for HTTP2, gRPC, Thrift etc
 date: 2024-07-07 08:00:00.000000000 -05:00
 type: post
 parent_id: "0"
