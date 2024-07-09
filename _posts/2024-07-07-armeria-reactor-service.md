@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - react
+  - java
 permalink: "2024/07/07/armeria"
 ---
 
