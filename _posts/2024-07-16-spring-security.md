@@ -16,6 +16,8 @@ Another nice video for understanding Spring Security for Spring Boot application
 
 [Spring Security](https://www.youtube.com/watch?v=HyoLl3VcRFY)
 
+[Github code](https://github.com/Kehrlann/spring-security-the-good-parts)
+
 Explain the following concept in Spring security
 
 - Filter: security decision HTTP request
