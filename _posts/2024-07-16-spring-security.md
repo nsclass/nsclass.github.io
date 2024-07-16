@@ -15,3 +15,9 @@ permalink: "2024/07/16/spring-security-boot"
 Another nice video for understanding Spring Security for Spring Boot application
 
 [Spring Security](https://www.youtube.com/watch?v=HyoLl3VcRFY)
+
+Explain the following concept in Spring security
+
+- Filter: security decision HTTP request
+- Authentication: Spring domain object for security
+- AuthenticationProvider: validate credential
