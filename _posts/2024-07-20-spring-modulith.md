@@ -15,3 +15,5 @@ permalink: "2024/07/20/spring-modulith"
 Josh explained about event driven architecture with Spring Modulith
 
 [Spring Modulith Tip](https://www.youtube.com/watch?v=MYEx0kO2-8A)
+
+[Spring Modulith Demo](https://www.youtube.com/watch?v=FkP2aZiBrhg)
