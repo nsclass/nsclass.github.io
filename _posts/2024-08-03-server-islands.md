@@ -14,4 +14,17 @@ permalink: "2024/08/03/server-islands"
 
 Another interesting framework call ed Server islands to improve web rendering speed
 
-[Youtube](https://www.youtube.com/watch?v=uBxehYwQox4)
+[Youtube - Server Islands](https://www.youtube.com/watch?v=uBxehYwQox4)
+
+Basic idea is to send the html part first which does not require any dynamic logic then send the part which requires dynamic logic such as `Suspense` in below example.
+
+```js
+<main>
+  <h1>Hello</h1>
+
+  <Suspense callback = "loading...">
+    <SlowComponent />
+  </Suspense>
+
+</main>
+```
