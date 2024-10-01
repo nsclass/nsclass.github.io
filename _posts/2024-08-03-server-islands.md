@@ -12,7 +12,7 @@ categories:
 permalink: "2024/08/03/server-islands"
 ---
 
-Another interesting framework call ed Server islands to improve web rendering speed
+Another interesting framework called server islands to improve web rendering speed
 
 [Youtube - Server Islands](https://www.youtube.com/watch?v=uBxehYwQox4)
 
