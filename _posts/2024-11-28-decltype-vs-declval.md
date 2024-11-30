@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - web
+  - cpp
 permalink: "2024/11/28/decltype-vs-declval"
 ---
 
