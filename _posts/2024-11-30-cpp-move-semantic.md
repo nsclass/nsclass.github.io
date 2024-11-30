@@ -14,6 +14,8 @@ permalink: "2024/11/30/cpp-move-semantic"
 
 ### Declaring virtual destructor will disable move sematic
 
+[Basic Move Semantic](https://www.youtube.com/watch?v=Bt3zcJZIalk)
+
 ```cpp
 class Customer {
   protected:
