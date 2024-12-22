@@ -15,5 +15,5 @@ permalink: "2024/12/22/cpp-unique_ptr-custom-resource"
 Using unique_ptr for a custom resource such as opening a file.
 
 ```cpp
-auto fp = unique_ptr<FILE, decltype(&fclose)>{fopen("sample.txt", r), &fclose};
+auto fp = unique_ptr<FILE, decltype(&fclose)>{fopen("sample.txt", "r"), &fclose};
 ```
