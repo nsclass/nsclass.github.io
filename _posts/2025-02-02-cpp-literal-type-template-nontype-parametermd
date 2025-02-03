@@ -1,0 +1,36 @@
+---
+layout: single
+title: C++ - Literal class type(const constructor) as template non-type argument 
+date: 2025-02-02 08:00:00.000000000 -05:00
+type: post
+parent_id: "0"
+published: true
+password: ""
+status: publish
+categories:
+  - cpp
+permalink: "2025/02/02/cpp-20-literal-class-template-nontype-argument"
+---
+
+C++20 allow to have a template non type argument for literal class type
+
+```cpp
+#include <iostream>
+
+struct Point {
+    int x;
+    int y;
+
+    constexpr Point(int x, int y) : x(x), y(y) {}
+};
+
+template <Point P>
+void printPoint() {
+    std::cout << "Point: (" << P.x << ", " << P.y << ")" << std::endl;
+}
+
+int main() {
+    printPoint<Point{1, 2}>(); // Output: Point: (1, 2)
+    return 0;
+}
+```
