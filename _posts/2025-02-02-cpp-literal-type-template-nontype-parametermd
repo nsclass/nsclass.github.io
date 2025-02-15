@@ -18,19 +18,19 @@ C++20 allow to have a template non type argument for literal class type
 #include <iostream>
 
 struct Point {
-    int x;
-    int y;
+  int x;
+  int y;
 
-    constexpr Point(int x, int y) : x(x), y(y) {}
+  constexpr Point(int x, int y) : x(x), y(y) {}
 };
 
 template <Point P>
 void printPoint() {
-    std::cout << "Point: (" << P.x << ", " << P.y << ")" << std::endl;
+  std::cout << "Point: (" << P.x << ", " << P.y << ")" << std::endl;
 }
 
 int main() {
-    printPoint<Point{1, 2}>(); // Output: Point: (1, 2)
-    return 0;
+  printPoint<Point{1, 2}>();  // Output: Point: (1, 2)
+  return 0;
 }
 ```
