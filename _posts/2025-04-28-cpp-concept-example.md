@@ -12,7 +12,7 @@ categories:
 permalink: "2025/04/28/cpp-concept-example"
 ---
 
-C++20 introduced `concept`. The following code shows the sample example of using concept
+C++20 introduced `concept`. The following code shows the example of using concept.
 
 ```cpp
 #include <concepts>
