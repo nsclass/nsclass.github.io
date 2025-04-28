@@ -1,7 +1,7 @@
 ---
 layout: single
 title: C++ - variadic template with lambda
-date: 2025-03-02 08:00:00.000000000 -05:00
+date: 2025-04-28 08:00:00.000000000 -05:00
 type: post
 parent_id: "0"
 published: true
