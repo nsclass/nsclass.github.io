@@ -1,6 +1,6 @@
 ---
 layout: single
-title: C++ - variadic template with lambda
+title: C++ - Concept example
 date: 2025-04-28 08:00:00.000000000 -05:00
 type: post
 parent_id: "0"
