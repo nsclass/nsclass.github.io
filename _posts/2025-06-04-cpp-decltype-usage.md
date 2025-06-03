@@ -21,3 +21,7 @@ then we will always receive a reference to the element, but the program will fai
 ```cpp
 decltype(*pos) element = *pos;
 ```
+or
+```cpp
+decltype(auto) element = *pos;
+```
