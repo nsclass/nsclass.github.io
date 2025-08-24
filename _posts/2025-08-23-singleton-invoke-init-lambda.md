@@ -1,7 +1,7 @@
 ---
 layout: single
 title: C++ - Immediately Invoked Lambda Expression
-date: 2025-08-13 18:00:00.000000000 -05:00
+date: 2025-08-23 18:00:00.000000000 -05:00
 type: post
 parent_id: "0"
 published: true
