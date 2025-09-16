@@ -9,7 +9,7 @@ password: ""
 status: publish
 categories:
   - cpp
-permalink: "2025/08/31/cpp-string-cache-enum
+permalink: "2025/08/31/cpp-string-cache-enum"
 ---
 
 String cache example for enum type

@@ -9,7 +9,7 @@ password: ""
 status: publish
 categories:
   - cpp
-permalink: "2025/09/07/cpp-features-20-and-23
+permalink: "2025/09/07/cpp-features-20-and-23"
 ---
 
 Youtube videos for new features in C++20/23

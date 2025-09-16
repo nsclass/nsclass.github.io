@@ -9,7 +9,7 @@ password: ""
 status: publish
 categories:
   - cpp
-permalink: "2025/09/14/llm-key-terms
+permalink: "2025/09/14/llm-key-terms"
 ---
 
 Key terms from [Reasoning Engine by Gulli](https://docs.google.com/document/d/1WUk_A3LDvRJ8ZNvRG--vhI287nDMR-VNM4YOV8mctbI/edit?tab=t.0)
