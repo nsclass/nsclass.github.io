@@ -13,4 +13,5 @@ permalink: "2025/09/27/cpp-variadic-template"
 ---
 
 [C++ Variadic Templates and Parameter Packs - Vladimir Vishnevskii - C++ on Sea 2025](https://www.youtube.com/watch?v=zx4f7OT7Uec)
-slides: https://github.com/philsquared/cpponsea2025-slides/blob/main/Presentations/Variadic_Templates_and_Parameter_Packs.pdf
+
+[slides](https://github.com/philsquared/cpponsea2025-slides/blob/main/Presentations/Variadic_Templates_and_Parameter_Packs.pdf)
