@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - cpp
+  - AI
 permalink: "2025/09/16/mlp-cnn-rnn"
 ---
 
