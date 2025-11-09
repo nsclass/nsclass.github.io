@@ -12,5 +12,7 @@ categories:
 permalink: "2025/10/19/how-neural-network-works"
 ---
 
+The following Youtube will explain all details from derivatives to building neural networks in scratch including how back propagation is working. If anyone is curious about how neural networks is working, it is recommended to watch it :smile
+
 [The spelled-out intro to neural networks and backpropagation: building micrograd](https://www.youtube.com/watch?v=VMj-3S1tku0)
 
