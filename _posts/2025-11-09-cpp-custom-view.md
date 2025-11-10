@@ -1,6 +1,6 @@
 ---
 layout: single
-title: How neural network works
+title: C++ custom view for ranges
 date: 2025-11-09 18:00:00.000000000 -05:00
 type: post
 parent_id: "0"
@@ -8,7 +8,7 @@ published: true
 password: ""
 status: publish
 categories:
-  - ai
+  - cpp
 permalink: "2025/11/09/cpp-custom-view"
 ---
 
