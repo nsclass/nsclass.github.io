@@ -78,3 +78,29 @@ int main() {
     );
 }
 ```
+
+Optional example to avoid the temporal object creation
+```cpp
+#include <iostream>
+#include <optional>
+#include <string>
+
+struct Person {
+    std::string name;
+    int age;
+
+    Person(std::string n, int a) : name(std::move(n)), age(a) {
+        std::cout << "Person constructed\n";
+    }
+};
+
+int main() {
+    // Create an optional<Person> with constructor arguments
+    std::optional<Person> p = std::make_optional<Person>("Alice", 30);
+
+    std::cout << p->name << ", " << p->age << "\n";
+
+    std::optional<Data> opt(std::in_place, "test", 20);
+    std::cout << opt->name << ", " << opt->age << "\n";
+}
+```
