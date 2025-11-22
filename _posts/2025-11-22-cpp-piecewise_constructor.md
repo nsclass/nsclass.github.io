@@ -11,6 +11,7 @@ categories:
   - cpp
 permalink: "2025/11/22/cpp-piecewise_constructor"
 ---
+[Streamlining C++ Code - Avoiding Unnecessary C++ Object Creation - C++Now 2025](https://www.youtube.com/watch?v=PYZx6jrlm4M&list=PL_AKIMJc4roW7umwjjd9Td-rtoqkiyqFl&index=23)
 
 This constructs both elements in place, preventing unnecessary temporaries.
 
