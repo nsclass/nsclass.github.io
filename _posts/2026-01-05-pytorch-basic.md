@@ -1,6 +1,6 @@
 ---
 layout: single
-title: PyTorch - basic
+title: PyTorch - Basic but contains most of useful information
 date: 2026-01-05 18:00:00.000000000 -05:00
 type: post
 parent_id: "0"
