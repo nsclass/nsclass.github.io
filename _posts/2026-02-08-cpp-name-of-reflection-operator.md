@@ -17,3 +17,6 @@ constexpr auto name = ^^int;
 ```
 
 It(`^^`) is called `lift` operator which is AKA `Unibrow`
+
+`[:name:]` is called a splicer
+
