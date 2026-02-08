@@ -13,7 +13,7 @@ permalink: "2026/02/08/cpp-name-of-reflection-operator"
 ---
 
 ```cpp
-const auto name = ^^int;
+constexpr auto name = ^^int;
 ```
 
 It(`^^`) is called `lift` operator which is AKA `Unibrow`
