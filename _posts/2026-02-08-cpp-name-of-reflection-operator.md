@@ -18,5 +18,8 @@ constexpr auto name = ^^int;
 
 It(`^^`) is called `lift` operator which is AKA `Unibrow`
 
+```cpp
+typename [:name:] foo = 42;
+```
 `[:name:]` is called a splicer
 
