@@ -106,7 +106,9 @@ struct Shield { vec3 pos; float radius; };
 
 void World::update(float dt) {
     // ... other updates ...
-    for(auto& s : shields) s.radius -= dt; // Easy to add new logic
+    for (auto& s : shields) {
+        s.radius -= dt; // Easy to add new logic
+    }
 }
 ```
 
