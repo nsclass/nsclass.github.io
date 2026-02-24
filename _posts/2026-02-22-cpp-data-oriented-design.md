@@ -115,6 +115,7 @@ void World::update(float dt) {
 #### 3. Testability
 Since `update_particles` doesn't depend on the state of a `World` object or a `Rocket` object, we can test it by just passing a vector of data.
 
+{% raw %}
 ```cpp
 void update_particles(std::span<Particle> particles, float dt) {
     for(auto& p : particles) p.pos += p.vel * dt;
@@ -125,6 +126,7 @@ std::vector<Particle> test_particles = {{ {0,0,0}, {1,0,0} }};
 update_particles(test_particles, 1.0f);
 assert(test_particles[0].pos.x == 1.0f);
 ```
+{% endraw %}
 
 #### 4. Multi-threading Support
 Because the `World` stores rockets and particles in separate, independent vectors, we can update them in parallel without any synchronization (mutexes).
