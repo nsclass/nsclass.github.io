@@ -1,7 +1,7 @@
 ---
 layout: single
 title: C++ - Type erasure
-date: 2026-02-22 18:00:00.000000000 -05:00
+date: 2026-02-23 18:00:00.000000000 -05:00
 type: post
 parent_id: "0"
 published: true
@@ -9,7 +9,7 @@ password: ""
 status: publish
 categories:
   - cpp
-permalink: "2026/02/22/cpp-type-erasure"
+permalink: "2026/02/23/cpp-type-erasure"
 ---
 [Duck Typing, the C++ Way: How Type Erasure Bends the Rules - Sarthak Sehgal - CppCon 2025](https://www.youtube.com/watch?v=HkoQAjwMyOc)
 
