@@ -294,6 +294,7 @@ int read_file(FILE*, char* buffer, int bytes,
 
 ### Sender-Based Wrapper
 
+{% raw %}
 ```cpp
 namespace stdex = std::execution;
 
@@ -315,6 +316,7 @@ struct read_file_sender {
     int size;
 };
 ```
+{% endraw %}
 
 ### Operation State Implementation
 
