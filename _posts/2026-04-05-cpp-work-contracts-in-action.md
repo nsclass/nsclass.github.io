@@ -114,8 +114,8 @@ The core of the 2025 talk is building a real-world **Multicast Queue (MCQ)** —
        |
        v
   ┌─────────────────────────────────┐
-  │  Shared Memory Ring Buffer       │
-  │  (single writer, wraps around)   │
+  │  Shared Memory Ring Buffer      │
+  │  (single writer, wraps around)  │
   └──────┬──────────┬───────────────┘
          |          |
     Consumer 1   Consumer 2  ...  Consumer N
@@ -179,11 +179,11 @@ The talk introduces an important architectural pattern: separating **I/O detecti
 
 ```
   ┌─────────────────┐         ┌──────────────────────────┐
-  │  Poller Thread   │         │  Worker Thread Pool       │
-  │                  │         │                          │
-  │  poll() detects  │ ──────> │  execute_next_contract() │
-  │  data available  │schedule │  runs contract callback  │
-  │                  │         │                          │
+  │  Poller Thread  │         │  Worker Thread Pool      │
+  │                 │         │                          │
+  │  poll() detects │ ──────> │  execute_next_contract() │
+  │  data available │schedule │  runs contract callback  │
+  │                 │         │                          │
   └─────────────────┘         └──────────────────────────┘
 ```
 
