@@ -1,0 +1,67 @@
+---
+layout: single
+title: Java - unmarshalling partial XML in XML schema
+date: 2016-05-06 10:50:50.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '22522283702'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/05/06/java-unmarshalling-partial-xml-in-xml-schema/"
+---
+{% highlight wl linenos %}
+public class XmlPartialMarshaller<T> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlPartialMarshaller.class);
+    private DocumentBuilder documentBuilder;
+    private DocumentBuilderFactory documentBuilderFactory;
+    private Binder<Node> binderPartialXml;
+    private JAXBContext contextPartialXml;
+    private Class partialSchemaClass;
+    public XmlPartialMarshaller(Class<T> partialSchemaClass) {
+        this.partialSchemaClass = partialSchemaClass;
+        try {
+            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            this.contextPartialXml = JAXBContext.newInstance(partialSchemaClass);
+            this.binderPartialXml = contextPartialXml.createBinder();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+    public T marshalPartialXml(String xml) {
+       try {
+            InputStream inputStream = null;
+            try {
+                inputStream = IOUtils.toInputStream(xml);
+                Document document = documentBuilder.parse(inputStream);
+                Node xmlNode = document.getDocumentElement();
+                JAXBElement<T> element = binderPartialXml.unmarshal(xmlNode,
+                        partialSchemaClass);
+                return element.getValue();
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            } finally {
+                if (inputStream != null)
+                    inputStream.close();
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return null;
+    }
+}
+{% endhighlight %}

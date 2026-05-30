@@ -1,0 +1,51 @@
+---
+layout: single
+title: Java - loading a resource file in unit test code
+date: 2015-08-17 10:31:53.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- java
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '13798243093'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/08/17/java-loading-a-resource-file-in-unit-test-code/"
+---
+{% highlight wl linenos %}
+    String xml = getResourceString("/test_files/TestProperties.xml");
+    private String getResourceString(String resourcePath) {
+        InputStream inputStream = null;
+        try {
+            URL url = getClass().getResource(resourcePath);
+            File file = new File(url.toURI());
+            boolean exist = file.exists();
+            org.junit.Assert.assertTrue(exist);
+            inputStream = this.getClass().getResourceAsStream(resourcePath);
+            String xmlResult = IOUtils.toString(inputStream, "UTF-8");
+            return xmlResult;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+            } catch (Exception ex) {
+                logger.error(ex.getMessage(), ex);
+            }
+        }
+        return null;
+    }
+{% endhighlight %}

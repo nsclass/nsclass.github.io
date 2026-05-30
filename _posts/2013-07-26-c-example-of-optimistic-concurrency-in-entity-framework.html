@@ -1,0 +1,167 @@
+---
+layout: single
+title: C# example of optimistic concurrency with Entity Framework code first
+date: 2013-07-26 08:28:48.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_3cebac7c77d27dee4c7e925c77f3e8d4: "{{unknown}}"
+  _oembed_65add97d8787a2be2d3515fb3e473e4e: "{{unknown}}"
+  geo_public: '0'
+  _oembed_34fb8921ca6fc20b11fcc19303314196: "{{unknown}}"
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-25
+    22:32:12";}
+  _oembed_142706fab765ec8376e9f293bc352fab: "{{unknown}}"
+  _oembed_9ca77fcfc4ab4f5285d7ee33e84239f2: "{{unknown}}"
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/26/c-example-of-optimistic-concurrency-in-entity-framework/"
+---
+<p>The following article shows the good example how to use optimistic concurrency control in Entity Framework code first.<br />
+http://msdn.microsoft.com/en-us/data/jj592904.aspx</p>
+<p>Just in case I would like to copy the code examples from the above page.<br />
+Resolving optimistic concurrency exceptions as client wins<br />
+{% highlight wl linenos %}
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Update original values from the database
+            var entry = ex.Entries.Single();
+            entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+        }
+    } while (saveFailed);
+}
+{% endhighlight %}
+Resolving optimistic concurrency exceptions with Reload (database wins)<br />
+{% highlight wl linenos %}
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Update the values of the entity that failed to save from the store
+            ex.Entries.Single().Reload();
+        }
+    } while (saveFailed);
+}
+{% endhighlight %}
+<p>Custom resolution of optimistic concurrency exceptions<br />
+{% highlight wl linenos %}
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Get the current entity values and the values in the database
+            var entry = ex.Entries.Single();
+            var currentValues = entry.CurrentValues;
+            var databaseValues = entry.GetDatabaseValues();
+            // Choose an initial set of resolved values. In this case we
+            // make the default be the values currently in the database.
+            var resolvedValues = databaseValues.Clone();
+            // Have the user choose what the resolved values should be
+            HaveUserResolveConcurrency(currentValues, databaseValues, resolvedValues);
+            // Update the original values with the database values and
+            // the current values with whatever the user choose.
+            entry.OriginalValues.SetValues(databaseValues);
+            entry.CurrentValues.SetValues(resolvedValues);
+        }
+    } while (saveFailed);
+}
+public void HaveUserResolveConcurrency(DbPropertyValues currentValues,
+                                       DbPropertyValues databaseValues,
+                                       DbPropertyValues resolvedValues)
+{
+    // Show the current, database, and resolved values to the user and have
+    // them edit the resolved values to get the correct resolution.
+}
+{% endhighlight %}
+Custom resolution of optimistic concurrency exceptions using objects<br />
+{% highlight wl linenos %}
+using (var context = new BloggingContext())
+{
+    var blog = context.Blogs.Find(1);
+    blog.Name = "The New ADO.NET Blog";
+    bool saveFailed;
+    do
+    {
+        saveFailed = false;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            saveFailed = true;
+            // Get the current entity values and the values in the database
+            // as instances of the entity type
+            var entry = ex.Entries.Single();
+            var databaseValues = entry.GetDatabaseValues();
+            var databaseValuesAsBlog = (Blog)databaseValues.ToObject();
+            // Choose an initial set of resolved values. In this case we
+            // make the default be the values currently in the database.
+            var resolvedValuesAsBlog = (Blog)databaseValues.ToObject();
+            // Have the user choose what the resolved values should be
+            HaveUserResolveConcurrency((Blog)entry.Entity,
+                                       databaseValuesAsBlog,
+                                       resolvedValuesAsBlog);
+            // Update the original values with the database values and
+            // the current values with whatever the user choose.
+            entry.OriginalValues.SetValues(databaseValues);
+            entry.CurrentValues.SetValues(resolvedValuesAsBlog);
+        }
+    } while (saveFailed);
+}
+public void HaveUserResolveConcurrency(Blog entity,
+                                       Blog databaseValues,
+                                       Blog resolvedValues)
+{
+    // Show the current, database, and resolved values to the user and have
+    // them update the resolved values to get the correct resolution.
+}
+{% endhighlight %}
