@@ -1,0 +1,26 @@
+---
+layout: single
+title: C# - Continuous task example
+date: 2013-11-22 13:42:35.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/11/22/c-continuous-task-example/"
+---
+
+{% highlight wl linenos %} public interface IContinueTask { string TaskName { get; } TimeSpan Interval { get; } IObservable ObservableIntervalChange { get; } void Action(); } public class ContinuousTaskItem { private CancellationTokenSource m_cancelTokenSource = new CancellationTokenSource(); private IContinueTask m_task; public ContinuousTaskItem(IContinueTask task) { m_task = task; } public bool Cancel() { m_cancelTokenSource.Cancel(); return true; } public Task Create() { return Task.Factory.StartNew( () =\> { while (true) { if (m_cancelTokenSource.Token.WaitHandle.WaitOne(m_task.Interval)) break; m_task.Action(); } }, m_cancelTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default); } } public class ContinuousTaskManager { private Dictionary m_taskList = new Dictionary(); public ContinuousTaskManager() { } public bool AddContinueTask(IContinueTask task) { lock (m_taskList) { if (m_taskList.Keys.FirstOrDefault(x =\> x == task.TaskName) == null) { var ob = task.ObservableIntervalChange.Subscribe( interval =\> { lock (m_taskList) { // delete task ContinuousTaskItem taskItem = null; if (m_taskList.TryGetValue(task.TaskName, out taskItem)) { taskItem.Cancel(); m_taskList.Remove(task.TaskName); // create again var newTask = new ContinuousTaskItem(task); m_taskList.Add(task.TaskName, newTask); newTask.Create(); } } } ); var item = new ContinuousTaskItem(task); m_taskList.Add(task.TaskName, item); item.Create(); return true; } return false; } } public bool RemoveTask(string taskName) { lock (m_taskList) { // delete task ContinuousTaskItem taskItem = null; if (m_taskList.TryGetValue(taskName, out taskItem)) { taskItem.Cancel(); m_taskList.Remove(taskName); return true; } } return false; } public void Clear() { lock (m_taskList) { foreach (var task in m_taskList.Values) { task.Cancel(); } m_taskList.Clear(); } } } {% endhighlight %}

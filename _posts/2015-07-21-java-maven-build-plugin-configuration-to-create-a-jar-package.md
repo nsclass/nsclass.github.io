@@ -1,0 +1,38 @@
+---
+layout: single
+title: Java - Maven build plugin configuration to create a jar package
+date: 2015-07-21 13:13:20.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '12926005790'
+  _oembed_37408715606edbeffb0ce810c9eeffa0: "{{unknown}}"
+  _oembed_4b0341f5311208b75e1d711f826d55c2: "{{unknown}}"
+  _oembed_16ce78fb0d809f8490e92bbebcb02f9c: "{{unknown}}"
+  _oembed_104721fa94becb9d8f8ba535ea92fff1: "{{unknown}}"
+  _oembed_167c67e027d24700c23e5a9d0f5aae4d: "{{unknown}}"
+  _oembed_a0c23bdf67308f991f56d7d45567c99c: "{{unknown}}"
+  _oembed_35ad77e138f91a03c92689ad3cae0a95: "{{unknown}}"
+  _oembed_6d9a6fa542a455803783a589c36168ff: "{{unknown}}"
+  _oembed_8af16713b8cf532ab5351e7d048193d0: "{{unknown}}"
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/07/21/java-maven-build-plugin-configuration-to-create-a-jar-package/"
+---
+
+Make a package to be runnable including all dependent libs in a jar file
+
+{% highlight wl linenos %} org.apache.maven.plugins maven-assembly-plugin 2.6 package single com.app.demo.MainApp jar-with-dependencies {% endhighlight %}

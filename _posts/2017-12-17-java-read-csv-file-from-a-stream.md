@@ -1,0 +1,27 @@
+---
+layout: single
+title: Java - Read CSV file from a stream
+date: 2017-12-17 20:47:51.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '12626122676'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/12/17/java-read-csv-file-from-a-stream/"
+---
+
+{% highlight wl linenos %} try (final CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(inputStream)))) { String\[\] line = null; while ((line = reader.readNext()) != null) { } } catch (Exception e) { ... } {% endhighlight %}

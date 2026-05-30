@@ -1,0 +1,33 @@
+---
+layout: single
+title: Java - JDK9 tool jdeps and jdeprscan to inspect any illegal usage
+date: 2017-11-11 07:21:40.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '11327939040'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/11/11/java-jdk9-tool-jdeps-to-inspect-any-illegal-usage/"
+---
+
+The following jdeps command will inspect any illegal usage in My.class and provide alternative way to fix problems.\
+This tool exists in JDK9.
+
+{% highlight wl linenos %} \$ jdeps -jdkinternals My.class {% endhighlight %}
+
+Static analysis tool detect the usage of deprecated APIs.\
+{% highlight wl linenos %} \$ jdeprscan -cp My {% endhighlight %}

@@ -1,0 +1,34 @@
+---
+layout: single
+title: C# WPF - customizing start up fuction in WPF
+date: 2013-09-02 07:52:13.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _publicize_pending: '1'
+  _edit_last: '14827209'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-09-01
+    21:52:13";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/09/02/c-wpf-customizing-start-up-fuction-in-wpf/"
+---
+
+When you create a WPF application with visual studio, you will always find app.xaml and app.xaml.cs file.\
+In app.xaml file, you can find the StartupUri attribute in Application tag. The StartupUri will indicate where the application starts. However sometimes you want to do some initialization before starting up the application then you need to modify the start up point with the following changes. As it shows you can specify the function name on start up point.
+
+{% highlight wl linenos %} {% endhighlight %}
+
+After modifying the xaml, your application class should include the "Application_Startup" function as shown the below code.\
+{% highlight wl linenos %} public partial class App : Application { private void Application_Startup(object sender, StartupEventArgs e) { // Create the startup window MainWindow wnd = new MainWindow(); // Do stuff here, e.g. to the window wnd.Title = "Something else"; // Show the window wnd.Show(); } } {% endhighlight %}

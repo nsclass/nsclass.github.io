@@ -1,0 +1,30 @@
+---
+layout: single
+title: C++ Performance measuring utility classes
+date: 2013-08-06 10:44:31.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Performance
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-08-06
+    04:57:13";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/08/06/c-performance-measuring-utility-classes/"
+---
+
+{% highlight wl linenos %} \#ifdef \_DEBUG \#define ENABLED_MEASURE_PERFORMANCE \#endif \#define ENABLED_MEASURE_PERFORMANCE \#ifdef ENABLED_MEASURE_PERFORMANCE class MeasureTime { public: MeasureTime() { memset(&m_startTick, 0, sizeof(m_startTick)); } ~MeasureTime() { } void Start(std::wstring const& name) { wchar_t strFormat\[512\]; swprintf_s(strFormat, 512, L"\[MEASURE TIME - BEGIN\] %s\n", name.c_str()); OutputDebugString(strFormat); m_name = name; QueryPerformanceFrequency(&m_startTick); m_frequency = ((double)m_startTick.QuadPart) / 1000.0; QueryPerformanceCounter(&m_startTick); } void Stop() { LARGE_INTEGER curTick; QueryPerformanceCounter(&curTick); auto delay = curTick.QuadPart - m_startTick.QuadPart; auto elapsed = (double)delay / m_frequency; wchar_t strFormat\[512\]; swprintf_s(strFormat, 512, L"\[MEASURE TIME - END \] %s - %lf(ms)\n", m_name.c_str(), elapsed); OutputDebugString(strFormat); } private: LARGE_INTEGER m_startTick; double m_frequency; std::wstring m_name; }; class MeasureTimeScope { public: MeasureTimeScope(std::wstring const& name) { m_measure.Start(name); } MeasureTimeScope(wchar_t const\* name) { m_measure.Start(name); } ~MeasureTimeScope() { m_measure.Stop(); } private: MeasureTime m_measure; }; \#define MEASURE_TIME_SCOPE(X) MeasureTimeScope measure(L#X) \#else \#define MEASURE_TIME_SCOPE(X) \#endif {% endhighlight %}

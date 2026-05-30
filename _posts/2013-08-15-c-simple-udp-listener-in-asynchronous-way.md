@@ -1,0 +1,29 @@
+---
+layout: single
+title: C# - Simple UDP listener in asynchronous way
+date: 2013-08-15 08:16:55.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-08-14
+    22:16:55";}
+  geo_public: '0'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/08/15/c-simple-udp-listener-in-asynchronous-way/"
+---
+
+{% highlight wl linenos %} private Socket udpSock; private byte\[\] buffer; public void Starter(){ //Setup the socket and message buffer udpSock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp); udpSock.Bind(new IPEndPoint(IPAddress.Any, 12345)); buffer = new byte\[1024\]; //Start listening for a new message. EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0); udpSock.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, udpSock); } private void DoReceiveFrom(IAsyncResult iar){ try{ //Get the received message. Socket recvSock = (Socket)iar.AsyncState; EndPoint clientEP = new IPEndPoint(IPAddress.Any, 0); int msgLen = recvSock.EndReceiveFrom(iar, ref clientEP); byte\[\] localMsg = new byte\[msgLen\]; Array.Copy(buffer, localMsg, msgLen); //Start listening for a new message. EndPoint newClientEP = new IPEndPoint(IPAddress.Any, 0); udpSock.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref newClientEP, DoReceiveFrom, udpSock); //Handle the received message Console.WriteLine("Recieved {0} bytes from {1}:{2}", msgLen, ((IPEndPoint)clientEP).Address, ((IPEndPoint)clientEP).Port); //Do other, more interesting, things with the received message. } catch (ObjectDisposedException){ //expected termination exception on a closed socket. // ...I'm open to suggestions on a better way of doing this. } } {% endhighlight %}

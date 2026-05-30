@@ -1,0 +1,26 @@
+---
+layout: single
+title: Certification - Creating self certification files in Windows
+date: 2013-10-10 08:42:01.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _publicize_pending: '1'
+  _edit_last: '14827209'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/10/10/c-wcf-creating-self-certification-files-in-windows/"
+---
+
+{% highlight wl linenos %} // create certification for authority makecert -r -pe -n "CN=Tunnel Project Authority" -ss CA -sr CurrentUser -a sha1 -sky signature -cy authority -sv SampleAuthority.pvk SampleAuthority.cer // based on above certification of authority, it will generate another certification. makecert -pe -n "CN=tunnel.project.client" -a sha1 -sky Exchange -eku 1.3.6.1.5.5.7.3.1 -ic SampleAuthority.cer -iv SampleAuthority.pvk -sp "Microsoft RSA SChannel Cryptographic Provider" -sy 12 -sv SampleAuthorityClient.pvk SampleAuthorityClient.cer // create pfx pvk2pfx -pvk SampleAuthorityClient.pvk -spc SampleAuthorityClient.cer -pfx SampleAuthorityClient.pfx -po password // based on above certification of authority, it will generate another certification. makecert -pe -n "CN=tunnel.project.server" -a sha1 -sky Exchange -eku 1.3.6.1.5.5.7.3.1 -ic SampleAuthority.cer -iv SampleAuthority.pvk -sp "Microsoft RSA SChannel Cryptographic Provider" -sy 12 -sv SampleAuthorityServer.pvk SampleAuthorityServer.cer // create pfx pvk2pfx -pvk SampleAuthorityServer.pvk -spc SampleAuthorityServer.cer -pfx SampleAuthorityServer.pfx -po password {% endhighlight %}

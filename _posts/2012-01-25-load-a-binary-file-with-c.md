@@ -1,0 +1,27 @@
+---
+layout: single
+title: Load a binary file with C++
+date: 2012-01-25 10:12:05.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";s:1:"0";s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2012-01-24
+    23:15:42";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2012/01/25/load-a-binary-file-with-c/"
+---
+
+{% highlight wl linenos %} bool LoadBinaryFile(std::wstring const& path, std::vector& data) { try { std::basic_ifstream ifs(path, std::ios::binary); std::istreambuf_iterator streamIter(ifs); data.clear(); std::copy(streamIter, std::istreambuf_iterator(), std::back_inserter(data)); return true; } catch(...) { } return false; } {% endhighlight %}

@@ -1,0 +1,33 @@
+---
+layout: single
+title: Java - exceptions
+date: 2016-08-20 23:19:41.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '25973206058'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/08/20/java-exceptions/"
+---
+
+Java has 3 different types of exceptions.
+
+1\. Checked exception\
+- Use this exception for a case which can be recoverable.\
+2. Runtime exception\
+- Use this exception to indicate the programming error.\
+3. Errors

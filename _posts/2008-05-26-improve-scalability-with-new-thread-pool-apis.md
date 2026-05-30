@@ -1,0 +1,32 @@
+---
+layout: single
+title: Improve Scalability With New Thread Pool APIs
+date: 2008-05-26 14:19:24.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+tags: []
+meta:
+  spaces_8e963f1d044baa6ea177d10f0c6ccc02_permalink: http://cid-f610c86c6d82b8a2.users.api.live.net/Users(-715851972732602206)/Blogs('F610C86C6D82B8A2!116')/Entries('F610C86C6D82B8A2!209')?authkey=bau8ZqLz*pg%24
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2008/05/26/improve-scalability-with-new-thread-pool-apis/"
+---
+
+<div id="msgcns!F610C86C6D82B8A2!209" class="bvMsg">
+
+<div>
+
+<http://msdn.microsoft.com/en-au/magazine/cc163327.aspx>
+
+</div>
+
+</div>

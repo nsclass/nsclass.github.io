@@ -1,0 +1,32 @@
+---
+layout: single
+title: An Introduction to XML Data Binding in C++
+date: 2008-05-23 09:48:47.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+tags: []
+meta:
+  spaces_8e963f1d044baa6ea177d10f0c6ccc02_permalink: http://cid-f610c86c6d82b8a2.users.api.live.net/Users(-715851972732602206)/Blogs('F610C86C6D82B8A2!116')/Entries('F610C86C6D82B8A2!203')?authkey=bau8ZqLz*pg%24
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2008/05/23/an-introduction-to-xml-data-binding-in-c/"
+---
+
+<div id="msgcns!F610C86C6D82B8A2!203" class="bvMsg">
+
+<div>
+
+<http://www.artima.com/cppsource/xml_data_binding.html>
+
+</div>
+
+</div>

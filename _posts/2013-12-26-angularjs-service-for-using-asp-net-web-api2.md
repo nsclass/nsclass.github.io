@@ -1,0 +1,32 @@
+---
+layout: single
+title: AngularJS service code with ASP .NET WEB API2
+date: 2013-12-26 23:14:01.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ASP.NET
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  _oembed_121a6fb140f992a20360608bb1f817f0: "{{unknown}}"
+  _oembed_69e808c4638a3ba4a86c684e1a8ced20: "{{unknown}}"
+  _oembed_34a7099657ccd17d9d9513e8a7113be5: "{{unknown}}"
+  _oembed_c61093d4da86e5f9fede303628a8cb41: "{{unknown}}"
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/12/26/angularjs-service-for-using-asp-net-web-api2/"
+---
+
+The following AngularJS service code shows how to login with bearer token authentication of ASP.NET WEB API2 to access exported restful APIs.
+
+{% highlight wl linenos %} 'use strict'; app.factory('authService', function (\$http, \$q) { var service = {}; service.loginToken = {}; service.getAccessToken = function () { return loginToken.access_token; }; service.login = function (userName, password) { var deferred = \$q.defer(); var loginData = { grant_type: "password", username: userName, password: password }; \$http({ method: 'POST', url: '/Token', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, data: \$.param(loginData) }) .success(function (response) { service.loginToken = response; deferred.resolve(response); }) .error(function (response) { deferred.reject(response); }); return deferred.promise; }; service.logout = function () { var deferred = \$q.defer(); \$http({ method: 'POST', url: '/api/Account/Logout', headers: { 'Authorization': 'Bearer ' + this.loginToken.access_token }, }) .success(function (response) { service.loginToken = \[\]; deferred.resolve(response); }) .error(function (response) { deferred.reject(response); }); return deferred.promise; }; return service; }); {% endhighlight %}

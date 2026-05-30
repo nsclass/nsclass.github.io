@@ -1,0 +1,31 @@
+---
+layout: single
+title: Firefox - generate VS project files for Firefox source code
+date: 2015-06-29 13:56:40.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+tags:
+- Mozilla
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '12137053266'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/06/29/firefox-generate-vs-project-for-firefox-project/"
+---
+
+{% highlight wl linenos %} mach build-backend --backend=VisualStudio {% endhighlight %}
+
+It can be found from the following path.
+
+\[root source\]\mozilla-central\obj-i686-pc-mingw32\msvc\mozilla.sln

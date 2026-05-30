@@ -1,0 +1,31 @@
+---
+layout: single
+title: Scala - By Name Parameters
+date: 2017-09-30 19:37:45.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Scala
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '9841449725'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/09/30/scala-by-name-parameters/"
+---
+
+Syntax: =\> A
+
+{% highlight wl linenos %} def ifElse\[A\](test: Boolean, whenTrue: =\> A, whenFalse: =\> A): A = test match { case true =\> whenTrue case false =\> whenFalse } ifElse(1 == 1, println("true"), println("false")) {% endhighlight %}
+
+By Name parameter will be evaluated when called

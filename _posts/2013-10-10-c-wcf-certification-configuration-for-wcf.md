@@ -1,0 +1,30 @@
+---
+layout: single
+title: C# WCF - certification configuration for WCF
+date: 2013-10-10 08:50:39.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/10/10/c-wcf-certification-configuration-for-wcf/"
+---
+
+Server side configuration\
+{% highlight wl linenos %} static Binding CreateBinding() { int maxReceivedSize = Constants.MAX_PACKET_LENGTH; NetTcpBinding clientManBinding = new NetTcpBinding(SecurityMode.Message, false); clientManBinding.TransferMode = TransferMode.Buffered; clientManBinding.MaxBufferSize = maxReceivedSize; clientManBinding.MaxReceivedMessageSize = maxReceivedSize; clientManBinding.ReaderQuotas.MaxStringContentLength = maxReceivedSize; clientManBinding.ReaderQuotas.MaxBytesPerRead = maxReceivedSize; clientManBinding.ReaderQuotas.MaxArrayLength = maxReceivedSize; clientManBinding.ReaderQuotas.MaxDepth = 1024; clientManBinding.MaxBufferPoolSize = maxReceivedSize; clientManBinding.Security.Message.ClientCredentialType = MessageCredentialType.Certificate; TimeSpan ClockSkew = TimeSpan.MaxValue; CustomBinding custBinding = new CustomBinding(clientManBinding); SymmetricSecurityBindingElement security = custBinding.Elements.Find(); security.LocalClientSettings.MaxClockSkew = ClockSkew; security.LocalServiceSettings.MaxClockSkew = ClockSkew; security.LocalServiceSettings.DetectReplays = false; security.LocalClientSettings.DetectReplays = false; SecureConversationSecurityTokenParameters secureTokenParams = (SecureConversationSecurityTokenParameters)security.ProtectionTokenParameters; // From the collection, get the bootstrap element. SecurityBindingElement bootstrap = secureTokenParams.BootstrapSecurityBindingElement; // Set the MaxClockSkew on the bootstrap element. bootstrap.LocalClientSettings.MaxClockSkew = ClockSkew; bootstrap.LocalServiceSettings.MaxClockSkew = ClockSkew; bootstrap.LocalServiceSettings.DetectReplays = false; bootstrap.LocalClientSettings.DetectReplays = false; return custBinding; } public WcfServiceHost(Uri address, Binding binding, X509Certificate2 serverCert, X509Certificate2 clientCert) { m_serviceHost = new ServiceHost(typeof(Host), address); m_serviceHost.Credentials.ServiceCertificate.Certificate = serverCert; m_serviceHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None; m_serviceHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck; m_serviceHost.Credentials.ClientCertificate.Certificate = clientCert; } {% endhighlight %}
+
+Client side configuration\
+{% highlight wl linenos %} // create TCP binding protected static NetTcpBinding CreateDefaultSecureNetTCPBinding() { SecurityMode security = SecurityMode.Message; int maxStringContentLength = Constants.MAX_PACKET_LENGTH; NetTcpBinding tcpIpBinding = new NetTcpBinding(); tcpIpBinding.Security.Mode = security; if (security == SecurityMode.Message) { tcpIpBinding.Security.Message.ClientCredentialType = MessageCredentialType.Certificate; } tcpIpBinding.ReaderQuotas.MaxArrayLength = maxStringContentLength; tcpIpBinding.ReaderQuotas.MaxBytesPerRead = maxStringContentLength; tcpIpBinding.ReaderQuotas.MaxStringContentLength = maxStringContentLength; tcpIpBinding.ReaderQuotas.MaxDepth = 100; tcpIpBinding.MaxReceivedMessageSize = maxStringContentLength; tcpIpBinding.MaxBufferSize = maxStringContentLength; return tcpIpBinding; } // create endpoint address with created TCP binding and certification public static EndpointAddress GetSecureEndPointAddress(Uri uri, X509Certificate2 cert) { EndpointAddress endpointAddress = new EndpointAddress(uri, EndpointIdentity.CreateX509CertificateIdentity(cert)); return endpointAddress; } // create proxy(ClientBase*) based on created binding and certificated address protected virtual Proxy CreateProxy(Binding binding, EndpointAddress addr, X509Certificate2 cert) { var proxy = new Proxy(binding, addr); proxy.ClientCredentials.ClientCertificate.Certificate = cert; proxy.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None; return proxy; } // open proxy protected void Open(Binding binding, EndpointAddress endpointAddr, X509Certificate2 cert) { m_proxy = CreateProxy(BootstrapBinding(binding), endpointAddr, cert); m_proxy.Open(); } {% endhighlight %}*

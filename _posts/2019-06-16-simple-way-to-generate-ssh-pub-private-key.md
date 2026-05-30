@@ -1,0 +1,31 @@
+---
+layout: single
+title: Simple way to generate ssh pub/private key
+date: 2019-06-16 14:59:51.000000000 -05:00
+type: post
+parent_id: "0"
+published: true
+password: ""
+status: publish
+categories:
+  - Programming
+tags: []
+meta:
+  _edit_last: "14827209"
+  geo_public: "0"
+  _publicize_job_id: "31891467429"
+  timeline_notification: "1560715192"
+author:
+  login: acrocontext
+  email:
+  display_name: acrocontext
+  first_name: ""
+  last_name: ""
+permalink: "/2019/06/16/simple-way-to-generate-ssh-pub-private-key/"
+---
+
+Very simple way to generate ssh pub/private key in Linux.
+
+{% highlight wl linenos %} \$ ssh-keygen -t rsa -P "" -m PEM -f filename {% endhighlight %}
+
+Copy the content of .ssh/id_rsa.pub to .ssh/authorized_keys

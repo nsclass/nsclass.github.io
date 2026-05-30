@@ -1,0 +1,27 @@
+---
+layout: single
+title: Yeoman - AugularJS with Gulp
+date: 2016-10-25 00:06:38.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Web
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '28178117772'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2016/10/25/yeoman-augularjs-with-gulp/"
+---
+
+{% highlight wl linenos %} npm install -g generator-gulp-angular yo gulp-angular {% endhighlight %}

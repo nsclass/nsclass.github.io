@@ -1,0 +1,28 @@
+---
+layout: single
+title: C# - an example of creating an observable object with C# custom event
+date: 2013-03-06 14:55:41.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-03-06
+    03:57:08";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/06/create-observable-example-for-c-event/"
+---
+
+{% highlight wl linenos %} public class ValueChangeData { public object oldValue; public object newValue; } public IObservable CreateObservableSourceChange() { return Observable.Create( observer =\> { DelegateValueChanged changedFunc = new DelegateValueChanged((oldValue, newValue) =\> { ValueChangeData data = new ValueChangeData(); data.oldValue = oldValue; data.newValue = newValue; observer.OnNext(data); }); OnValueChanged += changedFunc; return () =\> { OnValueChanged -= changedFunc; }; } ); } {% endhighlight %}

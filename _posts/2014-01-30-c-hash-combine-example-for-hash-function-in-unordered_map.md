@@ -1,0 +1,26 @@
+---
+layout: single
+title: C++ - Hash combine example for hash function in unordered_map
+date: 2014-01-30 08:32:16.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/01/30/c-hash-combine-example-for-hash-function-in-unordered_map/"
+---
+
+{% highlight wl linenos %} template inline void hash_combine(std::size_t & seed, const T & v) { std::hash hasher; seed ^= hasher(v) + 0x9e3779b9 + (seed \<\< 6) + (seed \>\> 2); } {% endhighlight %} {% highlight wl linenos %} class Item { public: std::string name; int age; int code; Item(std::string n, int age, int code) : name(std::move(n)), age(age), code(code) { } bool operator == (Item const& item) const { return name == item.name && age == item.age && code == item.code; } }; struct ItemHasher { std::size_t operator()(Item const& item) const { std::size_t seed = 0; hash_combine(seed, item.name); hash_combine(seed, item.age); hash_combine(seed, item.code); return seed; } }; std::unordered_map testHash; {% endhighlight %}

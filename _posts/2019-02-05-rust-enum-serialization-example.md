@@ -1,0 +1,28 @@
+---
+layout: single
+title: Rust - Enum serialization example
+date: 2019-02-05 11:17:14.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Rust
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '27312176006'
+  timeline_notification: '1549387034'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/02/05/rust-enum-serialization-example/"
+---
+
+{% highlight wl linenos %} use serde::ser::{ Serialize, Serializer }; use serde::de::{ Deserialize, Deserializer }; pub enum EnumTestType { Type1, Type2, UNKNOWN, } impl EnumTestType { pub fn value(&self) -\> &'static str { match \*self { EnumTestType::Type1 =\> "T1", EnumTestType::Type2 =\> "T2", EnumTestType::UNKNOWN =\> "?", } } } impl Serialize for EnumTestType { fn serialize~~(&self, serializer: S) -\> Result where S: Serializer, { serializer.serialize_str(self.value()) } } impl \<'a\> Deserialize\<'a\> for EnumTestType { fn deserialize(deserializer: D) -\> Result where D: Deserializer\<'a\>, { let s = String::deserialize(deserializer)?; let result = match s.as_str() { "D" =\> EnumTestType::Type1, "I" =\> EnumTestType::Type2, \_ =\> EnumTestType::UNKNOWN, }; Ok(result) } } {% endhighlight %}~~

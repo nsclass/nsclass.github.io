@@ -1,0 +1,29 @@
+---
+layout: single
+title: Git - configuration to use p4merge for diff
+date: 2013-03-09 21:37:55.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Windows
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-03-09
+    11:13:08";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/09/git-configuration-for-p4merge/"
+---
+
+On Windows\
+{% highlight wl linenos %} \[diff\] tool = p4merge \[difftool "p4merge"\] path = c:\\Program Files\\Perforce\\p4merge.exe \[merge\] tool = p4merge \[mergetool "p4merge"\] path = c:\\Program Files\\Perforce\\p4merge.exe trustExitCode = true keepBackup = false {% endhighlight %}
