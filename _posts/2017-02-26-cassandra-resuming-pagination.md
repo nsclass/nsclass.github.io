@@ -1,0 +1,58 @@
+---
+layout: single
+title: Cassandra - Resuming pagination
+date: 2017-02-26 08:25:44.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- cassandra
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '2253472202'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/02/26/cassandra-resuming-pagination/"
+---
+
+Cassandra provides the page state information and it can be reused to get next iteration.
+
+```
+Statement stmt = QueryBuilder
+                    .select()
+                    .all()
+                    .from("users")
+                    .where(eq("email", emailUpper));
+ResultSet resultSet = getSession().execute(stmt);
+PagingState pagingState = resultSet.getExecutionInfo().getPagingState();
+```
+
+Then it can be serialized in below way\
+```
+String savedStringState = pagingState.toString();
+byte[] savedBytesState = pagingState.toBytes();
+```
+
+It can be reconstructed and resume the query as shown following example.\
+```
+PagingState pagingState = PagingState.fromString(string);
+Statement stmt = QueryBuilder
+                    .select()
+                    .all()
+                    .from("users")
+                    .where(eq("email", emailUpper));
+PagingState pagingState = resultSet.getExecutionInfo().getPagingState();
+// restore state from the saved string
+PagingState pagingState = PagingState.fromString(savedStringState);
+stmt.setPagingState(pagingState);
+ResultSet resultSet = getSession().execute(stmt);
+```

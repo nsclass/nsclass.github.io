@@ -1,0 +1,28 @@
+---
+layout: single
+title: C++11 - std::rethrow_if_nested
+date: 2014-02-10 09:34:30.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/02/10/c11-stdrethrow_if_nested/"
+---
+
+std::throw_with_nested will create a class inherited from std::std::nested_exception and user exception then it will get current exception and user exception in it then throw.\
+Ex)\
+std::throw_with_nested(MyException());

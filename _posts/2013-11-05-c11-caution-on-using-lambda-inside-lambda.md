@@ -1,0 +1,52 @@
+---
+layout: single
+title: C++11 - Caution on using lambda inside lambda.
+date: 2013-11-05 11:51:50.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/11/05/c11-caution-on-using-lambda-inside-lambda/"
+---
+
+When you create a lambda and if the lambda create another lambda in asynchronous way by using thread, you need to be very careful on capturing values. If you capture all variables(including local variables) by references, you will likely make a mistake by using accidentally local variables inside another lambda. If you are lucky application will crash, if not application will corrupt heap in randomly.
+
+You can find similar information from the link(http://stackoverflow.com/questions/6216232/c-nested-lambda-bug-in-vs2010-with-lambda-parameter-capture).
+
+```
+void Func()
+{
+   FireCall(pEvent, idx + 1, [data](_IEvent* pCall)->HRESULT
+   {
+      return pCall->OnEvent(data);
+   });
+}
+bool FireCall(_IEvent* pEvent, DWORD idx, boost::function<HRESULT(_IEvent*)> func)
+{
+   IStream* pStream = NULL;
+   HRESULT hRes = CoMarshalInterThreadInterfaceInStream(IID__Event, pEvent, &pStream);
+   pEvent->Release();
+   // create another lambda, it should pass variable by value.
+   m_threadPool.Schedule([idx, pStream]()
+   {
+       _IEvent* pCallEvent = NULL;
+       auto res = CoGetInterfaceAndReleaseStream(pStream, IID, (void**)&pCallEvent);
+       if (SUCCEEDED(res))
+          func(pCallEvent);
+   });
+}
+```

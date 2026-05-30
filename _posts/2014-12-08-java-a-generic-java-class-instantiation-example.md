@@ -1,0 +1,53 @@
+---
+layout: single
+title: Java - a generic Java class instantiation example
+date: 2014-12-08 12:56:20.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- java
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/12/08/java-a-generic-java-class-instantiation-example/"
+---
+
+```
+public class CommandFactory {
+    public static <T extends Command<R>, R extends CommandResult> T createCommand(Class<T> classObject, Object... params) {
+        try {
+            T newInstance = classObject.newInstance();
+            if (newInstance.initialize(params)) {
+                return newInstance;
+            }
+        } catch (Exception e) {
+        }
+        assert false;
+        return null;
+    }
+}
+public class TestCommandResult extends CommandResult {
+}
+public class TestCommand extends Command<TestCommandResult> {
+    private int index;
+    public TestCommand() {
+    }
+    public bool initialize(int idx) {
+        this.index = idx;
+    }
+}
+TestCommand testCmd = CommandFactory.<TestCommand, TestCommandResult>createCommand(TestCommand.class, 1);
+```

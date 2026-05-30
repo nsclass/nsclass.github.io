@@ -1,0 +1,107 @@
+---
+layout: single
+title: C# WCF - Ninject Ioc
+date: 2014-06-24 11:48:53.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags:
+- WCF
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/06/24/c-wcf-ninject-ioc/"
+---
+
+In order to use Ioc to instantiate a WCF service class, Ioc should provide implementation of following two interfaces.\
+IInstanceProvider\
+IServiceBehavior
+
+Implement IServiceBehavior\
+```
+    public class NinjectBehaviorAttribute : Attribute, IServiceBehavior
+    {
+        public void AddBindingParameters(ServiceDescription serviceDescription,
+            ServiceHostBase serviceHostBase, Collection<ServiceEndpoint> endpoints,
+            BindingParameterCollection bindingParameters)
+        {
+        }
+        public void ApplyDispatchBehavior(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
+        {
+            Type serviceType = serviceDescription.ServiceType;
+            IInstanceProvider instanceProvider = new NinjectInstanceProvider(NinjectServiceLocator.Kernel, serviceType);
+            foreach (ChannelDispatcher dispatcher in serviceHostBase.ChannelDispatchers)
+            {
+                foreach (EndpointDispatcher endpointDispatcher in dispatcher.Endpoints)
+                {
+                    DispatchRuntime dispatchRuntime = endpointDispatcher.DispatchRuntime;
+                    dispatchRuntime.InstanceProvider = instanceProvider;
+                }
+            }
+        }
+        public void Validate(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
+        {
+        }
+    }
+```
+
+Implement IInstanceProvider\
+```
+    public class NinjectInstanceProvider : IInstanceProvider
+    {
+        private Type serviceType;
+        private IKernel kernel;
+        public NinjectInstanceProvider(IKernel kernel, Type serviceType)
+        {
+            this.kernel = kernel;
+            this.serviceType = serviceType;
+        }
+        public object GetInstance(InstanceContext instanceContext)
+        {
+            return this.GetInstance(instanceContext, null);
+        }
+        public object GetInstance(InstanceContext instanceContext, Message message)
+        {
+            return kernel.Get(this.serviceType);
+        }
+        public void ReleaseInstance(InstanceContext instanceContext, object instance)
+        {
+        }
+    }
+```
+
+Example class\
+```
+[ServiceContract]
+public interface IExample
+{
+    void Test();
+}
+[NinjectBehavior]
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
+public Example : IExample
+{
+    ITest _testIntf;
+    IMathTest _mathTestIntf;
+    public Example(ITest testIntf, IMathTest mathTestIntf)
+    {
+        _testIntf = testIntf;
+        _mathTestIntf = mathTestIntf;
+    }
+    public void Test()
+    {
+    }
+}
+```

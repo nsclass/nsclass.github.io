@@ -1,0 +1,46 @@
+---
+layout: single
+title: C# generic function to invoke a method of class with static information
+date: 2013-07-08 10:23:12.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-08
+    00:59:37";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/08/c-generic-function-to-invoke-a-method-of-class-with-static-information/"
+---
+
+```
+class Invoker<T> where T : class
+{
+      static void Invoke(T invokeClass, string methodName, object[] args)
+      {
+         Debug.Assert(invokeClass != null);
+         Type type = typeof(T);
+         MethodInfo methodInfo = type.GetMethod(methodName);
+         try
+         {
+            methodInfo.Invoke(invokeClass, args);
+         }
+         catch(Exception e)
+         {
+            Trace.WriteLine(e.Message);
+         }
+      }
+}
+```

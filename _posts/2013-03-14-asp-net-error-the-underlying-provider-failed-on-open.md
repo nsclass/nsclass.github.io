@@ -1,0 +1,30 @@
+---
+layout: single
+title: ASP.NET database connection error - the underlying provider failed on Open
+date: 2013-03-14 07:54:56.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-03-13
+    20:55:34";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/14/asp-net-error-the-underlying-provider-failed-on-open/"
+---
+
+context.Connection.Open() didn't help solving my problem so I tried enabling "Allow Remote Clients" in DTC config, no more error.
+
+In windows 7 you can open the DTC config by running dcomcnfg, Component Services -\> Computers -\> My Computer -\> Distributed Transaction Coordinator -\> Right click to Local DTC -\> Security. – kerem Mar 3 '11 at 16:48

@@ -1,0 +1,65 @@
+---
+layout: single
+title: Spark - Cassandra connector example
+date: 2019-06-15 20:47:10.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Spark
+tags: []
+meta:
+  _edit_last: '14827209'
+  _oembed_36d97139f06432ceace018aca9696459: "{{unknown}}"
+  geo_public: '0'
+  _publicize_job_id: '31868832868'
+  timeline_notification: '1560649630'
+  _oembed_ce7abf32e3abab13dd8311ee727f51a6: "{{unknown}}"
+  _oembed_2cb4019330fb25d9003d12a88de6111b: "{{unknown}}"
+  _oembed_0ab9cc469e0a0b6830b4218e32f79bf6: "{{unknown}}"
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/06/15/spark-cassandra-connector-example/"
+---
+
+Github\
+https://github.com/nsclass/spark-cassandra-example
+
+```
+object SparkCassandra {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder()
+      .appName("SparkCassandra")
+      .master("local")
+      .config("spark.cassandra.connection.host", "127.0.0.1")
+      .getOrCreate()
+    // Read data as RDD
+    val rdd = spark.sparkContext.cassandraTable(keyspace = "system", table = "local")
+      .select("key", "cluster_name", "cql_version")
+    println("Data read as RDD")
+    rdd.collect()
+      .foreach(row => {
+        println(row.getString("key"))
+        println(row.getString("cluster_name"))
+        println(row.getString("cql_version"))
+      })
+    // Read data as DataSet (DataFrame)
+    val dataset = spark.read
+      .cassandraFormat(keyspace = "system", table = "local")
+      .load()
+    dataset.collect()
+      .foreach(row => {
+        println(row.getAs("key"))
+        println(row.getAs("cluster_name"))
+        println(row.getAs("cql_version"))
+      })
+  }
+}
+```

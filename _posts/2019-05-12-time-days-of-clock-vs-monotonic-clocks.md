@@ -1,0 +1,37 @@
+---
+layout: single
+title: Time - days of clock vs Monotonic clocks
+date: 2019-05-12 09:24:39.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  timeline_notification: '1557671080'
+  geo_public: '0'
+  _publicize_job_id: '30731395290'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2019/05/12/time-days-of-clock-vs-monotonic-clocks/"
+---
+
+Getting days of clocks\
+- Linux: clock_gettime(CLOCK_REALTIME)\
+- Java: System.currentTimeMillis()
+
+Getting monotonic clocks\
+- Linux: clock_gettime(CLOCK_MONOTONIC)\
+- Java: System.nanoTime()
+
+It's important to know difference between days of clocks and monotonic clocks because days of clocks is measured from a certain epock(Java is using 1970 Jan 1 in UTC) it can be backward when time is adjusted by NTP.\
+But monotonic clocks will never go back, it will guarantee to be always forward so if application want to measure the duration of time, monotonic clocks should be used.\
+However it's meaningless on comparing monotonic clocks between two machines.

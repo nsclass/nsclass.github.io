@@ -1,0 +1,28 @@
+---
+layout: single
+title: Modbus - Coils, Discret Inputs etc
+date: 2013-10-11 09:27:26.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/10/11/modbus-coils-discret-inputs-etc/"
+---
+
+discrete inputs: read-only Boolean\
+coils: read-write Boolean\
+input registers: read-only integer(16 bits)\
+holding registers: read-write integer(16 bits)

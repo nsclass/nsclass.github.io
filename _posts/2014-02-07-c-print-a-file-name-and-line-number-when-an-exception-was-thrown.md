@@ -1,0 +1,41 @@
+---
+layout: single
+title: C# - print a file name and line number when an exception was thrown
+date: 2014-02-07 10:05:17.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/02/07/c-print-a-file-name-and-line-number-when-an-exception-was-thrown/"
+---
+
+```
+    public static class ExceptionUtils
+    {
+        public static void PrintException(Exception e)
+        {
+            var frame = new StackTrace(e, true).GetFrame(0);
+            if (frame != null)
+            {
+                var str = string.Format("File: {0}({1}){2}{3}", frame.GetFileName(), frame.GetFileLineNumber(), Environment.NewLine, e.Message);
+                Trace.WriteLine(str);
+            }
+            else
+                Trace.WriteLine(e.Message);
+        }
+    }
+```

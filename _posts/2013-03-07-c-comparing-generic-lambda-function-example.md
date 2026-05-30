@@ -1,0 +1,31 @@
+---
+layout: single
+title: C# - an example of comparing C# objects using generic lambda function
+date: 2013-03-07 08:29:02.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-03-06
+    21:29:02";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/07/c-comparing-generic-lambda-function-example/"
+---
+
+```
+var comparer = Comparer<T>‌.Default;
+Func<T,T,T> minOf = (‌x, y) => comparer‌.Compare(‌x, y) < 0 ? x: y;
+```

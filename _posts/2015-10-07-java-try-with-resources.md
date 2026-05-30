@@ -1,0 +1,43 @@
+---
+layout: single
+title: Java - Try with resources
+date: 2015-10-07 09:42:28.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags:
+- java
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '15551021739'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/10/07/java-try-with-resources/"
+---
+
+From Java7, it introduced the mechanism to release the resource automatically as C# does with using statement. In C#, you can use the using statement to release resource allocated by object which derives from IDisposable.
+
+```
+using (var socket = new Socket(...)) {
+}
+```
+
+Java7 can achieve same result with the following syntax. However it cannot use for any object, it can only support the instance which implements java.lang.AutoCloseable as C# does.
+
+```
+try (
+    File file = new FileInputStream(...);
+    File output = new FileInputStream(...);
+) {
+}
+```

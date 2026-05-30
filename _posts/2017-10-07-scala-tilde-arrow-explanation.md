@@ -1,0 +1,48 @@
+---
+layout: single
+title: Scala - ~> [Tilde arrow] explanation
+date: 2017-10-07 11:23:50.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Programming
+- Scala
+tags: []
+meta:
+  _edit_last: '14827209'
+  _oembed_fb680533a04f9e99749680259feca307: "{{unknown}}"
+  geo_public: '0'
+  _publicize_job_id: '10081723220'
+  _oembed_b135946faca6947922433b56175f0af9: "{{unknown}}"
+  _oembed_45338f5800747e907b78bb7090485537: "{{unknown}}"
+  _oembed_b6430d20814a3830cc1645c44fa2aa6a: "{{unknown}}"
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/10/07/scala-tilde-arrow-explanation/"
+---
+
+"~\>" is a place holder for type.\
+Main reason to use "~\>" is to make readable on type A goes to type B. This is possible because Scala allow to express in in-fix notation for pre-fix expression.
+
+```
+trait Order[~>[_,_]] {
+   def sort[A,B](f: A ~> B): B
+}
+```
+
+is equivalent to
+
+```
+trait Order[M[_,_]] {
+   def sort[A,B](f: M[A, B]): B
+}
+```
+
+https://stackoverflow.com/questions/10085951/scala-tilde-greater-than-operator

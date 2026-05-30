@@ -1,0 +1,58 @@
+---
+layout: single
+title: C++11 - a good example of using std::function
+date: 2013-03-06 11:10:30.000000000 -06:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- C++
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-03-06
+    00:11:30";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/03/06/stdfunction-useful-example/"
+---
+
+```
+struct Wanderer
+{
+    explicit Wanderer(std::vector<std::function>& update_loop)
+    {
+        update_loop.emplace_back([this](float dt) { update(dt); });
+    }
+    void update(float dt);
+};
+struct Diver
+{
+    explicit Diver(std::vector<std::function>& update_loop)
+    {
+        update_loop.emplace_back([this](float dt) { update(dt); });
+    }
+    void update(float dt);
+};
+int main()
+{
+    std::vector<std::function> update_loop;
+    Wanderer wanderer{update_loop};
+    Diver diver{update_loop};
+    while (true)
+    {
+        for (auto & function : update_loop)
+        {
+            function(0.016f);
+        }
+    }
+}
+```

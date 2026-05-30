@@ -1,0 +1,28 @@
+---
+layout: single
+title: Duplicate images finder
+date: 2008-05-16 10:09:16.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Code
+tags: []
+meta:
+  spaces_8e963f1d044baa6ea177d10f0c6ccc02_permalink: http://cid-f610c86c6d82b8a2.users.api.live.net/Users(-715851972732602206)/Blogs('F610C86C6D82B8A2!116')/Entries('F610C86C6D82B8A2!176')?authkey=bau8ZqLz*pg%24
+  _oembed_d1e8bdd75d0d7b0f2aaea4d83017130a: "{{unknown}}"
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2008/05/16/duplicate-images-finder/"
+---
+
+<http://www.codeplex.com/DupliFinder>
+
+[](http://www.codeplex.com/DupliFinder/SourceControl/DownloadSourceCode.aspx?changeSetId=17633) 
+

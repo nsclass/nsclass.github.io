@@ -1,0 +1,31 @@
+---
+layout: single
+title: Java - Guava API to sort items in collection with Ordering compound example
+date: 2017-08-08 02:41:39.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '8006180220'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2017/08/08/java-guava-api-to-sort-items-in-collection-with-ordering-compound-example/"
+---
+
+```
+Collection.sort(list,
+	Ordering.from((Comparator<Item>) Comparator.comparingInt(item -> item.getId()))
+	.compound(Comparator.comparing(Item::getName)))
+```

@@ -1,0 +1,54 @@
+---
+layout: single
+title: Java - iterate all classpath with spring framework
+date: 2015-07-02 13:54:21.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  geo_public: '0'
+  _publicize_job_id: '12238129970'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2015/07/02/java-iterate-all-class-path-with-spring-framework/"
+---
+
+The following code will iterate all available classpath in the application.
+
+```
+try {
+    Enumeration<URL> resources = ApplicationContextProvider.getApplicationContext().getClassLoader().getResources("");
+    while (resources.hasMoreElements()) {
+        URL url = resources.nextElement();
+        String path = url.getPath();
+    }
+} catch (Exception e) {
+}
+```
+
+Iterate classpath for the jar application\
+```
+    private static void iterateClassPath() {
+        try {
+            Enumeration<URL> resources = MainApp.class.getClassLoader().getResources("");
+            while (resources.hasMoreElements()) {
+                URL url = resources.nextElement();
+                String path = url.getPath();
+                System.out.println("Classpath: " + path);
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to get class path: " + e.getMessage());
+        }
+    }
+```

@@ -1,0 +1,43 @@
+---
+layout: single
+title: C++11- good to know algorithm
+date: 2014-05-12 08:01:47.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2014/05/12/c11-good-to-know-algorithm/"
+---
+
+The following algorithm will make your code clean and faster\
+```
+1. std::all_of
+bool res = std::all_of(std::begin(container), std::end(container), [](int value) { return value > 0; });
+2. std::any_of
+bool res = std::any_of(std::begin(container), std::end(container), [](int value) { return value > 0; });
+3. std::none_of
+bool res = std::none_of(std::begin(container), std::end(container), [](int value) { return value > 0; });
+4. std::is_sorted
+bool res = std::is_sorted(std::begin(container), std::end(container), [](int first, int second) { return first < second; });
+5. std::is_sorted_until
+auto last = std::is_sorted_until(std::begin(container), std::end(container), [](int first, int second) { return first < second; });
+6. std::is_partitioned
+bool res = std::is_partitioned(std::begin(container), std::end(container), [](int value) { return value > 10; });
+7. std::is_permutation
+bool res = std::is_permutation(std::begin(container), std::end(container), std::begin(container2);
+8. std::minmax_element
+std::vector<int>::iterator min, max;
+std::tie(min, max) = std::minmax_element(std::begin(container), std::end(container));
+```

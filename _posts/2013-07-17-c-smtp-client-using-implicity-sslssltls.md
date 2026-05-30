@@ -1,0 +1,82 @@
+---
+layout: single
+title: C# SMTP client using CDO
+date: 2013-07-17 07:44:10.000000000 -05:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ".NET"
+- Programming
+tags: []
+meta:
+  _edit_last: '14827209'
+  _publicize_pending: '1'
+  geo_public: '0'
+  tagazine-media: a:7:{s:7:"primary";s:0:"";s:6:"images";a:0:{}s:6:"videos";a:0:{}s:11:"image_count";i:0;s:6:"author";s:8:"14827209";s:7:"blog_id";s:8:"14365184";s:9:"mod_stamp";s:19:"2013-07-17
+    00:10:31";}
+author:
+  login: acrocontext
+  email:  
+  display_name: acrocontext
+  first_name: ''
+  last_name: ''
+permalink: "/2013/07/17/c-smtp-client-using-implicity-sslssltls/"
+---
+
+The following code utilize the CDO service of Windows OS to send an email. In my research CDO SMTP client can only support SSL/TLS connection type for using SSL. If you want to use START TLS connection type, C# SmtpClient class can support it.
+
+```
+/// <summary>
+    /// Send an electronic message using the Collaboration Data Objects (CDO).
+    /// </summary>
+    /// <remarks>http://support.microsoft.com/kb/310212</remarks>
+private void SendEmailWithCDO()
+{
+            try
+            {
+                var settings = ViewModel;
+                CDO.Message message = new CDO.Message();
+                CDO.IConfiguration configuration = message.Configuration;
+                ADODB.Fields fields = configuration.Fields;
+                // Set configuration.
+                // sendusing:               cdoSendUsingPort, value 2, for sending the message using the network.
+                // smtpauthenticate:     Specifies the mechanism used when authenticating to an SMTP service over the network.
+                //                                  Possible values are:
+                //                                  - cdoAnonymous, value 0. Do not authenticate.
+                //                                  - cdoBasic, value 1. Use basic clear-text authentication. (Hint: This requires the use of "sendusername" and "sendpassword" fields)
+                //                                  - cdoNTLM, value 2. The current process security context is used to authenticate with the service.
+                ADODB.Field field = fields["http://schemas.microsoft.com/cdo/configuration/smtpserver"];
+                field.Value = settings.SMTPServerAddress;
+                field = fields["http://schemas.microsoft.com/cdo/configuration/smtpserverport"];
+                field.Value = settings.PortNumber;
+                field = fields["http://schemas.microsoft.com/cdo/configuration/sendusing"];
+                field.Value = CDO.CdoSendUsing.cdoSendUsingPort;
+                field = fields["http://schemas.microsoft.com/cdo/configuration/smtpauthenticate"];
+                field.Value = CDO.CdoProtocolsAuthentication.cdoBasic;
+                field = fields["http://schemas.microsoft.com/cdo/configuration/sendusername"];
+                field.Value = settings.Username;
+                field = fields["http://schemas.microsoft.com/cdo/configuration/sendpassword"];
+                field.Value = settings.Password;
+                field = fields["http://schemas.microsoft.com/cdo/configuration/smtpusessl"];
+                field.Value = "true";
+                fields.Update();
+                message.From = settings.SenderEmailAddress;
+                message.To = settings.SenderEmailAddress;
+                message.Subject = "Test";
+                message.TextBody = settings.Content;
+                // Send message.
+                message.Send();
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(message);
+                MessageBox.Show("Sent a message successfully");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                MessageBox.Show(ex.Message);
+            }
+        }
+}
+```
