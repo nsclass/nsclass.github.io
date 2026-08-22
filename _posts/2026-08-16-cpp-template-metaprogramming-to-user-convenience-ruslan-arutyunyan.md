@@ -73,9 +73,11 @@ blocked_nd_range(const std::array<blocked_range<T>, N>& dims) : my_dims(dims) {}
 
 Nothing is deduced here — `T` and `N` come from the class instantiation — so all that's needed is for the argument to be constructible. It compiles. The call site is the problem:
 
+{% raw %}
 ```cpp
 blocked_nd_range<int, 2> r{{{{0, 10}, {0, 20}}}};
 ```
+{% endraw %}
 
 Arutyunyan admits he originally got there by adding braces until the compiler stopped complaining, in 2018, when he'd just started with modern C++. But the count is explainable, and he explains it with pseudo-code: the layers are the brace for **`blocked_nd_range`**, the brace for **`std::array`**, and the brace for the **C array inside `std::array`** — plus the innermost braces that become the `blocked_range`s themselves.
 

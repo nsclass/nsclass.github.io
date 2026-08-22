@@ -31,9 +31,11 @@ $ sudo docker run -v /usr/local/bin:/target jpetazzo/nsenter
 ```
 
 Get the process id of container\
+{% raw %}
 ```
 PID=$(docker inspect --format {{.State.Pid}} <container>)
 ```
+{% endraw %}
 
 Launching a shell inside the container\
 ```
