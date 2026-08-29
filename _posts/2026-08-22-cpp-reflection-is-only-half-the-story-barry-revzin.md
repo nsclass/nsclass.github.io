@@ -28,11 +28,36 @@ Start with the list of things reflection lets us do better: formatting, serializ
 
 Look closely at that list and something jumps out. **Every one of those is something we could already do.** You can write all of it by hand. We don't want to, because we want code that writes code for us. Not because it feels elite (although Revzin concedes that it does), but because it's extremely practical for general software engineering.
 
-The motivating example is a config type with a string and an int. You want to print it, so you write a formatter. The code isn't long or complicated, and it's easy to teach. (Revzin suggests AI tooling can produce it reliably; an audience member disagrees — *"I find it's terrible at it."*)
+The motivating example is a config type with a string and an int. You want to print it, so you write a formatter:
+
+```cpp
+struct Config {
+    std::string name;
+    int         count;
+};
+
+template <>
+struct std::formatter<Config> : std::formatter<std::string> {
+    auto format(const Config& c, auto& ctx) const {
+        return std::format_to(ctx.out(), "Config(name={}, count={})",
+                              c.name, c.count);
+    }
+};
+```
+
+The code isn't long or complicated, and it's easy to teach. (Revzin suggests AI tooling can produce it reliably; an audience member disagrees — *"I find it's terrible at it."*)
 
 The problem isn't the formatter's length or complexity. **It's that the formatter has to exist at all.** Config types change constantly over an application's lifetime. Add a member, forget to update the formatter and the YAML serializer, and everything still compiles and runs — you just have an incomplete representation of your application in your logs forever.
 
-With reflection, you slap an annotation on the type, and one specialization of `formatter` looks for that annotation and does the default member-wise thing. All those hand-written formatters go away.
+With reflection, you slap an annotation on the type, and *one* specialization of `formatter` looks for that annotation and does the default member-wise thing:
+
+```cpp
+struct [[= derive<Formattable>]] Config {   // one annotation...
+    std::string name;
+    int         count;
+};
+// ...and every hand-written formatter in the codebase goes away.
+```
 
 This leads to a guideline Revzin proposes for the future, in the spirit of Sean Parent's *no raw loops*:
 
@@ -117,7 +142,22 @@ It took a couple of minutes to write, and the only bugs were typos. The reason i
 
 And there's no prescribed style. Use ranges, use a different ranges library, use raw loops — whatever fits your codebase.
 
-The **type-based metaprogramming version** looks nothing like it. `get_subobjects` has a precondition that it can't be *instantiated* with a non-class reflection, so instead of a boolean guard you need a guarded partial specialization. The result is a disjunction, but nothing about the code says so:
+The **type-based metaprogramming version** looks nothing like it. `get_subobjects` has a precondition that it can't be *instantiated* with a non-class reflection, so instead of a boolean guard you need a guarded partial specialization:
+
+```cpp
+// Sketch of the shape: the guard has to become a specialization, because
+// the precondition defers INSTANTIATION, not evaluation.
+template <class T, class = void>
+struct is_structural_impl
+    : mp_or<std::is_scalar<T>, std::is_lvalue_reference<T>> {};
+
+template <class T>
+struct is_structural_impl<T, std::enable_if_t<std::is_class_v<T> ||
+                                              std::is_union_v<T>>>
+    : mp_all_of<get_subobjects<T>, /* public, non-mutable, structural... */> {};
+```
+
+The result is a disjunction, but nothing about the code says so:
 
 > How can you tell that this is a disjunction, and that these are my main categories? You just have to know that's what it means. And you also have to just know that this is complete — that I don't intend there to be any other specializations.
 
@@ -157,6 +197,23 @@ At a high level they share a lot:
 - Both have two forms: an expression/declaration form that injects code, and a **decorator form** attached to an existing declaration — the analogue of a C++ attribute or annotation.
 
 ### Rust: tokens in, tokens out
+
+In both Rust and Swift the macro invocation is **visually distinct** — you always know you are looking at one:
+
+```rust
+#[derive(Debug)]          // attribute form: attached to a declaration
+struct Config { name: String, count: i32 }
+
+println!("{:?}", config); // the trailing ! marks a macro invocation
+```
+
+```swift
+@Debug struct Config { var name: String; var count: Int }
+@main struct App { ... }   // note: @main is a LANGUAGE feature, same syntax
+#line                      // also a macro invocation
+```
+
+Swift's macros and its language features share a syntax, so macros look and feel like the rest of the language.
 
 `#[derive(Debug)]` on a struct makes it printable member-wise; `println!` is itself a macro, marked by the trailing `!`.
 
@@ -237,6 +294,26 @@ for (auto [i, r] : std::views::enumerate(arg_types))
 ```
 
 Revzin is explicit that this is a thought experiment: token sequences are proposed, not standardized, and may never be in any C++.
+
+For contrast, this is the shape of the Rust side — literally tokens in, tokens out, with no semantic analysis:
+
+```rust
+#[proc_macro_derive(Debug)]
+pub fn derive_debug(input: TokenStream) -> TokenStream {
+    let ast = syn::parse(input).unwrap();      // tokens -> syntax tree
+    let fields = match ast.data {              // pattern-match the variants
+        Data::Struct(s) => s.fields,
+        _ => panic!("only structs"),
+    };
+    let calls = fields.iter().map(|f| {        // one .field() call per member
+        let name = &f.ident;
+        quote! { .field(stringify!(#name), &self.#name) }
+    });
+    quote! { /* ...assembled tokens get injected... */ }.into()
+}
+```
+
+Because it is purely token-level, a generic `Config` passes all its tokens in too — **the macro operates on the template itself, not on any instantiation.** Which, Revzin notes, is an interesting thing to sit with from a C++ perspective, where our templates are barely parsable to begin with.
 
 Why he prefers it isn't the length:
 

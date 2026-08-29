@@ -35,7 +35,20 @@ By this hierarchy, lock-free ought to beat lock-based under contention. At most 
 
 ## Act 0: the benchmark that starts the trouble
 
-To compare all three fairly you need an operation expressible in every style. Pikus picks **incrementing an integer**: `fetch_add` is wait-free, a CAS loop over the same integer is lock-free (pointless in real life — or so you'd think), and a spin lock around a plain `int` is lock-based.
+To compare all three fairly you need an operation expressible in every style. Pikus picks **incrementing an integer**:
+
+```cpp
+// wait-free
+x.fetch_add(1, std::memory_order_relaxed);
+
+// lock-free: a CAS loop over the same integer.
+// Pointless in real life -- or so you would think.
+int old = x.load(std::memory_order_relaxed);
+while (!x.compare_exchange_weak(old, old + 1, std::memory_order_relaxed)) {}
+
+// lock-based: a spin lock around a plain int
+{ std::lock_guard guard(spinlock); ++plain_int; }
+```
 
 The results on an Intel x86 machine, plotting average increment time against thread count:
 
@@ -123,7 +136,21 @@ The usual list, and it's still valid: deadlock, livelock, **preemption** (a desc
 
 Point one was "locks win at high contention." Point two is that there's a **third option** beyond lock-based and lock-free — and to find it, look at an atomic maximum.
 
-The lock version is obvious: take the lock, compare, maybe update. The lock-free version is a CAS loop (there's no hardware max instruction). Two very different workloads matter here:
+```cpp
+// Lock-based: EVERY comparison happens under the lock.
+{
+    std::lock_guard guard(lock);
+    if (n > max) max = n;
+}
+
+// Lock-free: there is no hardware max instruction, so CAS loop.
+// Note the comparison does not involve the CAS -- if no update is
+// needed, the expensive part never runs.
+int old = max.load(std::memory_order_relaxed);
+while (n > old && !max.compare_exchange_weak(old, n, std::memory_order_relaxed)) {}
+```
+
+Two very different workloads matter here:
 
 - **Frequent updates** — the value keeps climbing, so you update almost every time.
 - **Rare updates** — you hit the lifetime maximum early and then almost never write again.
@@ -170,9 +197,19 @@ Here's the experience Pikus asks the room about, and gets nods for: you write a 
 
 What the microbenchmarks miss is that **synchronization steals resources from the other threads doing the actual work**. Real programs touch shared data *in service of* something else: the task queue is contended at its endpoints, but the point isn't cycling the queue, it's executing the tasks that come out.
 
-So the model becomes: each thread does some **shared work** (one increment of a global atomic) interleaved with some **thread-local work** (a chain of `sin` calls on stack variables, with `DoNotOptimize` sprinkled in). Vary the ratio. The metric is the number of *useful math iterations* completed in five seconds — throughput of the payload, not the synchronization. Then swap the synchronization implementation between `fetch_add`, a CAS loop, and a spin lock, normalizing everything to `fetch_add`.
+So the model becomes:
 
-**At maximum contention** (100 shared iterations per 1 parallel iteration) there's no news: the spin lock delivers ~2.5× the overall throughput of atomics. `std::mutex` is bad; we knew that.
+```cpp
+// Vary N: the ratio of thread-local work to shared work.
+for (int i = 0; i < N; ++i) {
+    // thread-local payload: a chain of sin() on stack variables
+    v = std::sin(v);
+    benchmark::DoNotOptimize(v);
+}
+increment_shared();     // <- fetch_add / CAS loop / spin lock
+```
+
+The metric is the number of *useful math iterations* completed in five seconds — throughput of the payload, not the synchronization. Then swap `increment_shared` between the three implementations and normalize to `fetch_add`. **At maximum contention** (100 shared iterations per 1 parallel iteration) there's no news: the spin lock delivers ~2.5× the overall throughput of atomics. `std::mutex` is bad; we knew that.
 
 **At low contention there is very much news.** At a ratio of 100 parallel iterations per *one* shared increment, the spin lock is **substantially slower overall** — around 4× at the sharpest point on the Grace chart. At 1000:1 you can still see it. Only around 10,000:1 does everything converge.
 
@@ -219,6 +256,37 @@ The design is a power-of-two ring buffer with head and tail indices:
 - **Head and tail are two separate high-contention domains.** Producers fight over the tail, consumers over the head, and there is no reason for the two groups to fight each other — so they live on **separate cache lines**, each protected by a **spin lock**.
 - The lock is held only long enough to claim a slot and bump the index, then released immediately. After that you own an **exclusive slot**, and contention on any individual slot is **low** — so the slot uses **atomics**.
 - Each slot holds an **atomic key**. One key value is reserved (e.g. null, if the queue carries pointers). Constructing the value isn't atomic, but the **atomic store of the key is what publishes the slot** to consumers.
+
+```cpp
+struct Slot {
+    std::atomic<Key> key{kReserved};   // kReserved == "empty"; the store
+                                       // of a real key PUBLISHES the slot
+    std::atomic<bool> busy{false};     // only for the wraparound race
+    Value value;                       // construction is NOT atomic
+};
+
+// Head and tail are separate high-contention domains: producers fight
+// over one, consumers over the other, and they should never fight
+// each other -- so, separate cache lines, each with its own spin lock.
+alignas(64) Spinlock tail_lock;  alignas(64) size_t tail;
+alignas(64) Spinlock head_lock;  alignas(64) size_t head;
+alignas(64) Slot slots[kCapacity];        // kCapacity is a power of two
+
+void push(Key k, Value v) {
+    size_t i;
+    {
+        std::lock_guard guard(tail_lock);   // HIGH contention -> spin lock
+        i = tail++;                         // claim a slot, then get out
+    }
+    Slot& s = slots[i & (kCapacity - 1)];
+
+    // We now own this slot exclusively. Contention on any INDIVIDUAL
+    // slot is low -> atomics.
+    s.busy.store(true, std::memory_order_relaxed);
+    s.value = std::move(v);                  // not atomic, and need not be
+    s.key.store(k, std::memory_order_release);   // <- publishes the slot
+}
+```
 - A separate `busy` flag handles one exotic race: a producer that laps the entire ring and comes back to fight for a slot another producer is still constructing. (Asked why `key` and `busy` aren't packed into one atomic and hit with a single CAS: because he wanted to allow pointer-sized keys without a double-width CAS, and packing into low bits means bit manipulation. In key-only mode `busy` isn't needed at all.)
 
 **Throughput** results across Granite Rapids, AMD Zen 5, and Grace, versus a field of well-known lock-free queues: at two threads a queue that's effectively SPSC-with-MPMC-safety wins, but at **large thread counts the hybrid queue outperforms everybody**. (On Grace, as with NUMA, you'll want multiple queues per cache domain if you're using all the cores.)
@@ -246,7 +314,16 @@ Four things Pikus discovered while preparing the talk and didn't have time to fu
 
 **3. AMD's near-memory atomics (Zen 4+).** Everything above about coherency protocols changes: if you `fetch_add` a line you don't own, instead of issuing an RFO you send a request to the **memory controller**, which has its own ALU. It performs the increment, invalidates every L1/L2 copy so L3 is the sole owner, and if you want the result back you get **eight bytes in a packet** — not a cache line. It's observable, and it makes some of these benchmarks look very strange on machines that have it. It doesn't apply to CAS, which still needs ordinary coherence.
 
-**4. Back-off inside a CAS loop.** What if the aggressive back-off that rescues the spin lock were injected into a CAS loop? On most systems: no difference, or slightly worse — which is presumably why nobody does it. **On Apple silicon**, at high contention, the CAS loop jumped to about half the spin lock's throughput: still losing to the spin lock by ~50%, but roughly **10× better than `fetch_add`**. (If you try this, you must use **strong** CAS, not weak.)
+**4. Back-off inside a CAS loop.** What if the aggressive back-off that rescues the spin lock were injected into a CAS loop?
+
+```cpp
+int old = x.load(std::memory_order_relaxed);
+for (int i = 0; !x.compare_exchange_strong(old, old + 1); ++i) {
+    //                          ^^^^^^ strong, not weak -- required here
+    if (i == kProbes) { yield_to_scheduler(); i = 0; }   // the spin lock's trick
+}
+```
+ On most systems: no difference, or slightly worse — which is presumably why nobody does it. **On Apple silicon**, at high contention, the CAS loop jumped to about half the spin lock's throughput: still losing to the spin lock by ~50%, but roughly **10× better than `fetch_add`**. (If you try this, you must use **strong** CAS, not weak.)
 
 ## Three things to take away
 

@@ -15,125 +15,217 @@ permalink: "2026/06/29/cpp-sender-receiver-control-flow-steve-downey"
 
 [Steve Downey - Using the C++ Sender/Receiver Framework: Implement Control Flow for Async Processing](https://www.youtube.com/watch?v=xXncLUD-4bA)
 
-Most introductions to C++26 [`std::execution`](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html) (P2300) stop at "here are the algorithms: `then`, `let_value`, `when_all`." Steve Downey's talk goes one level deeper and asks a more interesting question: **if senders are the new way to express asynchronous work, can you build *all* of structured programming out of them?** Sequence, selection, iteration, recursion — the Böhm–Jacopini building blocks. The answer is yes, and watching how the pieces map onto each other is the best way to actually understand what `let_value` is *for*.
+Most introductions to C++26 [`std::execution`](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html) (P2300) stop at "here are the algorithms." Downey asks a harder question: **can you build all of structured programming out of senders?** Sequence, selection, iteration, recursion. The answer is yes, and the code is the argument.
 
-The talk was first given at C++Now 2023; the [slides are on Downey's site](https://sdowney.org/posts/index.php/2024/05/18/slides-from-cnow-2023-async-control-flow/). The code below uses the `stdexec::` namespace from NVIDIA's reference implementation, which mirrors the standard `std::execution::` names.
+Examples use `stdexec::` from NVIDIA's reference implementation, which mirrors `std::execution::`. Downey compiles his slide deck, so these ran.
 
-## The core idea: senders are continuation-passing style
+## The model: CPS with three channels
 
-Downey grounds the whole framework in 1970s **continuation-passing style** (Sussman & Steele). Instead of a function *returning* a value, it passes that value forward to a *continuation* — a callback that consumes it. A receiver is exactly that continuation, with three channels:
+A receiver is a continuation. In continuation-passing style, a function that would return a value instead takes a callback and passes the value forward:
 
-- **value** — success
-- **error** — failure
-- **stopped** — cancellation
-
-A sender, then, is a *description* of work that will eventually call one of those channels. The punchline he keeps coming back to: senders are **"three monads in a trench-coat"** — one monad stacked over each channel. And the three monadic operations have names you already know:
-
-| Monad operation | Sender algorithm | What it does |
-|-----------------|------------------|--------------|
-| `pure` / `return` | `just` | Lift a plain value into a sender |
-| `fmap` (functor map) | `then` | Transform the value with a function returning a **value** |
-| `bind` (`>>=`) | `let_value` | Feed the value to a function returning a **sender** |
-
-The other property that makes everything work: **senders are lazy**. Composing them builds a description; nothing runs until a consumer like `sync_wait` connects a receiver and starts it. That laziness is what lets you treat control flow as data you assemble before executing.
-
-Downey (a Bloomberg C++ infrastructure engineer) is careful to stress this isn't a strange new invention: CPS dates to a 1975 AI memo, the model is a **delimited continuation**, and his favorite intuition for it is the operating system. When a process makes a `read()` syscall it suspends; when the disk delivers data it resumes. *That suspension is the process's continuation* — delimited not by the whole OS but by the process boundary. A receiver plays the same role for a chain of senders. He also notes the corollary that pays off later in C++26: **coroutines are senders** — the thing a coroutine returns to hand you its eventual value *is* a sender, which is exactly why `std::execution` is the framework a future `std::task` plugs into.
-
-## Sequence: `then`
-
-The simplest control structure — do this, then do that — is just a chain of `then`:
-
-```cpp
-stdexec::schedule(sch)
-  | stdexec::then([] { return 13; })
-  | stdexec::then([](int arg) { return arg + 42; });
-// completes with 55
+```
+        A -> B          // direct style
+   (A, B -> R) -> R     // continuation-passing style
 ```
 
-Each `then` is a functor map: it takes the value off the value channel, transforms it, and puts the result back. Sequencing is function composition.
+A sender is a *description* of work that will eventually call one of three channels on its receiver: **value**, **error**, or **stopped** (cancellation). Downey's summary: senders are **"three monads in a trench coat"** — one stacked over each channel.
 
-## Selection: `let_value` as `if`/`else`
+The three monadic operations have names you already know:
 
-Here's the first place `then` is not enough. To choose *which* branch to run **based on a runtime value**, you need to select among senders — and that's `bind`, i.e. `let_value`:
+| Monad | Sender algorithm | Takes a function returning… |
+|---|---|---|
+| `pure` / `return` | `just` | (lifts a plain value) |
+| `fmap` | `then` | a **value** |
+| `bind` (`>>=`) | `let_value` | a **sender** |
 
-```cpp
-| stdexec::let_value([=](auto tpl) {
-      return tst((i > j), seven_sender, eleven_sender);
-  });
-```
+And senders are **lazy**. Composing builds a structure; nothing runs until `sync_wait` connects a receiver and starts it.
 
-The helper `tst` returns a `variant_sender` holding *either* the left or the right branch. The key insight: the branch is **not** baked statically into the sender graph. `let_value` runs its function at execution time, looks at the value, and only then produces the sender to continue with. A conditional is a runtime choice of continuation — which is the literal definition of monadic bind.
-
-This is the single most important takeaway of the talk: **`then` transforms values; `let_value` chooses futures.** Any time control flow depends on a computed value, you reach for `let_value`.
-
-## Recursion: factorial
-
-Once you have sequence and selection, recursion follows. Factorial is `let_value` recursing on a smaller input, then `then` to fold the result back in:
+## Sequence
 
 ```cpp
-auto fac(int n) -> any_int_sender {
-    if (n == 0)
-        return stdexec::just(1);
-    return stdexec::just(n - 1)
-         | stdexec::let_value([](int k) { return fac(k); })   // recurse
-         | stdexec::then([n](int k) { return k * n; });       // combine
+#include <stdexec/execution.hpp>
+#include <exec/static_thread_pool.hpp>
+
+int main() {
+    exec::static_thread_pool pool{8};
+    auto sch = pool.get_scheduler();
+
+    auto work = stdexec::schedule(sch)          // hook to start async work
+              | stdexec::then([] {
+                    std::print("hello world\n");
+                    return 13;
+                })
+              | stdexec::then([](int arg) {
+                    return arg + 42;
+                });
+
+    // Nothing has run yet. sync_wait bridges back to the synchronous world.
+    auto [i] = stdexec::sync_wait(std::move(work)).value();
+    std::print("{}\n", i);                       // 55
+    return 0;
 }
-// fac(10) == 3628800
 ```
 
-Note `any_int_sender` — a type-erased sender. Recursion needs a single concrete return type, and the recursive sender type would otherwise be infinite, so you erase it. (Type erasure has a cost; it's the price of unbounded recursion.)
+The brackets in `auto [i]` are because the value channel is variadic — `sync_wait` hands back a tuple of everything sent, even when that is one thing.
 
-## Iteration: fold as tail recursion
-
-A loop is tail recursion that threads loop state through `let_value`:
-
-```cpp
-// sum 1..9999 by advancing (i, acc) until done, yielding 49995000
-```
-
-Each iteration uses `let_value` to inspect the current state, decide whether to continue, and produce either the next iteration's sender or a `just` with the final accumulator. This is the async analogue of a fold — and because each step is a sender, the "loop" can suspend, resume on another scheduler, or be cancelled between iterations.
+Each `then` is a functor map: take the value off the value channel, transform it, put the result back. **Sequencing is function composition.**
 
 ## Fork/join: `when_all`
 
-Independent work runs concurrently with `when_all`, which completes only when all of its input senders complete and concatenates their values:
-
 ```cpp
-stdexec::when_all(
-    stdexec::on(sched, stdexec::just(0) | stdexec::then(square)),
-    stdexec::on(sched, stdexec::just(1) | stdexec::then(square)),
-    stdexec::on(sched, stdexec::just(2) | stdexec::then(square))
+auto square = [](int x) { return x * x; };
+
+auto work = stdexec::when_all(
+    stdexec::on(sch, stdexec::just(0) | stdexec::then(square)),
+    stdexec::on(sch, stdexec::just(1) | stdexec::then(square)),
+    stdexec::on(sch, stdexec::just(2) | stdexec::then(square))
 );
-// completes with (0, 1, 4)
+
+auto [i, j, k] = stdexec::sync_wait(std::move(work)).value();   // 0, 1, 4
 ```
 
-Downey uses this to turn *tree recursion* into *parallelism* — a naive Fibonacci that forks its two recursive calls with `when_all` and joins them with `then`. The execution order is nondeterministic, but the **result** order is fixed by the structure. `on` reschedules each branch onto the thread pool, so the fork actually runs in parallel. He's gleefully honest that this is a terrible Fibonacci: it's exponential, and spreading it across threads *ruins locality* and runs slower — computing `fib(37)` ate **4.8 GB** on his machine. The point isn't efficiency; it's that the control structure composes and stays correct (valgrind and ASan were happy).
+`just` lifts a value into a sender — the constant function, the `pure` of this monad. `on` says *run this over there*, so the three branches can land on three different pool threads. Execution order is nondeterministic; **result** order is fixed by structure, so `i`, `j`, `k` always correspond to the three arguments in order.
 
-## Backtracking: search with a failure continuation
+## Selection: `let_value` is the whole point
 
-The most sophisticated example is depth-first search with backtracking. A `search_tree` walks a tree via nested `let_value` calls, threading a **`fail` continuation** through the recursion. If the current node matches, it returns immediately; otherwise it chains "search the left subtree" to "search the right subtree," and the `fail` continuation is what gets invoked when a branch dead-ends — backtracking expressed purely as continuations. This is the moment the CPS framing pays off: backtracking is just *which continuation you call next*.
+This is where `then` runs out. To choose *which sender runs* based on a runtime value, you need bind:
 
-## The three channels: errors and cancellation
+```cpp
+auto work = stdexec::just(i, j)
+          | stdexec::let_value([=](int i, int j) {
+                return tst(i > j, seven_sender, eleven_sender);
+            });
+```
 
-Downey keeps the talk on the value channel on purpose — "from a control point of view there's nothing particularly interesting" about the other two, because they work the same way. But the design lets you **cross channels** like a patch bay:
+`then` cannot do this. A function passed to `then` returns a *value*; the graph downstream is already fixed. A function passed to `let_value` returns a *sender*, chosen at execution time.
 
-- An error needn't be an exception — you can just *send* one onto the error channel directly, or throw and have it caught and placed there for you. The error channel lets you abort early and do common error handling at the end of the graph rather than threading it through every step.
-- His running example of recovery is reconnection: if you can't reach the server you were told to use, the error can be moved back onto the value channel and the work proceeds — "I'll try the other one." Adapters wire the channels together in both directions.
-- **stopped** is strictly cancellation — "I was asked to cancel, and now I'm letting you know I'm done." It's not a pause and shouldn't be repurposed as a value channel. `stopped_as_optional` / `stopped_as_error` translate it when you need to.
+Both branches must have one type, so `tst` unifies them. Downey shows two versions:
 
-Because each channel is its own monad, the same `bind` pattern generalizes: "on error, do X" and "on cancellation, do Y" are `let_error` / `let_stopped` — bind applied to a different channel.
+```cpp
+// Type-erasing version: works for any two senders, costs an indirection.
+template <stdexec::sender L, stdexec::sender R>
+auto tst(bool condition, L left, R right)
+    -> any_sender_of<stdexec::set_value_t(int)>
+{
+    return condition ? any_sender_of<stdexec::set_value_t(int)>{left}
+                     : any_sender_of<stdexec::set_value_t(int)>{right};
+}
+
+// Variant version: we know there are exactly two types, so keep them visible.
+template <stdexec::sender L, stdexec::sender R>
+auto tst(bool condition, L left, R right) -> variant_sender<L, R> {
+    return condition ? variant_sender<L, R>{left}
+                     : variant_sender<L, R>{right};
+}
+```
+
+Note `stdexec::sender L` rather than `auto` — sender is a concept, and constraining it moves the error to the mistake instead of somewhere else in the program.
+
+An attendee asks the obvious question: why not just branch inside the lambda? Downey's answer is the reason this matters:
+
+> Because I'm building up a chain of senders. If these were more interesting, creating them as senders lets me cancel that work — whereas if I just had a branch, I can't cancel in the middle of a sender.
+
+A plain `if` runs as ordinary synchronous code: no cancellation point, no chance to say *this branch goes on the GPU and that one uses SIMD locally*. And mechanically, you would have to `decltype` both branch expressions into one type anyway — which is exactly what `tst` is doing.
+
+**`then` transforms values; `let_value` chooses futures.**
+
+## Recursion: factorial
+
+```cpp
+auto fac(int n) -> any_int_sender {
+    if (n == 0) {
+        return stdexec::just(1);                                  // base case
+    }
+    return stdexec::just(n - 1)
+         | stdexec::let_value([](int k) { return fac(k); })        // recurse
+         | stdexec::then([n](int k) { return k * n; });            // combine
+}
+
+auto [r] = stdexec::sync_wait(fac(10)).value();                    // 3628800
+```
+
+`any_int_sender` is type-erased because recursion needs one concrete return type and the honest type here is infinite.
+
+Downey is blunt that this is a bad factorial — "it's even more terrible than the standard recursive function." The chain is built dynamically as it runs, and `let_value` keeps the sender feeding it alive, so you accumulate the whole stack. Capturing `n` by value is what keeps this merely expensive rather than a lifetime bug; capture by reference and every prior frame must stay alive.
+
+The point is not efficiency, it is expressiveness: sequence + selection + recursion is the Böhm–Jacopini set. Once you have those three, you have all structured control flow.
+
+## Tree recursion becomes parallelism
+
+```cpp
+auto fib(int n) -> any_int_sender {
+    if (n < 2) {
+        return stdexec::just(n);
+    }
+    return stdexec::when_all(
+               stdexec::on(default_scheduler(), fib(n - 1)),
+               stdexec::on(default_scheduler(), fib(n - 2)))
+         | stdexec::then([](int a, int b) { return a + b; });
+}
+```
+
+Two recursive calls forked with `when_all`, joined with `then`. Downey is gleeful about how bad this is: exponential, and spreading it over threads *ruins locality* so adding threads made it slower. `fib(37)` consumed **4.8 GB**. Valgrind and ASan were both happy — it is correct, just awful.
+
+## Iteration: fold
+
+```cpp
+// left fold over iota(1, 10000), summing with +
+auto work = fold_left(std::views::iota(1, 10000), 0, std::plus<>{});
+auto [sum] = stdexec::sync_wait(std::move(work)).value();   // 49995000
+```
+
+Each step uses `let_value` to inspect the accumulator and current position and produce *either* the next iteration's sender or a `just` holding the final result. Because each step is a sender, the loop can suspend, move schedulers, or be cancelled between iterations.
+
+Downey's note on why this matters, and why you still shouldn't:
+
+> Once you have fold you have almost every algorithm. Fold is a universal algorithm generator. It's usually the worst way of writing an algorithm — but because everything is a fold, if you can do folds you can do everything else.
+
+It will also exhaust your heap, since the chain is allocated as it grows. A trampoline scheduler could discard completed frames as it goes.
+
+## Backtracking: pass the failure continuation as a parameter
+
+The most interesting example. Depth-first search takes *where to go if this subtree fails* as an argument:
+
+```cpp
+auto search_tree(auto test,               // predicate on a node
+                 node* n,                 // current node
+                 auto sched,              // where to run
+                 stdexec::sender auto fail)   // what to do if we dead-end
+    -> any_node_sender
+{
+    if (n == nullptr) {
+        return fail;                       // dead end: take the continuation
+    }
+    if (test(n)) {
+        return stdexec::just(n);           // found it
+    }
+    // Search left; if left fails, its failure continuation is "search right".
+    return search_tree(test, n->left, sched,
+                       search_tree(test, n->right, sched, fail));
+}
+```
+
+The `fail` sender is threaded down the recursion, so at each node you already hold the sender describing where to resume. That automatically threads and linearizes the tree.
+
+This is where CPS pays off, and it is also inversion of control — the failure policy is supplied by the caller, not baked into the algorithm.
+
+## The other two channels
+
+Downey stays on the value channel deliberately: the error and stopped channels work the same way, so `let_error` and `let_stopped` are bind on a different channel. What is worth knowing:
+
+- An error need not be an exception. You can **send** one onto the error channel directly; a thrown exception is caught and placed there for you.
+- Adapters cross channels in both directions, like a patch bay. His recovery example: could not reach the assigned server, move the error back onto the value channel, proceed with "I'll try the other one." `stopped_as_optional` / `stopped_as_error` translate cancellation.
+- **stopped is strictly cancellation** — "I was asked to cancel, and now I'm letting you know I'm done." Not a pause, and repurposing it as a value channel misleads everyone.
+
+Also worth noting for later: **coroutines are senders.** What a coroutine returns to hand you its eventual value *is* a sender, which is why a future `std::task` plugs straight into this framework. Asked why he did not write these examples as coroutines, Downey says he did not want to explain coroutines at the same time.
 
 ## "Can is not Should"
 
-Downey's closing caveat is worth repeating. Just because you *can* express every control structure as senders doesn't mean you *should*. The framework earns its complexity when you genuinely need **throughput** (overlapping I/O, parallelism) or **interruptibility** (structured cancellation). For straight-line synchronous logic, ordinary code is clearer. Senders are a tool for asynchronous composition, not a replacement for `if` and `for`.
+The closing caveat, which he repeats several times:
 
-## Takeaways
+> Knowing that you can is not how you should do it.
 
-- Senders are continuation-passing style made composable: a receiver is a continuation with value/error/stopped channels.
-- `just` = `pure`, `then` = `fmap`, `let_value` = `bind`. That trio is enough to build sequence, selection, iteration, and recursion.
-- **`then` transforms a value; `let_value` chooses the next sender.** Any runtime-dependent control flow needs `let_value`.
-- `when_all` gives you fork/join; CPS continuations give you backtracking; type erasure (`any_*_sender`) makes recursion compile.
-- The same `bind` pattern works on the error and stopped channels, so error handling and cancellation are just control flow on other channels.
-- "Can is not Should" — reach for senders when you need throughput or interruptibility, not for ordinary straight-line code.
+Senders earn their complexity when you need **throughput** (overlapping I/O, real parallelism) or **interruptibility** (structured cancellation). For straight-line synchronous logic, ordinary code is clearer. And when you need an algorithm, write the algorithm — the general-purpose ones look complicated because they handle every corner case, and yours probably does not have to.
 
 ---
 

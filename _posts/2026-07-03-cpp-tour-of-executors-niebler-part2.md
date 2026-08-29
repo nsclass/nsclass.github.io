@@ -15,7 +15,7 @@ permalink: "2026/07/03/cpp-tour-of-executors-niebler-part2"
 
 [Eric Niebler - Working with Asynchrony Generically: A Tour of C++ Executors (part 2/2) - CppCon 2021](https://www.youtube.com/watch?v=6a0zzUBUNW4)
 
-[Part 1](/2026/06/30/cpp-tour-of-executors-niebler-part1) laid out the four concepts — scheduler, sender, receiver, operation state — and showed how a composite operation nests like Russian dolls and executes outside-in. Part 2 is where the design *pays off*. Niebler argues that sender/receiver isn't just a callback model with extra steps: it's **structured concurrency**, and structure is precisely what makes cooperative cancellation tractable. The back half of the talk is one extended, slightly unhinged worked example — a program that hooks the whole system's keyboard and plays Model M clicky sounds — built up sender by sender.
+[Part 1](/2026/06/30/cpp-tour-of-executors-niebler-part1) laid out the four concepts and showed how a composite operation nests and executes outside-in. Part 2 is the payoff: sender/receiver is **structured concurrency**, and structure is what makes cooperative cancellation tractable. The back half is one extended worked example — hook the system keyboard, play Model M clicky sounds — built sender by sender.
 
 > **A note on names.** Same caveats as part 1. The cancellation completion was `set_done` and is now **`set_stopped`**; `done_as_optional` is now **`stopped_as_optional`**; the C++23 target slipped to **C++26**. `std::stop_token` is unchanged. I use the talk's spellings and flag the modern ones.
 
@@ -278,20 +278,9 @@ The rest, he says, is "a boat-load of nasty platform-specific hackery" — hooki
 
 ## Where it's headed
 
-Niebler closes with the roadmap. `std::execution` (P2300), then targeted at C++23, would bring the concepts, customization points, a handful of fundamental async algorithms, coroutine integration, and integration with the C++17 parallel algorithms. Beyond that: more standard algorithms (mined from libunifex), a `timed_scheduler` concept and `timeout()`, portable access to a **system scheduler** (Windows Thread Pool / GCD), a manual event-loop scheduler, and a **nursery** for spawning-then-joining work. And the higher layers: coroutine types deeply integrated with sender/receiver and ranges (`std::task`, `std::generator`, `std::async_generator`), fully async parallel algorithms, and eventually **async ranges** (reactive streams) with their own adaptors.
+The roadmap: the concepts, customization points, fundamental async algorithms, coroutine integration, and integration with the C++17 parallel algorithms. Beyond that — more algorithms mined from libunifex, a `timed_scheduler` concept and `timeout()`, portable access to a **system scheduler** (Windows Thread Pool / GCD), a manual event-loop scheduler, and a **nursery** for spawning-then-joining work. Then the higher layers: `std::task`, `std::generator`, `std::async_generator`, fully async parallel algorithms, and eventually **async ranges** with their own adaptors.
 
-*(Watching in 2026: P2300 landed in C++26 rather than C++23, but the shape of this roadmap is exactly what shipped and what's still being built on top.)*
-
-## Takeaways
-
-- **Sender/receiver is structured concurrency.** Nested operation states give you nested lifetimes: RAII works, and children can borrow parents' locals by reference with no allocation — just like `co_await`.
-- **Fire-and-forget `execute(fn)` is the `goto` of async** — no single exit, no join point, no safe place to put a scope. That's the composability failure sender/receiver fixes.
-- **No detached computation**: every operation completes back up through its parent, so **concurrency must be joined** — which makes **cooperative cancellation essential**, not optional.
-- Cancellation rides on `std::stop_token`; the **algorithms** orchestrate it (only those introducing concurrency need to), it's **cooperative and best-effort**, and patterns like `stop_when` package it.
-- The worked example shows the real cost model: bridging a callback API to a sender is easy; making an operation **interruptible** (register a stop callback on the receiver's token, complete with `set_done`) is the "here be dragons" part — but it's the algorithm author's job, paid once.
-- The endgame is a layered stack — coroutines and async ranges built on sender/receiver, exactly as ranges sit on iterators.
-
-If you've read part 1, this is the half that shows *why* the machine was built the way it was. Watch them back to back.
+*(Watching in 2026: P2300 landed in C++26 rather than C++23, but the shape is what shipped.)*
 
 ---
 

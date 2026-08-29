@@ -275,14 +275,14 @@ The closing Q&A sketched two futures. **`decltype(call)`**, a proposal with a pa
 
 ## Takeaways
 
-The summary slide — the one slide in a zero-slides talk, and, he notes, made by the conference rather than by him — comes down to three techniques:
+Three techniques:
 
-1. **Generate a constructor with a chosen number of parameters** by conjuring a pack from `index_sequence` and discarding the indices. An undefined primary template plus a partial specialization is the only expansion context you get; you can't manufacture a second one, which is exactly why the same trick can't be applied to the deduction guide.
+1. **Generate a constructor with a chosen number of parameters** by conjuring a pack from `index_sequence` and discarding the indices. An undefined primary template plus a partial specialization is the only expansion context you get — which is exactly why the same trick can't be applied to the deduction guide.
 
-2. **Deduce from braced-init-lists** via a pack of C arrays — or an `initializer_list` — treating it purely as a proxy for `T` and `N`. The guide runs first and independently; the real constructor is matched afterward.
+2. **Deduce from braced-init-lists** via a pack of C arrays (or an `initializer_list`), treating it purely as a proxy for `T` and `N`. The guide runs first and independently; the real constructor is matched afterward.
 
-3. **Deduce from function-like objects** by decomposing `&F::operator()`, and resolve overloaded call operators by exploiting an arity constraint your API already guarantees.
+3. **Deduce from function-like objects** by decomposing `&F::operator()`, resolving overloaded call operators by exploiting an arity constraint the API already guarantees.
 
-The through-line is smaller than any of them, and it's what makes the talk worth ninety minutes. Every one of these ships an API where the *ordinary* call site is the short one, the *unusual* call site still works by spelling out template arguments, and the *wrong* call site produces an error message that points at the mistake instead of at the library. That's the entire trade: metaprogramming complexity absorbed by the author so it never reaches the user.
+The through-line: each of these ships an API where the *ordinary* call site is the short one, the *unusual* one still works by spelling out template arguments, and the *wrong* one produces an error pointing at the mistake rather than at the library. Metaprogramming complexity absorbed by the author so it never reaches the user.
 
 > *"Never give up, by the way. When you think it's impossible, the solution might be just around the corner."*

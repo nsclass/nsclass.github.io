@@ -229,6 +229,20 @@ Do the same with the raw callback API and you are threading a vector through a c
 
 The standard library provides exactly two, and both are trivial.
 
+```cpp
+struct suspend_never {
+    bool await_ready() const noexcept { return true; }   // always ready
+    void await_suspend(std::coroutine_handle<>) const noexcept {}  // never called
+    void await_resume() const noexcept {}                // does nothing
+};
+
+struct suspend_always {
+    bool await_ready() const noexcept { return false; }  // never ready
+    void await_suspend(std::coroutine_handle<>) const noexcept {}  // drops the handle!
+    void await_resume() const noexcept {}
+};
+```
+
 `std::suspend_never` never suspends. `await_ready` returns `true`, so `await_suspend` is never called — you could put `std::terminate` in it and never find out. `await_resume` does nothing.
 
 > You can pretty much think of `co_await std::suspend_never{}` as a no-op. The compiler could just remove it and it would make no difference.
@@ -295,11 +309,61 @@ No `co_await`, no `co_yield`, no `co_return` in the body. It is a proxy function
 
 That is the actual distinction. `suspend_never` in `final_suspend` gives you automatic cleanup — the frame is destroyed when the coroutine falls off the end. `suspend_always` keeps the frame alive after the body has finished, and you must destroy it yourself.
 
-Which sounds like a pure downside until the closing Q&A, where the use case lands. With a lazy task type you need to pull the return value out of the frame *after* the body has completed but *before* the frame dies. Suspending at `final_suspend` holds the frame open long enough to steal the value, then you explicitly destroy it. The mechanism: grab the handle inside `get_return_object`, store it in the return object, call `destroy()` in that object's destructor. Generators want it too — it lets you unconditionally free the frame at the end, without checking whether the generator ran to completion or stopped somewhere in the middle.
+Which sounds like a pure downside until the closing Q&A, where the use case lands. With a lazy task type you need to pull the return value out of the frame *after* the body has completed but *before* the frame dies. Suspending at `final_suspend` holds the frame open long enough to steal the value, then you explicitly destroy it. The mechanism:
+
+```cpp
+struct MyCoroutine {
+    std::coroutine_handle<promise_type> handle;
+
+    struct promise_type {
+        MyCoroutine get_return_object() {
+            // From inside the promise you can recover your own handle.
+            return MyCoroutine{
+                std::coroutine_handle<promise_type>::from_promise(*this)};
+        }
+        std::suspend_never  initial_suspend() { return {}; }
+        std::suspend_always final_suspend() noexcept { return {}; }  // stay alive
+        void return_void() {}
+        void unhandled_exception() {}
+    };
+
+    // Because final_suspend suspends, the frame outlives the body --
+    // long enough to steal the value -- so WE destroy it.
+    ~MyCoroutine() { if (handle) handle.destroy(); }
+};
+``` Generators want it too — it lets you unconditionally free the frame at the end, without checking whether the generator ran to completion or stopped somewhere in the middle.
 
 ## Threads, and where the first line actually runs
 
-The second demo replaces the fake awaitable with one that genuinely sleeps, spawning a thread per sleep and detaching it. (Wasteful, acknowledged, slideware.) Then it prints thread IDs.
+The second demo replaces the fake awaitable with one that genuinely sleeps, spawning a thread per sleep and detaching it. (Wasteful, acknowledged, slideware.)
+
+```cpp
+struct my_sleep {
+    std::chrono::milliseconds duration;
+
+    bool await_ready() { return false; }
+
+    void await_suspend(std::coroutine_handle<> handle) {
+        std::thread t([handle, d = duration] {
+            std::this_thread::sleep_for(d);
+            handle.resume();          // resumes ON THE NEW THREAD
+        });
+        t.detach();                   // no good place to join -- slideware
+    }
+
+    void await_resume() {}
+};
+
+MyCoroutine do_something() {
+    std::println("hello from coroutine {}", std::this_thread::get_id());
+    co_await my_sleep{200ms};
+    std::println("again {}", std::this_thread::get_id());   // different thread
+    co_await my_sleep{200ms};
+    std::println("again {}", std::this_thread::get_id());
+}
+```
+
+Then it prints thread IDs.
 
 The instructive result is not that the sleep threads differ. It is that **the first line printed from inside the coroutine carries the main thread's ID.**
 
@@ -313,7 +377,26 @@ The same demo produces the best exchange of the session. Fischer asks where a pr
 
 The one thing that *is* guaranteed: everything before the first `co_await` runs synchronously on the caller's thread, so it must come out before `main` continues. After that, all bets are off.
 
-The final demo swaps the thread-per-sleep for a real scheduler — one `jthread`, a queue of tasks ordered by expiry — and runs two coroutines through it concurrently. Their output interleaves, on a single thread, which is the whole point of the exercise.
+The final demo swaps the thread-per-sleep for a real scheduler — one `jthread`, a queue of tasks ordered by expiry:
+
+```cpp
+struct my_sleep {
+    MyScheduler& sched;                  // one jthread + a queue, no more
+    std::chrono::milliseconds duration;
+
+    bool await_ready() { return false; }
+
+    void await_suspend(std::coroutine_handle<> handle) {
+        // Don't spawn a thread -- hand the handle to the scheduler and let
+        // it resume us when the timer expires. One thread, recycled.
+        sched.schedule(duration, [handle] { handle.resume(); });
+    }
+
+    void await_resume() {}
+};
+```
+
+Run two coroutines through it concurrently and their output interleaves — on a single thread, which is the whole point of the exercise.
 
 ## On allocations and scaling
 

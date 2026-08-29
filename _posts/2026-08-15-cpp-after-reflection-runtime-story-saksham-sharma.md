@@ -114,9 +114,34 @@ An audience exchange cut right to it:
 The mechanism is just **operator overloading**: adding two graph nodes yields a third graph node that records the addition. Inputs are proxies, outputs are proxies, and any file reads or dynamic decisions in between happen *at trace time* — so if a config file says "add, don't subtract," the resulting graph contains an add.
 
 ```cpp
-// Two front ends, one graph. This is the same DSL:
-//   Python: for i in range(n): result = custom_runtime_func(a, b)
-//   C++:    for (int i = 0; i < n; ++i) result = custom_runtime_func(a, b);
+// The whole mechanism is operator overloading over proxy values.
+// Nothing computes; every operation RECORDS a new node.
+struct Tracer {
+    NodeId id;
+};
+
+Tracer operator*(Tracer a, Tracer b) {
+    return Tracer{graph.add_node(Op::Mul, a.id, b.id)};   // records, not computes
+}
+Tracer operator+(Tracer a, Tracer b) {
+    return Tracer{graph.add_node(Op::Add, a.id, b.id)};
+}
+
+// Import a foreign function by reflecting its signature -- this records a
+// "call this, with this signature" node without calling anything yet.
+auto dgemv = graph.import<&cblas_dgemv>();
+```
+
+The two front ends produce the *same* graph from line-for-line identical code:
+
+```cpp
+// C++
+for (int i = 0; i < n; ++i) result = custom_runtime_func(a, b);
+```
+
+```python
+# Python
+for i in range(n): result = custom_runtime_func(a, b)
 ```
 
 The C++ and Python versions of the target code are **line-for-line identical** apart from the loop syntax. And a foreign-function import mechanism lets the graph reference something like `dgemv` (double-precision general matrix-vector multiply, from the BLAS family, via CBLAS) — recording a node that says "call this function with this signature," without calling it yet. Reflection is what makes capturing that signature pleasant.
@@ -145,10 +170,29 @@ Walk the graph, deduplicate it, generate C++ source for each operation as a stri
 
 The rendering approach carries through the rest of the talk: maintain a **context** mapping each node's unique ID to what you've learned about it — scalar or vector, dimensionality, type, length. Then loop over the topologically sorted graph:
 
-- **Literal node** → emit `int node1 = 1;`
-- **Binary op** → emit `int node5 = node3 * node2;`, using the context to name previous results, then record how to refer to `node5` for later nodes.
+```cpp
+// context: node id -> what we know about it (scalar/vector, dims, type, length)
+Context ctx;
 
-Topological sorting is what makes this work: you always discover a node before you use it.
+for (NodeId id : topological_order(graph)) {
+    const Node& n = graph[id];
+    switch (n.op) {
+    case Op::Literal:
+        out += std::format("int node{} = {};\n", id, n.literal);
+        ctx.record(id, std::format("node{}", id), Kind::Scalar);
+        break;
+    case Op::Mul:
+        // ctx supplies the NAMES of already-emitted results
+        out += std::format("int node{} = {} * {};\n",
+                           id, ctx.name(n.lhs), ctx.name(n.rhs));
+        ctx.record(id, std::format("node{}", id), Kind::Scalar);
+        break;
+    // ...
+    }
+}
+```
+
+Topological sorting is what makes this work: you always discover a node before you use it. Then `clang` the file, `dlopen` it, and look up the symbol.
 
 It runs. It also means you need a **C++ compiler present at runtime**, manual symbol import/export, and a **filesystem** — and, as Sharma notes, C++ famously doesn't acknowledge that a filesystem exists, so you can't standardize anything that depends on one.
 
@@ -163,9 +207,38 @@ The model:
 - **Materialization units** are how you inject code into a dylib.
 - **Resource trackers** attach to materialization units and give you garbage collection: when jitted code is no longer needed, you can remove it.
 
-The flow is: create an LLVM module in C++, wrap it as a `ThreadSafeModule`, add it to a dylib, then ask `LLJIT` for `graph_dsl_run` and get a function pointer back. Everything compiles in memory; you never think about it.
+```cpp
+auto jit = llvm::orc::LLJITBuilder().create();
+auto& dylib = (*jit)->getMainJITDylib();
 
-Building the module means specializing for the **target triple** (architecture, vendor, OS, environment) and data layout — all available through public LLVM APIs — then creating a function and filling in **basic blocks**, each of which must end in exactly one terminating instruction.
+// ORDER MATTERS: imports must be added before the code that uses them.
+(*jit)->addIRModule(dylib, make_imports_module());
+(*jit)->addIRModule(dylib, llvm::orc::ThreadSafeModule(std::move(mod), std::move(ctx)));
+
+// Bind imports: ORC hands you a mangler; you supply mangled-name -> pointer.
+auto mangle = llvm::orc::MangleAndInterner(es, (*jit)->getDataLayout());
+dylib.define(llvm::orc::absoluteSymbols({
+    { mangle("cblas_dgemv"), llvm::orc::ExecutorSymbolDef(
+          llvm::orc::ExecutorAddr::fromPtr(&cblas_dgemv), {}) },
+}));
+
+// Everything compiles in memory. You just get a pointer back.
+auto sym = (*jit)->lookup("graph_dsl_run");
+auto* run = sym->toPtr<void(*)(double*, double*)>();
+```
+
+Building the module means specializing for the **target triple** and data layout, then filling in basic blocks — each of which must end in exactly one terminating instruction:
+
+```cpp
+auto mod = std::make_unique<llvm::Module>("graph_dsl", *ctx);
+mod->setTargetTriple(tm->getTargetTriple().str());   // arch-vendor-os-env
+mod->setDataLayout(tm->createDataLayout());
+
+auto* fn = llvm::Function::Create(fnTy, llvm::Function::ExternalLinkage,
+                                  "graph_dsl_run", mod.get());
+auto* entry = llvm::BasicBlock::Create(*ctx, "entry", fn);
+builder.SetInsertPoint(entry);
+```
 
 The filling-in code looks strikingly like the C++-generation code: same context object, same loop over graph nodes, minus the string rendering.
 
@@ -173,16 +246,56 @@ The filling-in code looks strikingly like the C++-generation code: same context 
 
 The interesting part, because vector inputs with runtime-dynamic sizes need real loops. Sharma writes an `emit_index_loop` helper that takes a **lambda** invoked once per iteration, receiving the element index — so the binary-operation code stays simple and just calls `builder.CreateStore(...)` inside the lambda.
 
-Inside the helper, you build the loop by hand:
+```cpp
+// The binary-op code stays simple: it just calls a store inside the lambda.
+emit_index_loop(builder, len, [&](llvm::Value* index) {
+    auto* l = builder.CreateLoad(ty, builder.CreateGEP(ty, lhs, index));
+    auto* r = builder.CreateLoad(ty, builder.CreateGEP(ty, rhs, index));
+    builder.CreateStore(builder.CreateFMul(l, r),
+                        builder.CreateGEP(ty, dst, index));
+});
+```
 
-1. Branch unconditionally into the loop **header**.
-2. In the header, create a **phi node** — an LLVM node whose value depends on *how you reached it*. Add an incoming edge from the preheader with value `0`.
-3. Compute the loop condition and emit a conditional branch to either the body or the exit.
-4. Move the insert point into the body and call the user's lambda.
-5. Add the second incoming edge to the phi node — the value on the back edge.
-6. Exit.
+Inside the helper you build the loop by hand:
 
-The payoff: **2D loops come free** by calling `emit_index_loop` recursively. Conditionals are simpler still — parse the left, right, and condition nodes and emit `CreateSelect`; if the condition is a vector, wrap it in an index loop.
+```cpp
+void emit_index_loop(llvm::IRBuilder<>& b, llvm::Value* len, auto body) {
+    auto* fn   = b.GetInsertBlock()->getParent();
+    auto* pre  = b.GetInsertBlock();
+    auto* head = llvm::BasicBlock::Create(ctx, "loop.header", fn);
+    auto* bodyB= llvm::BasicBlock::Create(ctx, "loop.body",   fn);
+    auto* exit = llvm::BasicBlock::Create(ctx, "loop.exit",   fn);
+
+    b.CreateBr(head);                       // 1. unconditionally into the header
+    b.SetInsertPoint(head);
+
+    // 2. A phi node's value depends on HOW you reached it. Coming from the
+    //    preheader, the index is 0.
+    auto* index = b.CreatePHI(b.getInt64Ty(), 2, "i");
+    index->addIncoming(b.getInt64(0), pre);
+
+    // 3. condition -> body or exit
+    b.CreateCondBr(b.CreateICmpULT(index, len), bodyB, exit);
+
+    b.SetInsertPoint(bodyB);
+    body(index);                            // 4. the caller's lambda
+
+    // 5. the back edge: the second way you can arrive at the phi
+    auto* next = b.CreateAdd(index, b.getInt64(1));
+    b.CreateBr(head);
+    index->addIncoming(next, b.GetInsertBlock());
+
+    b.SetInsertPoint(exit);                 // 6. done
+}
+```
+
+The payoff: **2D loops come free** by calling `emit_index_loop` recursively. Conditionals are simpler still:
+
+```cpp
+// parse left, right, condition -- then one instruction
+auto* result = builder.CreateSelect(cond, lhs, rhs);
+// if cond is a vector, wrap the whole thing in an index loop
+```
 
 **Binding imports** is easy with ORC: it hands you a mangling lambda, you mangle your function names, and you supply a symbol map from mangled name to function pointer. Done.
 
@@ -216,11 +329,27 @@ In the state-estimation code, the transition matrix is **transposed inside a loo
 
 **Node deduplication** is the fix, and it's the template for most graph optimizations:
 
-1. Start with the original graph; create a new empty graph.
-2. Walk the old graph in **topological order**, node by node.
-3. Clone each node, then look up whether its rewritten input arguments already exist in the new graph.
-4. For the existence check, compute a **signature** — hash the operation plus its input arguments.
-5. Don't be too strict: **exclude the source location** from the signature, so two identical operations written in different places still merge.
+```cpp
+Graph dedup(const Graph& old) {
+    Graph out;
+    std::unordered_map<Signature, NodeId> seen;
+    std::unordered_map<NodeId, NodeId> rewritten;
+
+    for (NodeId id : topological_order(old)) {          // always inputs-first
+        Node n = old[id];
+        for (auto& arg : n.args) arg = rewritten.at(arg);   // rewrite inputs
+
+        // Signature = op + rewritten args. Deliberately EXCLUDES the source
+        // location, so identical operations written in two places still merge.
+        Signature sig = hash(n.op, n.args);
+
+        auto [it, inserted] = seen.try_emplace(sig, NodeId{});
+        if (inserted) it->second = out.add(n);
+        rewritten[id] = it->second;
+    }
+    return out;
+}
+```
 
 Result on the benchmark: **148 nodes down to 105**.
 
@@ -242,7 +371,21 @@ Two places still need attention:
 
 Sharma has been pushing this idea for years — talks at CppCon and C++Now, plus a paper he's reviving as part of this work. The requirement is modest: a **standardizable way to express the signature of a struct or function on an API boundary**. Recurse over the members, serialize everything into a hash or JSON or map, do it diligently, and you have a true signature per type.
 
-The API he likes best isn't a single symbol lookup but a **symbol map**: instead of `dlsym("compute")` and *hoping* the pointer matches your assumed type, expose `compute_symbol_map` as a list. Loop it, find the entry whose signature matches what you want. If someone changes `compute` from taking a `double` to taking a `float`, they add an entry rather than breaking every downstream consumer.
+The API he likes best isn't a single symbol lookup but a **symbol map**:
+
+```cpp
+// Instead of: dlsym("compute") and HOPING the pointer matches your cast.
+// Expose a list, and match on signature:
+struct SymbolEntry {
+    std::string_view signature;   // serialized from reflection
+    void*            fn;
+};
+extern "C" SymbolEntry compute_symbol_map[];
+
+// Loop it; find the entry whose signature is the one you want.
+// If someone changes compute() from double to float, they ADD an entry
+// rather than breaking every downstream consumer.
+```
 
 Two audience challenges landed here, and Sharma conceded both gracefully:
 

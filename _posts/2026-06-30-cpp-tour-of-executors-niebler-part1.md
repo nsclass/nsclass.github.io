@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "C++ - A Tour of C++ Executors, Part 1 (Eric Niebler, CppCon 2021)"
+title: "C++ - Working with Asynchrony Generically: A Tour of C++ Executors, Part 1 (Eric Niebler)"
 date: 2026-06-30 10:00:00.000000000 -05:00
 type: post
 parent_id: "0"
@@ -15,146 +15,222 @@ permalink: "2026/06/30/cpp-tour-of-executors-niebler-part1"
 
 [Eric Niebler - Working with Asynchrony Generically: A Tour of C++ Executors (part 1/2) - CppCon 2021](https://www.youtube.com/watch?v=xLboNIf7BTg)
 
-This is the talk where [`std::execution`](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html) (P2300) was introduced to a wide audience. Watching it in 2026 — now that the proposal has landed in C++26 — is interesting precisely because Niebler lays out the *intent* before the design hardened. If you've used the algorithms (`then`, `let_value`, `when_all`) without quite grasping why senders are built the way they are, this is the talk that explains the machine underneath. This post covers part 1: the goals, the four core concepts, and the mechanics of how a concurrent operation actually executes.
+The talk where [`std::execution`](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html) (P2300) was introduced to a wide audience. Part 1 is the machine: four concepts, how a composite operation actually executes, and how to write an algorithm yourself.
 
-> **A note on names.** This talk is from 2021, and a few names changed on the way into the standard. The cancellation completion was `set_done` and is now **`set_stopped`**; `done_as_optional`/`done_as_error` are now **`stopped_as_optional`**/**`stopped_as_error`**; the C++23 target slipped to **C++26**. I'll use the talk's original terms where Niebler does and flag the modern spelling.
+> **Names changed on the way into the standard.** `set_done` → **`set_stopped`**; `done_as_optional`/`done_as_error` → **`stopped_as_optional`**/**`stopped_as_error`**; `on` → **`starts_on`**; `transfer` → **`continues_on`**. Code below uses the talk's spelling with the modern name noted.
 
-## The goal: an STL for asynchrony
+## The goal
 
-Niebler frames the whole effort with one analogy. The STL gave us containers, iterators, and **generic algorithms over sequences** — Stepanov's great achievement. But sequences are one narrow domain. The executors work aims to do "what Stepanov did for the STL, but for asynchronous algorithms": a full suite of standard async algorithms derived from real-world requirements (`then` to chain work, `when_all` to launch work concurrently, `sync_wait` to block, plus `repeat`, `stop_when`, `timeout`, …), and a set of **concepts derived from the algorithms themselves**.
+The STL gave us generic algorithms over sequences. The executors work aims to do "what Stepanov did for the STL, but for asynchronous algorithms" — a suite of standard async algorithms (`then`, `when_all`, `sync_wait`, `repeat`, `stop_when`, `timeout`, …) plus **concepts derived from the algorithms themselves**.
 
-Alongside the algorithms, the vision includes: efficient interop with C++20 coroutines (Niebler firmly believes the `sync_await` style is how people will *want* to write async code), an open and extensible way to say *where, how, and when* work runs, standard schedulers out of the box (an event loop; portable access to the system execution context — a Windows thread pool, or Grand Central Dispatch on macOS), and a "nursery" for spawned work.
+## Four concepts, and that is the whole model
 
-## P2300 = `std::execution`: four concepts
+```cpp
+// scheduler — a handle to a compute resource. One function.
+sender auto s = schedule(sched);
 
-The proposal is built on a tiny vocabulary:
+// sender — a unit of LAZY async work. One function.
+operation_state auto op = connect(sender, receiver);
 
-- **scheduler** — a handle to a compute resource. One operation: `schedule()`.
-- **sender** — a unit of *lazy* async work. (You will, Niebler jokes, get tired of hearing "unit of lazy work.")
-- **receiver** — a completion handler / callback.
-- **operation state** — the live state of an in-flight operation.
+// operation_state — the live state of an in-flight operation. One function.
+start(op);          // NOW the work is enqueued
 
-The name "sender/receiver" describes what flows: a sender sends, to a receiver, the **result** of an async computation — which is one of three things: a bundle of **values** (success), an **error**, or a **cancellation** signal.
+// receiver — a completion handler. Three functions; exactly one is
+// called, exactly once.
+set_value(rcvr, values...);   // success
+set_error(rcvr, e);           // failure
+set_done(rcvr);               // cancellation  (now set_stopped)
+```
 
-## First example: launch, fan out, join, wait
+Niebler calls this slide "the heart and soul of the sender/receiver model." Two concepts you use (scheduler, sender), two more for algorithm authors (receiver, operation state). Together they express any asynchronous computation.
+
+The laziness is worth dwelling on. Once you have connected a sender to a receiver and hold an operation state, **you can drop it on the floor and no work has happened.** Nothing is enqueued until `start`.
+
+## Launch, fan out, join, wait
 
 ```cpp
 scheduler auto sch = thread_pool.get_scheduler();
 
-sender auto work =
-    schedule(sch)
-  | then([]{ return do_task_1(); })
-  | ... ;
+sender auto t1 = schedule(sch) | then([]{ return do_task_1(); });
+sender auto t2 = schedule(sch) | then([]{ return do_task_2(); });
+sender auto t3 = schedule(sch) | then([]{ return do_task_3(); });
 
 auto [a, b, c] = sync_wait(when_all(t1, t2, t3)).value();
 ```
 
-Niebler highlights two things about this. First, **everything in the example happens with zero allocations** — scheduling work, running it concurrently, and blocking for it, all allocation-free. Second, executing those lines **does nothing**: you are building a *tree* of work. But not a runtime tree like a red-black tree — the nodes are stored statically in member variables. Think **expression template**.
+Two remarkable properties. **Everything here happens with zero allocations** — scheduling, running concurrently, blocking for completion. And **executing those lines does nothing**: you are building a tree, whose nodes live in member variables rather than heap nodes. Think expression template.
 
-The design is **self-similar**: `schedule` returns a sender; `then` takes a sender and returns a sender; `when_all` takes senders and returns a sender. Because every algorithm is sender-in/sender-out, you compose complex async expressions out of simple ones, exactly like ranges (and yes, pipe syntax works).
+The design is **self-similar** — every algorithm is sender-in/sender-out:
 
-## Second example: moving between execution contexts
+```cpp
+sender auto schedule(scheduler auto);              // -> sender
+sender auto then(sender auto, invocable auto);     // sender -> sender
+sender auto when_all(sender auto...);              // senders -> sender
+```
+
+which is what lets complex async expressions compose out of simple ones.
+
+## Moving between execution contexts
 
 ```cpp
 // accept on a low-latency pool, process on a worker pool, repeat
-on(low_latency_sched, accept_request())     // accept_request() returns a sender
-  | transfer(worker_sched)
-  | then(process_request)
-  | repeat();                                // repeat: from libunifex, not P2300
+sender auto accept_and_process() {
+    return on(low_latency_sched, accept_request())   // accept_request() -> sender
+         | transfer(worker_sched)                    // now: continues_on
+         | then(process_request)
+         | repeat();                                 // from libunifex, not P2300
+}
 ```
 
-`on` (which Niebler clarifies means **start-on** — start execution *on* this context; today's `starts_on`) specifies *where* work begins; `transfer` (today's `continues_on`) moves the completion to another context. He's candid that this serial version only fetches the next request after the previous finishes — you'd launch many concurrent instances, or write it as a coroutine returning a `task` (a libunifex type; there was no standard `task` yet) and `co_await` the senders.
+`on` means **start-on** — begin execution on this context. `transfer` moves the *completion* to another context.
 
-## Under the hood: the control flow
-
-Here's the machine, and it's small:
-
-1. A **scheduler** has one function, `schedule()`, returning a sender that starts in that scheduler's context. *If you only use the algorithms, this is all you need to know.*
-2. **`connect(sender, receiver)`** returns an **operation state** — all the state that must stay alive for the operation's duration.
-3. The operation state has one function, **`start()`**, which enqueues the work. Nothing is enqueued until `start` is called. (You can connect a sender to a receiver, get an op state, and *drop it on the floor* — no work happened. It's fine.)
-4. A **receiver** has three functions — `set_value` (success), `set_error` (failure), `set_done` (cancellation; now `set_stopped`). When the operation completes it calls **exactly one of these, exactly once**.
-
-That's the heart and soul of the model: two simple concepts you'll use (scheduler, sender), and two more for algorithm authors (receiver, operation state). These four can express *any* async computation.
-
-## How a composite operation executes: nesting dolls
-
-Take the `when_all` tree and `connect` it to a receiver. Each sender **wraps the receiver in its own receiver** (adding its algorithm's logic) and passes it down to its children. `when_all` builds three wrapped receivers, hands them to its three child senders, each of which wraps again and passes down to the innermost sender — which, having no children, builds an **operation state** and returns it back up, each parent wrapping it in its own op state.
-
-So: **senders nest, receivers nest, operation states nest** — Russian nesting dolls. Then `start()` recurses into the children: operations **execute outside-in** and **complete inside-out**. The innermost `schedule` operation enqueues onto the thread pool; a thread picks it up and calls `set_value`, which propagates back out through each wrapping receiver.
-
-Two things Niebler stresses:
-
-- Every adapter (`when_all`, `then`, …) gets to **run code when the operation starts and when it finishes** — it bookends each async operation, which is how it implements its logic.
-- These are **layers of behavior, not necessarily layers of data**. An op state with many nested layers can still be tiny — don't fear a giant struct.
-
-## Implementing `then` in ~20 lines
-
-The whole point of the four concepts is that *you* can write algorithms. A minimal `then`:
+Niebler is candid that this serial version only fetches the next request after the previous finishes. The coroutine spelling reads better:
 
 ```cpp
-// the algorithm: curry the sender and function into a then_sender
-template <sender S, class F>
-sender auto then(S s, F f) { return then_sender<S, F>{std::move(s), std::move(f)}; }
+task<void> accept_and_process() {
+    for (;;) {                       // not actually infinite -- see cancellation
+        auto request = co_await on(low_latency_sched, accept_request());
+        co_await on(worker_sched, process_request(request));
+    }
+}
+```
 
-// the sender: store the input sender; connect wraps the receiver
+## How a composite operation executes
+
+`connect` the `when_all` tree to a receiver, and each sender **wraps the receiver in its own receiver**, adding its algorithm's logic, then passes it down to its children. The innermost sender has no children, so it builds an **operation state** and returns it back up — each parent wrapping it in its own op state.
+
+Senders nest, receivers nest, operation states nest. Russian dolls. Then:
+
+```cpp
+start(op);   // recurses into children: operations execute OUTSIDE-IN
+             // completions propagate back:  operations complete INSIDE-OUT
+```
+
+The innermost `schedule` operation enqueues onto the thread pool; a thread picks it up and calls `set_value`, which propagates back out through each wrapping receiver.
+
+Two points Niebler stresses:
+
+- Every adapter gets to **run code when the operation starts and when it finishes** — it bookends each async operation, which is exactly how it implements its logic.
+- These are **layers of behavior, not layers of data.** An op state with many nested layers can still be tiny.
+
+## Implementing `then`
+
+The payoff of the four concepts is that you can write algorithms. A working `then`:
+
+```cpp
+// The algorithm: curry the arguments into a sender object.
+template <sender S, class F>
+sender auto then(S s, F f) {
+    return then_sender<S, F>{std::move(s), std::move(f)};
+}
+
+// The sender: store the input; connect() wraps the receiver.
 template <sender S, class F>
 struct then_sender {
-    S s_; F f_;
+    S s_;
+    F f_;
+
     template <receiver R>
     auto connect(R r) {
-        return execution::connect(std::move(s_),
-                                  then_receiver<R, F>{std::move(r), std::move(f_)});
-        // no work happens at start, so just return the inner op state
+        // No work needs to happen at start, so just return the inner
+        // operation state directly -- no op state of our own.
+        return execution::connect(
+            std::move(s_),
+            then_receiver<R, F>{std::move(r), std::move(f_)});
     }
 };
 
-// the receiver: this is where then's logic lives
+// The receiver: this is where then's logic actually lives.
 template <receiver R, class F>
 struct then_receiver {
-    R r_; F f_;
+    R r_;
+    F f_;
+
     template <class... Vs>
     void set_value(Vs... vs) {
-        execution::set_value(std::move(r_), f_(std::move(vs)...));  // chain f
+        // Instead of forwarding the values, run them through f
+        // and forward THAT.
+        execution::set_value(std::move(r_), f_(std::move(vs)...));
     }
-    void set_error(auto e)  { execution::set_error(std::move(r_), e); }   // pass through
-    void set_done()         { execution::set_done(std::move(r_)); }       // pass through
+
+    void set_error(auto e) { execution::set_error(std::move(r_), e); }  // pass through
+    void set_done()        { execution::set_done(std::move(r_)); }      // pass through
 };
 ```
 
-`set_value` is where the magic is: instead of forwarding the values, it runs them through the user's `f` and forwards *that*. Error and cancellation just pass through. (Caveat Niebler flags: if `f` returns `void`, this won't compile — you need an extra overload.) The standard's `then` handles more corner cases, but this is genuinely the shape of it.
+`set_value` is the whole algorithm. Error and cancellation pass straight through. Niebler flags the obvious gap: if `f` returns `void` this will not compile, so you need an extra overload. The standard's `then` handles more corner cases, but this is genuinely the shape.
 
-## Senders and coroutines
+## Senders and coroutines convert both ways
 
-The interop goes both ways, with **no extra allocation or synchronization** for the adaptation:
+**Awaitables are senders.** A coroutine `task` can go straight to `sync_wait`, which expects a sender:
 
-- **Awaitables as senders.** A `task` (a coroutine type) can be passed straight to `sync_wait`, which expects a sender. The `task` doesn't need to know anything about sender/receiver — it just implements the awaitable interface, and the sender/receiver customization points recognize awaitables and adapt them as receivers.
-- **Senders as awaitables.** You can `co_await` a sender inside a coroutine, provided the coroutine's promise type opts in. Authoring such a `task` is easy: inherit the promise from **`with_awaitable_senders`** and you get sender-awaiting for free.
+```cpp
+task<int> read_socket(socket& s);          // a coroutine type
 
-So the guidance becomes: leave the choice to your caller. **If you provide an async API, return a sender** — then the user decides whether to use coroutines or not. That choice belongs to them.
+auto [n] = sync_wait(read_socket(sock)).value();
+```
+
+The `task` needs to know nothing about sender/receiver — the customization points recognize awaitables and adapt them. No extra allocation or synchronization for the adaptation.
+
+**Senders are awaitables**, if the coroutine's promise opts in:
+
+```cpp
+task<void> read_both(socket& a, socket& b) {
+    auto [x, y] = co_await when_all(read_socket(a), read_socket(b));
+    //                    ^ when_all returns a sender, and we co_await it
+}
+```
+
+Opting in is one base class:
+
+```cpp
+struct my_task_promise : with_awaitable_senders<my_task_promise> {
+    // ... the usual promise machinery ...
+};
+```
+
+So you can stay in sender land, or work entirely in coroutines:
+
+```cpp
+auto compute = [&](int arg) -> task<int> {
+    co_await schedule(pool.get_scheduler());   // hop onto the pool
+    co_return compute_intensive(arg);
+};
+
+auto [a, b, c] = sync_wait(when_all(compute(1), compute(2), compute(3))).value();
+```
+
+Which leads to the guidance the talk ends on: **if you provide an async API, return a sender.** That leaves the choice of coroutines-or-not with the caller, which is where it belongs.
 
 ## Cancellation across the coroutine boundary
 
-Coroutines have no cancellation channel — only return and throw. So what happens when an awaited sender completes via `set_done`? Niebler's answer: it behaves like an **uncatchable "exception"** (his scare quotes). The entire async call stack of awaiting coroutine frames is unwound exactly as if an exception were propagating — destructors run in the same order — and even `catch(...)` won't stop it. Mechanically, `with_awaitable_senders` builds a linked list of coroutine frames; cancellation walks that list, deleting each frame.
+Coroutines have only two exits, return and throw — there is no cancellation channel. So when an awaited sender completes via `set_done`:
 
-If you *don't* want to unwind the whole stack, map cancellation into something a coroutine understands natively: `done_as_optional` (→ `nullopt`) or `done_as_error` (→ an exception of your choice) — today's `stopped_as_optional` / `stopped_as_error`. And when that cancellation "exception" reaches a sender boundary (you're awaiting a sender, not a coroutine — no frame to delete), it's translated back into a `set_done` call. Senders and coroutines intermix seamlessly, and that's why the earlier "infinite loop" isn't infinite: awaiting a sender can exit via cancellation, which immediately stops the coroutine.
+> It behaves as though an uncatchable "exception" has been thrown.
 
-## Q&A worth keeping
+The entire async stack of awaiting coroutine frames unwinds exactly as if an exception were propagating, destructors running in the same order — and `catch(...)` will not stop it. Mechanically, `with_awaitable_senders` maintains a linked list of coroutine frames; cancellation walks it and deletes each frame.
 
-- **GPUs / heterogeneous.** A vendor (e.g. NVIDIA) supplies the scheduler and the compiler; the generic algorithms have default implementations but are **customizable**, so passing a GPU scheduler to `sort` picks a GPU-specific implementation. Unified-memory CPUs (M1) fit *nicely* — generic code compiles for device with no host/device annotations, reaching ~90–95% of hand-tuned performance, lowering the bar to acceleration.
-- **Debugging.** Sender/receiver doesn't directly help, but it's **structured**: coroutines give you a real async call stack, and debuggers are gaining the ability to walk coroutine chains — so you'll see not just *what* is executing but *who's waiting on it and how you got there*.
-- **Does this replace `future`/`promise`?** No — it's a **lower-level substrate**. You don't have to build one giant tree and `sync_wait` it in `main`; you could write an `as_future` that launches a sender and hands back a handle. They didn't propose it because `std::future` is "fairly broken." Expect most people to live in coroutines and higher-level abstractions (channels, message passing, reactive streams) built *on* sender/receiver — just as ranges sit on iterators.
-- **vs. ASIO/folly executors.** Those are a **fire-and-forget** `execute(function)` model, which has composability problems (the subject of part 2). Sender/receiver is designed to supersede them.
+If you would rather not unwind everything, map cancellation into something a coroutine understands natively:
 
-## Takeaways
+```cpp
+// cancellation -> nullopt
+std::optional<int> r = co_await done_as_optional(some_sender);   // now stopped_as_optional
 
-- The mission is an **STL for asynchrony**: standard generic async algorithms over a small concept vocabulary.
-- Four concepts — **scheduler, sender, receiver, operation state** — express any async computation. Senders are lazy; nothing runs until `start()`.
-- The design is **self-similar** (sender-in/sender-out) and builds a **static tree** with zero allocations; senders, receivers, and operation states **nest** like dolls, executing outside-in and completing inside-out.
-- Writing an algorithm means writing a **receiver** (and maybe an op state); `then` is ~20 lines, with `set_value` carrying the logic.
-- Senders and coroutines convert both ways for free; **cancellation** unwinds the async coroutine stack like an uncatchable exception, and translates back to `set_stopped` at sender boundaries.
-- If you write async APIs, **return senders** and let the caller choose coroutines or not.
+// cancellation -> an exception of your choice
+int v = co_await done_as_error(some_sender, my_cancelled{});     // now stopped_as_error
+```
 
-Part 2 covers structured concurrency, how cancellation is actually implemented, and an extended worked example — worth watching right after this one.
+And when that cancellation reaches a sender boundary — you are awaiting a sender, not a coroutine, so there is no frame to delete — it is translated back into a `set_done` call. Senders and coroutines intermix freely and cancellation propagates through both.
+
+This is also why the earlier `for(;;)` is not really infinite: awaiting a sender can exit via cancellation, which stops the coroutine immediately.
+
+## Worth keeping from the Q&A
+
+- **GPUs.** The vendor supplies the scheduler and the compiler. All P2300 algorithms have default implementations but are **customizable**, so passing a GPU scheduler to `sort` selects a GPU implementation. On unified-memory CPUs, generic code compiles for device with no host/device annotations, reaching ~90–95% of hand-tuned performance.
+- **Does this replace `future`/`promise`?** No — it is a lower-level substrate. You could write an `as_future` that launches a sender and returns a handle; they did not propose it because `std::future` is "fairly broken." Expect most people to live in coroutines and higher-level abstractions built *on* sender/receiver, as ranges sit on iterators.
+- **vs. ASIO/folly executors.** Those are a fire-and-forget `execute(function)` model with composability problems — the subject of part 2.
+
+Part 2 covers structured concurrency, how cancellation is implemented, and an extended worked example.
 
 ---
 

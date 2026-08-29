@@ -204,7 +204,27 @@ A few notes from the talk:
 
 There's one subtlety in enforcing "refuse types that can't move." You'd reach for `std::is_move_constructible`, but that trait **lies**: it asks "is this constructible from an rvalue reference?" — and a type that only has a copy constructor answers *yes*, because `const T&` happily binds an rvalue. Turner has watched arguments break out at CppCon over this.
 
-So the talk borrows a Stack Overflow technique: a helper that detects whether a type is **exclusively** copyable **or** movable (via a probe with implicit conversions to both `const T&` and `T&&`; if both match, it's an ambiguity error). A real `has_move_constructor` concept is then "move-constructible AND not (copyable XOR movable)". It's fiddly, but it works.
+So the talk borrows a Stack Overflow technique — a probe type with implicit conversions to **both** candidate parameter types, so that a type having both operations makes the call ambiguous:
+
+```cpp
+// Implicitly converts to both. If T has BOTH a copy and a move constructor,
+// the call below is ambiguous -> substitution fails, which is the signal.
+template <typename T>
+struct detect_move_construction {
+    operator const T&();   // would match the copy constructor
+    operator T&&();        // would match the move constructor
+};
+
+template <typename T>
+concept exclusively_copyable_or_movable =
+    requires { T(detect_move_construction<T>{}); };
+
+template <typename T>
+concept has_move_constructor =
+    std::is_move_constructible_v<T> && !exclusively_copyable_or_movable<T>;
+```
+
+Turner's own caveats: an MSVC bug means his real version probes the *assignment* operator rather than construction, and he admits on stage there is no time to unpack it — "we don't have time to unpack all this, but it does work." Treat the above as the shape, not a drop-in.
 
 ## Now do it again for forwarding references
 
@@ -235,6 +255,26 @@ Same move as before: imagine a stronger type.
 void f1(auto&& x);
 void f2(forwarding_reference<...> x) { f1(x); }   // no std::forward needed
 void take(forwarding_reference<...> x)  { f2(x); } // it just propagates
+```
+
+The implementation is the same two pieces as before, plus deduction guides:
+
+```cpp
+template <typename T>
+class forwarding_reference {
+    T* ptr_;
+public:
+    constexpr explicit forwarding_reference(T&& obj) noexcept : ptr_(&obj) {}
+
+    [[nodiscard]] constexpr operator T&&() const noexcept {
+        return static_cast<T&&>(*ptr_);
+    }
+};
+
+// The guides pick the specialization from the argument's value category --
+// this is what makes the wrapper remember what it was constructed from.
+template <typename T> forwarding_reference(T&)  -> forwarding_reference<T&>;
+template <typename T> forwarding_reference(T&&) -> forwarding_reference<T>;
 ```
 
 Once a value is wrapped in a `forwarding_reference`, it **carries its own value category through the call chain**. You pass it from `take` to `f2` to `f1` and the correct copy-or-move happens at the end — *without* writing `std::forward` at every hop. The auto-forwarding "fell out of the design," as Turner puts it. It does need a **deduction guide** to pick the right specialization from an lvalue vs. rvalue argument, which is why this half requires **C++17** (whereas `moving_reference` backports to C++11).
@@ -273,10 +313,6 @@ No clean answer — but, he notes, this type is "worthy of every keyword and att
 
 ## Takeaways
 
-Two things Turner wants you to walk away with:
+1. **Avoid `move` when you can.** If you are about to `std::move` an object straight into a function call, pass the object directly instead — do not create the intermediate you are going to immediately move from.
 
-1. **Avoid `move` when you can.** If you're about to `std::move` an object straight into a function call, just... pass the object to the function directly. Don't create the intermediate you're going to immediately move from.
-
-2. **The real lesson isn't about move semantics at all.** The next time you identify a problem — any problem — reach for your imagination. A **stronger type** is very often the thing that solves it. Move semantics are "broken" because `&&` is overloaded, implicit conversions decay it, and named rvalue references betray you. A purpose-built type that refuses to convert implicitly makes all of that safe and readable. That pattern generalizes far beyond move semantics.
-
-Did he fix move semantics? He shrugs at his own question. But the wrapper types are public domain, the whole thing backports to C++11/17, and — more to the point — you're now thinking about `&&` differently than you were an hour ago. Which was the goal all along.
+2. **The real lesson is not about move semantics.** `&&` is overloaded three ways, implicit conversions decay it to `const T&`, and named rvalue references betray you. A purpose-built type that refuses to convert implicitly makes all of that safe and readable. Next time you identify a problem, reach for a **stronger type** — that pattern generalizes far beyond move semantics.

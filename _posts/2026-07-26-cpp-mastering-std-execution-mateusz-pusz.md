@@ -53,6 +53,15 @@ Detached work never rejoins. It can outlive the data it references, there's no R
 
 ## Why the tools we already had aren't enough
 
+```cpp
+// A future is EAGER: this is a handle to work already scheduled,
+// and possibly already running. There is no point at which you can
+// compose onto it before it starts.
+std::future<int> f = std::async(std::launch::async, compute);
+// ... allocation, atomic refcount churn, synchronization between
+//     set and get, plus scheduling overhead for any .then extension.
+```
+
 - **`std::future` / `std::promise`** — inefficient and hard to compose. Allocation/deallocation, atomic ref-count churn, synchronization between setting and getting the result, plus scheduling overhead if you use the non-standard `.then` extensions. Worse, a future is **eager**: it's a handle to work *already scheduled*, possibly already running — so you can't even reason cleanly about races. Not usable for efficient composition of async operations.
 - **Callbacks** — actually the simplest, most powerful, most efficient way to chain work. But there's **no standard shape**: every vendor invents its own callback signature, so they're inherently uncomposable, and there's no nesting of scopes or lifetimes (RAII doesn't apply).
 - **Coroutines** — these genuinely *are* structured concurrency. A co_awaiting coroutine has a single entry and single exit, composes cleanly, and RAII/scopes/lifetimes all just work. Pusz is emphatic that coroutines are excellent and you should learn them. **But** they have two gaps: they **don't support cancellation**, and they may require a **heap allocation** for the coroutine frame (often fine for async I/O, where one allocation is negligible; see the *HALO* paper for when that allocation is elided).
@@ -92,11 +101,16 @@ This is the vocabulary the rest of the framework is built on:
 
 ### How they fit together
 
-```
-scheduler.schedule()            -> sender
-sender.connect(receiver)        -> operation_state
-operation_state.start()          // work begins here
-// completion calls one of: set_value / set_error / set_stopped on the receiver
+```cpp
+sender auto           s  = schedule(sched);      // scheduler -> sender
+operation_state auto  op = connect(s, rcvr);     // sender + receiver -> op state
+start(op);                                       // work begins HERE
+
+// The receiver's three channels. Exactly one is called, exactly once:
+set_value(rcvr, values...);    // success
+set_error(rcvr, e);            // failure
+set_stopped(rcvr);             // cancellation -- NOT an error, just work
+                               // that is no longer needed
 ```
 
 The crucial ergonomic point: **as a user you only ever touch the blue boxes — schedulers and senders.** Receivers and operation states are machinery under the hood. You don't create them, and you often don't even know they're there. (If you're *implementing* an algorithm, then you do need to understand them.)
@@ -135,7 +149,14 @@ Every pipeline is built from three roles, mirroring begin / middle / end:
 The lazy guarantee: factories and adapters **never submit work** before the returned operation state is started, and they never start the inputs passed into them. Nothing runs until a consumer starts it.
 
 ```cpp
+// sync_wait returns optional<tuple<Values...>>:
+//   .value()  strips the optional  -> tuple
+//   [value]   structured binding    -> the element(s)
 auto [value] = std::execution::sync_wait(pipeline).value();
+
+// Even a single result comes back as a one-element tuple, which is why
+// structured bindings show up constantly with this framework:
+auto [a, b] = std::execution::sync_wait(two_value_pipeline).value();
 ```
 
 `sync_wait` starts the operation state and **blocks** the current thread until it completes — because eventually you *do* have to wait for an async result. It returns an **`optional<tuple<...>>`** of whatever the last sender sent:
@@ -195,11 +216,9 @@ A few honest caveats Pusz calls out live:
 
 ## Takeaways
 
-The teaser doesn't try to make you fluent — it tries to make the map legible:
+- Async is everyone's problem now, and **structured concurrency** is what makes it tractable: single entry, single exit, local reasoning.
+- Existing tools each miss something — futures are eager and inefficient, callbacks have no standard shape, coroutines lack cancellation. `std::execution` unifies them and **interoperates** with coroutines rather than replacing them.
+- Five words carry the model: **scheduler, execution context, sender, receiver, operation state**. The rest is composition — factories, adapters, consumers, with `starts_on`/`continues_on` to say *where*.
+- Pusz's actual message, aimed past the framework: **you learn to write code by writing it.** Slides and blog posts get you oriented; the fingertips do the rest.
 
-- Async is now everyone's problem, and **structured concurrency** is the discipline that makes it tractable: single entry, single exit, local reasoning, correct by construction.
-- The existing tools each miss something — futures are eager and inefficient, callbacks have no standard shape, coroutines lack cancellation. `std::execution` unifies them with a standard vocabulary that also **interoperates** with coroutines.
-- Learn five words — **scheduler, execution context, sender, receiver, operation state** — and the rest is composition: factories, adapters, consumers piped together, with `continues_on`/`starts_on` to say *where*.
-- And Pusz's real message, the one aimed past this particular framework: **you learn to write code by writing it.** Reading slides — or blog posts — gets you oriented. The fingertips do the rest.
-
-For the deeper conceptual build-up of the same model, see the two-part [*A Tour of C++ Executors* (Eric Niebler)](/2026/07/03/cpp-tour-of-executors-niebler-part2) and [Steve Downey on sender/receiver control flow](/2026/06/29/cpp-sender-receiver-control-flow-steve-downey).
+For the deeper conceptual build-up, see the two-part [*A Tour of C++ Executors* (Eric Niebler)](/2026/07/03/cpp-tour-of-executors-niebler-part2) and [Steve Downey on sender/receiver control flow](/2026/06/29/cpp-sender-receiver-control-flow-steve-downey).
