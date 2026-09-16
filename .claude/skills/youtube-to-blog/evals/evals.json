@@ -1,0 +1,59 @@
+{
+  "skill_name": "youtube-to-blog",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a blog post from this talk: https://www.youtube.com/watch?v=IVee1JXbrQE",
+      "expected_output": "A concise, code-first Jekyll post covering a selection of the least-known C++23 features from Josuttis' 90-minute ACCU talk, each shown with a compiled, runnable example and a summary.",
+      "files": [],
+      "assertions": [
+        "A post .md file was produced",
+        "Front matter matches blog conventions and permalink matches file name",
+        "Title uses 'C++ - ' prefix and names speaker/conference in parentheses",
+        "Body opens with the YouTube link line",
+        "Post is concise (60-300 body lines)",
+        "Code-first: at least 3 code blocks and >=35% of body lines are code",
+        "Limited quoting (<=3 blockquote lines)",
+        "Ends with a Summary section",
+        ">=60% of non-header C++ listings are complete programs (have main)",
+        "All complete C++ programs in the post compile (Apple clang or Homebrew LLVM clang, c++23/c++2c)",
+        "Links the talk's slide deck near the top"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "blog this lightning talk for me https://www.youtube.com/watch?v=PcerWZRm_eA",
+      "expected_output": "A short post on the dangers of implicit bool conversions (Jeff Garland, CppCon 2025), with complete programs showing the surprising conversions and the fix, verified by compiling.",
+      "files": [],
+      "assertions": [
+        "A post .md file was produced",
+        "Front matter matches blog conventions and permalink matches file name",
+        "Title uses 'C++ - ' prefix and names speaker/conference in parentheses",
+        "Body opens with the YouTube link line",
+        "Post is concise (60-300 body lines)",
+        "Code-first: at least 3 code blocks and >=35% of body lines are code",
+        "Limited quoting (<=3 blockquote lines)",
+        "Ends with a Summary section",
+        ">=60% of non-header C++ listings are complete programs (have main)",
+        "All complete C++ programs in the post compile (Apple clang or Homebrew LLVM clang, c++23/c++2c)",
+        "Links the talk's slide deck near the top"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you turn this GOTO talk into a post for my blog? https://www.youtube.com/watch?v=fto4t3Vl7dE",
+      "expected_output": "A non-C++ software engineering post (CDK + AWS Amplify full-stack) that is code-first and concise, uses the non-C++ title convention, and notes which code was or was not run.",
+      "files": [],
+      "assertions": [
+        "A post .md file was produced",
+        "Front matter matches blog conventions and permalink matches file name",
+        "Non-C++ title has no 'C++' prefix and names speaker/conference",
+        "Body opens with the YouTube link line",
+        "Post is concise (60-300 body lines)",
+        "Code-first: at least 3 code blocks and >=35% of body lines are code",
+        "Limited quoting (<=3 blockquote lines)",
+        "Ends with a Summary section"
+      ]
+    }
+  ]
+}
