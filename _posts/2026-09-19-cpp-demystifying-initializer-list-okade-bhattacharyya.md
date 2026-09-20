@@ -55,50 +55,62 @@ back in main
 
 The standard spells the transformation out as roughly `const A __a[3] = {A{1}, A{2}, A{3}};` followed by a list built from `__a`. You can read all of it off the output: three constructions before the call, sixteen bytes of list (two pointers), and three destructions at the closing `;`. Because the list is this cheap, **pass it by value** — that is what the standard library does, and `std::move` on one only copies the two pointers anyway.
 
-## `const` elements mean copy, never move
+## Why it is costly: two constructions per element
 
+{% raw %}
 ```cpp
+#include <compare>
 #include <cstdio>
-#include <memory>
+#include <map>
+#include <set>
 #include <vector>
 
 struct A {
-  A(int)          { puts("A(int)"); }
-  A(const A&)     { puts("A(const A&)"); }
-  A(A&&) noexcept { puts("A(A&&)"); }
-  ~A()            { puts("~A()"); }
+  static inline int ctor = 0, copy = 0, move = 0;
+  int v;
+  A(int v) : v(v)            { ++ctor; }
+  A(const A& o) : v(o.v)     { ++copy; }
+  A(A&& o) noexcept : v(o.v) { ++move; }
+  auto operator<=>(const A&) const = default;
 };
 
+void report(const char* what) {
+  printf("%-30s ctor=%d copy=%d move=%d\n", what, A::ctor, A::copy, A::move);
+  A::ctor = A::copy = A::move = 0;
+}
+
 int main() {
-  puts("-- vector<A> v{1, 2, 3}");
-  { std::vector<A> v{1, 2, 3}; }
-
-  puts("-- reserve + emplace_back");
+  { std::vector<A> v{1, 2, 3}; }                               report("vector<A>{1, 2, 3}");
   { std::vector<A> v; v.reserve(3);
-    v.emplace_back(1); v.emplace_back(2); v.emplace_back(3); }
+    v.emplace_back(1); v.emplace_back(2); v.emplace_back(3); } report("vector reserve + emplace_back");
 
-  // std::vector<std::unique_ptr<int>> u{std::make_unique<int>(1)};
-  //   error: call to implicitly-deleted copy constructor of 'std::unique_ptr<int>'
+  { std::set<A> s{1, 2}; }                                     report("set<A>{1, 2}");
+  { std::set<A> s; s.emplace(1); s.emplace(2); }               report("set emplace");
+
+  { std::map<int, A> m{{1, 1}, {2, 2}}; }                      report("map<int, A>{{1,1}, {2,2}}");
+  { std::map<int, A> m; m.emplace(1, 1); m.emplace(2, 2); }    report("map emplace");
 }
 ```
+{% endraw %}
 
 ```
--- vector<A> v{1, 2, 3}
-A(int)
-A(int)
-A(int)
-A(const A&)
-A(const A&)
-A(const A&)
-~A() x6
--- reserve + emplace_back
-A(int)
-A(int)
-A(int)
-~A() x3
+vector<A>{1, 2, 3}             ctor=3 copy=3 move=0
+vector reserve + emplace_back  ctor=3 copy=0 move=0
+set<A>{1, 2}                   ctor=2 copy=2 move=0
+set emplace                    ctor=2 copy=0 move=0
+map<int, A>{{1,1}, {2,2}}      ctor=2 copy=2 move=0
+map emplace                    ctor=2 copy=0 move=0
 ```
 
-`begin()` returns `const A*`, so the container has no way to move out of the backing array. **Construction through an `initializer_list` is never in place**: build the array, then copy it element by element. For `int` or `string_view` that is free; for `std::string` it doubles the allocations, and for a move-only type it does not compile at all. The commented-out line is the `unique_ptr` case — the diagnostic points at `construct_at` with `_Args = <const std::unique_ptr<int>&>`.
+One copy per element, in every container, and not a single move. Three things combine to produce that. The backing array is materialized in full before the container's constructor runs, so every element is built there first. `begin()` hands back `const T*`, so the container has no way to move out of it. And the constructor signature is `vector(initializer_list<T>)` — the arguments were collapsed into finished `T` objects before the call, so there is nothing left to perfect-forward. **Construction through a braced list is never in place**: one construction, one copy and one destruction per element, where `emplace` costs one construction.
+
+For `int` or `string_view` the copy is a register move and none of this matters. For anything that allocates — `std::string`, a nested container — it doubles the allocations. For a move-only type it does not compile at all: `std::vector<std::unique_ptr<int>> u{std::make_unique<int>(1)};` fails inside `construct_at` with `_Args = <const std::unique_ptr<int>&>`.
+
+| Instead of | Use | Note |
+|---|---|---|
+| `vector<A> v{1, 2, 3}` | `v.reserve(3)` then `emplace_back` | without `reserve` the three `emplace_back`s cost 3 moves to reallocate |
+| `set<A> s{1, 2}` | `s.emplace(1)` | |
+| `map<int, A> m{ {1, 1} }` | `m.emplace(1, 1)` | for a multi-argument mapped type `m.emplace(k, B{...})` still costs a move; only `emplace(piecewise_construct, forward_as_tuple(k), forward_as_tuple(a, b))` is fully in place |
 
 ## The `initializer_list` constructor is considered first, alone
 
@@ -207,34 +219,7 @@ int main() {
 ```
 {% endraw %}
 
-A `std::vector<std::vector<std::string>>` of constant data costs a heap allocation per row at startup and can never be `constexpr`. Nested `initializer_list` gives ragged rows with no allocation and no runtime work — the `static_assert`s prove the whole lookup folds at compile time. The lifetime rule still applies — this is safe only because the arrays back a `constexpr` object with static storage duration — so the talk keeps the pattern to types local to one translation unit.
-
-## C++26: the backing array may live in static storage
-
-```cpp
-#include <cstdio>
-#include <initializer_list>
-
-void f(std::initializer_list<int> a, std::initializer_list<int> b) {
-  printf("shared backing array: %s\n", a.begin() == b.begin() ? "yes" : "no");
-}
-
-void h() {
-  int local = 0;
-  std::initializer_list<int> il = {1, 2, 3};
-  const long d = (const char*)il.begin() - (const char*)&local;  // <-- stack, or far away?
-  printf("distance from stack local: %ld\n", d < 0 ? -d : d);
-}
-
-int main() { f({1, 2, 3}, {1, 2, 3}); h(); }
-```
-
-| Compiler | shared array | distance from the stack |
-|---|---|---|
-| Apple clang 21, `-std=c++23` and `-std=c++2c` | no | 4 bytes — on the stack |
-| GCC 15.1, `-std=c++23` and `-std=c++26` | no | ~10<sup>14</sup> bytes — static storage |
-
-P2752R3 permits (does not require) the compiler to put a constant backing array in static storage and to let separate lists share one array. GCC already places it statically; Clang still builds it on the stack, which is what makes `std::vector<char> v = { #embed "2mb-image.png" };` a 2 MB stack allocation today. Two other C++26 changes from the talk: `il.empty()` and `il.data()` become members, and the `std::begin`/`std::end` overloads for `initializer_list` are removed (P3016R6) as redundant. **Neither the members nor list sharing is implemented yet** in Apple clang 21, Homebrew clang 23.1, or GCC 15.1. The `std::span(initializer_list)` constructor was added by P2447R6 and then removed again before C++26 shipped, because it changed the meaning of `std::span<void* const>{a, 0}` from size 0 to size 2; P4190R0 proposes restoring it in C++29.
+A `std::vector<std::vector<std::string>>` of constant data costs a heap allocation per row at startup and can never be `constexpr`. Nested `initializer_list` gives ragged rows with no allocation and no runtime work — the `static_assert`s prove the whole lookup folds at compile time. The lifetime rule still applies — this is safe only because the arrays back a `constexpr` object with static storage duration — so the talk keeps the pattern to types local to one translation unit. C++26 (P2752R3) extends the idea to ordinary lists by *permitting* the compiler to give the backing array static storage — GCC 15.1 already does, Apple clang 21 still builds it on the stack four bytes from the neighbouring local.
 
 ## Summary
 
