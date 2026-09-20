@@ -91,7 +91,6 @@ int main() {
   { std::map<int, A> m; m.emplace(1, 1); m.emplace(2, 2); }    report("map emplace");
 }
 ```
-{% endraw %}
 
 ```
 vector<A>{1, 2, 3}             ctor=3 copy=3 move=0
@@ -101,6 +100,7 @@ set emplace                    ctor=2 copy=0 move=0
 map<int, A>{{1,1}, {2,2}}      ctor=2 copy=2 move=0
 map emplace                    ctor=2 copy=0 move=0
 ```
+{% endraw %}
 
 One copy per element, in every container, and not a single move. Three things combine to produce that. The backing array is materialized in full before the container's constructor runs, so every element is built there first. `begin()` hands back `const T*`, so the container has no way to move out of it. And the constructor signature is `vector(initializer_list<T>)` — the arguments were collapsed into finished `T` objects before the call, so there is nothing left to perfect-forward. **Construction through a braced list is never in place**: one construction, one copy and one destruction per element, where `emplace` costs one construction.
 
