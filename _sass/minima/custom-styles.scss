@@ -1,0 +1,42 @@
+// Overrides for Minima. Loaded last by the theme.
+
+.archive-list {
+  li { margin-bottom: 6px; }
+  .post-meta {
+    display: inline-block;
+    min-width: 7em;
+  }
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  font-size: 1.1em;
+  border: 1px solid $border-color-01;
+  border-radius: 4px;
+  background: $background-color;
+  color: $text-color;
+}
+
+#search-results {
+  li { margin-bottom: 18px; }
+  p { margin: 4px 0 0; }
+}
+
+.stats-summary { font-size: 1.1em; }
+
+.stats-table {
+  width: 100%;
+  .stats-count { text-align: right; width: 4em; }
+  .stats-bar-col { width: 70%; }
+}
+
+.stats-bar {
+  height: 0.9em;
+  min-width: 2px;
+  border-radius: 2px;
+  background: $link-base-color;
+}
+
+#search-results h3 { margin-top: 0; }

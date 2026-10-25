@@ -1,0 +1,29 @@
+---
+layout: page
+title: Stats
+---
+{%- assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" -%}
+{%- assign max = 0 -%}
+{%- for year in posts_by_year -%}
+  {%- if year.size > max -%}{%- assign max = year.size -%}{%- endif -%}
+{%- endfor %}
+
+<p class="stats-summary">
+  <strong>{{ site.posts.size }}</strong> posts over <strong>{{ posts_by_year.size }}</strong> years
+</p>
+
+<table class="stats-table">
+  <thead>
+    <tr><th>Year</th><th>Posts</th><th class="stats-bar-col"></th></tr>
+  </thead>
+  <tbody>
+  {%- for year in posts_by_year %}
+    {%- assign pct = year.size | times: 100.0 | divided_by: max %}
+    <tr>
+      <td><a href="{{ '/posts/' | relative_url }}#{{ year.name }}">{{ year.name }}</a></td>
+      <td class="stats-count">{{ year.size }}</td>
+      <td class="stats-bar-col"><div class="stats-bar" style="width: {{ pct }}%"></div></td>
+    </tr>
+  {%- endfor %}
+  </tbody>
+</table>

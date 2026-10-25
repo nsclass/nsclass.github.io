@@ -1,5 +1,17 @@
 ---
-layout:    home
-title:     Blog Posts
-blogfeed:  true
+layout: page
+title: Archive
 ---
+{%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+{%- assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" -%}
+{%- for year in posts_by_year %}
+<h2 id="{{ year.name }}">{{ year.name }} <span class="post-meta">({{ year.size }})</span></h2>
+<ul class="post-list archive-list">
+  {%- for post in year.items %}
+  <li>
+    <span class="post-meta">{{ post.date | date: date_format }}</span>
+    <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+  </li>
+  {%- endfor %}
+</ul>
+{%- endfor %}

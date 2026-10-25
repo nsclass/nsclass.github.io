@@ -1,4 +1,8 @@
 ---
-layout:    search
-title:     Search Posts
+layout: page
+title: Search
 ---
+<input type="search" id="search-input" class="search-input" placeholder="Search posts…" autocomplete="off" autofocus>
+<p id="search-status" class="post-meta"></p>
+<ul id="search-results" class="post-list"></ul>
+<script src="{{ '/assets/js/search.js' | relative_url }}" data-index="{{ '/search.json' | relative_url }}"></script>
