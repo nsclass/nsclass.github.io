@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PyTorch training loop, single GPU</title>
+<style>
+:root{
+  color-scheme: light;
+  --surface-0:#faf9f5;--surface-1:#f1efe8;--surface-2:#ffffff;
+  --text-primary:#1f1e1d;--text-secondary:#5f5e5a;--text-muted:#888780;--text-danger:#a32d2d;
+  --border:rgba(0,0,0,.10);--border-strong:rgba(0,0,0,.22);
+  --bg-accent:#E6F1FB;--text-accent:#185FA5;--border-accent:#378ADD;
+  --t:#5f5e5a;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);font-family:var(--sans);line-height:1.5}
+main{max-width:760px;margin:0 auto;padding:16px 16px 20px}
+.sub{font-size:14px;color:var(--text-secondary);margin:0 0 14px}
+button{font:inherit;font-size:13px;padding:6px 12px;border:0.5px solid var(--border-strong);background:transparent;color:var(--text-primary);border-radius:8px;cursor:pointer}
+button:hover{background:var(--surface-1)}
+button:active{transform:scale(.98)}
+button:focus-visible{outline:2px solid var(--border-accent);outline-offset:2px}
+.cl{padding:1px 8px;border-radius:4px;white-space:pre;color:var(--text-secondary)}
+.cl.on{background:var(--bg-accent);color:var(--text-accent)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px}
+svg text{font-family:var(--sans)}
+.t{font-size:14px;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.tm{font-size:11px;fill:var(--text-muted);font-family:var(--mono)}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.box{fill:var(--surface-1);stroke:var(--border-strong)}
+.c-teal{--f:#E1F5EE;--s:#0F6E56;--x:#085041}
+.c-gray{--f:#F1EFE8;--s:#5F5E5A;--x:#444441}
+.c-purple{--f:#EEEDFE;--s:#534AB7;--x:#3C3489}
+.c-amber{--f:#FAEEDA;--s:#854F0B;--x:#633806}
+.c-red{--f:#FCEBEB;--s:#A32D2D;--x:#791F1F}
+[class^="c-"]>rect{fill:var(--f);stroke:var(--s)}
+[class^="c-"]>text{fill:var(--x)}
+@media (prefers-reduced-motion: no-preference){.fx{animation:fx .55s ease-out}@keyframes fx{from{opacity:0}to{opacity:1}}}
+</style>
+</head>
+<body>
+<main>
+<p class="sub">Every number here comes from running the article's code: 5 training samples, <code>batch_size=2</code>, <code>shuffle=True</code>, <code>drop_last=True</code>, <code>lr=0.5</code>, 3 epochs, seed 123. Keys: &larr; &rarr; step, space plays.</p>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px">
+  <span style="font-size:13px;color:var(--text-secondary);flex:1;min-width:220px">5 samples &divide; batch 2 = 2 steps per epoch, 1 sample dropped</span>
+  <button onclick="prev()" aria-label="Previous step">&larr;</button>
+  <button id="playb" onclick="togglePlay()">Play</button>
+  <button onclick="next()" aria-label="Next step">&rarr;</button>
+  <button onclick="restart()">Restart</button>
+</div>
+<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px;margin:0 0 4px"><span id="stitle" style="font-weight:500"></span><span id="status" style="color:var(--text-secondary);text-align:right"></span></div>
+<div id="cap" aria-live="polite" style="font-size:14px;line-height:1.6;color:var(--text-secondary);min-height:48px;margin:0 0 6px"></div>
+<div id="stage"></div>
+<div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--text-secondary);margin:6px 0 12px">
+  <span><span class="sw" style="background:#9FE1CB"></span> sample in current batch</span>
+  <span><span class="sw" style="background:#D3D1C7"></span> queued, used or dropped</span>
+  <span><span class="sw" style="background:#CECBF6"></span> model weights</span>
+  <span><span class="sw" style="background:#FAC775"></span> gradients</span>
+  <span><span class="sw" style="background:#F7C1C1"></span> loss</span>
+</div>
+<div id="code" style="font-family:var(--mono);font-size:12px;line-height:1.7;background:var(--surface-1);border-radius:8px;padding:10px 6px;overflow-x:auto"></div>
+</main>
+<script>
+const X=[[-1.2,3.1],[-0.9,2.9],[-0.5,2.6],[2.3,-1.1],[2.7,-1.5]],Y=[0,0,0,1,1];
+// Recorded from the article's training loop (torch.manual_seed(123), SGD lr=0.5)
+const EPOCHS=[
+ {order:[2,1,3,0],drop:4,batches:[
+  {idx:[2,1],logits:[[-0.21,-0.10],[-0.20,-0.10]],loss:0.7487,gn:2.14},
+  {idx:[3,0],logits:[[0.43,-0.51],[1.54,-2.35]],loss:0.6450,gn:1.64}]},
+ {order:[3,4,1,2],drop:0,batches:[
+  {idx:[3,4],logits:[[-0.27,0.27],[-0.31,0.32]],loss:0.4423,gn:1.06},
+  {idx:[1,2],logits:[[0.75,-1.54],[0.54,-1.25]],loss:0.1256,gn:0.82}]},
+ {order:[0,4,1,2],drop:3,batches:[
+  {idx:[0,4],logits:[[2.73,-4.00],[-1.45,1.47]],loss:0.0269,gn:0.16},
+  {idx:[1,2],logits:[[2.43,-3.62],[2.00,-3.07]],loss:0.0043,gn:0.04}]}];
+const LOSSES=EPOCHS.flatMap(e=>e.batches.map(b=>b.loss));
+const TITLES=['Model and data','Shuffle and batch','Load batch','Forward pass','Loss','optimizer.zero_grad()','loss.backward()','optimizer.step()','Evaluate'];
+const CODE=['torch.manual_seed(123)','model = NeuralNetwork(num_inputs=2, num_outputs=2)   # 752 parameters','optimizer = torch.optim.SGD(model.parameters(), lr=0.5)','train_loader = DataLoader(train_ds, batch_size=2, shuffle=True, drop_last=True)','for epoch in range(num_epochs):','    model.train()','    for batch_idx, (features, labels) in enumerate(train_loader):','        logits = model(features)','        loss = F.cross_entropy(logits, labels)','        optimizer.zero_grad()','        loss.backward()','        optimizer.step()','model.eval()   # predictions on train_ds: [0, 0, 0, 1, 1]'];
+const MAP=[[0,1,2],[3,4,5],[6],[7],[8],[9],[10],[11],[12]];
+let seq=[{p:0}],idx=0,timer=null,g=0;
+EPOCHS.forEach((E,e)=>{seq.push({p:1,e});E.batches.forEach((b,k)=>{for(const p of [2,3,4,5,6,7])seq.push({p,e,k,g});g++;});});
+seq.push({p:8,e:2});
+function fmt(v,d){return v.toFixed(d??2);}
+function caption(s){
+ const E=EPOCHS[s.e],b=E&&s.k!=null?E.batches[s.k]:null;
+ switch(s.p){
+ case 0:return 'train_ds holds 5 samples with 2 features each and a class label. The model is three Linear layers (2→30→20→2) with ReLU between them: 752 weights, all on cuda:0.';
+ case 1:return `Epoch ${s.e+1}: shuffle=True draws a new order [${E.order.concat(E.drop).join(', ')}]. batch_size=2 makes 2 full batches, and drop_last=True drops the leftover sample x${E.drop}, so an epoch never ends on a batch of 1.`;
+ case 2:return `Batch ${s.k}: the loader stacks x${b.idx[0]} and x${b.idx[1]} into features of shape [2, 2] and labels [${b.idx.map(i=>Y[i]).join(', ')}]. On a GPU you would .to("cuda") both here.`;
+ case 3:return `logits = model(features) runs both samples through every layer at once. Autograd records each operation, building the graph that backward() will walk.`;
+ case 4:return `cross_entropy applies softmax to the logits and compares them with the labels. The loss is averaged over the batch: ${b.loss.toFixed(4)}.`;
+ case 5:return s.g===0?'zero_grad() resets every .grad. On the first step they are already None, but this call is what keeps gradients from accumulating across steps.':'zero_grad() sets every .grad to None (set_to_none=True is the default). Without it, this backward pass would add to the previous step’s gradients.';
+ case 6:return `loss.backward() walks the graph from the loss back to the inputs and fills .grad for all 752 parameters. Gradient norm: ${b.gn.toFixed(2)}.`;
+ case 7:return `optimizer.step() updates every weight in place: W ← W − 0.5 · W.grad. This is the only call that changes the model.`+(s.k===0?' Next: batch 1.':s.e<2?' Epoch done.':' Training finished.');
+ case 8:return 'model.eval() switches to evaluation mode. Run under torch.no_grad(), argmax of the logits predicts [0, 0, 0, 1, 1] for train_ds, matching the labels. Loss went from 0.75 to 0.004 in 6 steps.';}
+}
+function chip(x,y,w,h,label,cls,o){o=o||{};let s=`<g class="${cls}${o.fx?' fx':''}" opacity="${o.op??1}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" stroke-width="0.5"/><text class="${o.tc||'ts'}" x="${x+w/2}" y="${y+h/2}" text-anchor="middle" dominant-baseline="central">${label}</text></g>`;if(o.strike)s+=`<line x1="${x+3}" y1="${y+h-2}" x2="${x+w-3}" y2="${y+2}" style="stroke:var(--t)" stroke-width="1"/>`;return s;}
+function arrow(x1,y1,x2,y2,color,fx){return `<line class="${fx?'fx':''}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="1.4" marker-end="url(#arrow)"/>`;}
+const LAYERS=[{x:150,w:84,n:'Linear',d:'2→30',lin:1},{x:244,w:46,n:'ReLU'},{x:300,w:84,n:'Linear',d:'30→20',lin:1},{x:394,w:46,n:'ReLU'},{x:450,w:84,n:'Linear',d:'20→2',lin:1}];
+function render(){
+ const s=seq[idx],p=s.p,E=EPOCHS[s.e],b=E&&s.k!=null?E.batches[s.k]:null;
+ let o=`<svg width="100%" viewBox="0 0 680 450" role="img"><title>Single GPU: ${TITLES[p]}</title><desc>${caption(s)}</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+ // dataset
+ o+=`<text class="ts" x="20" y="29" dominant-baseline="central">train_ds</text>`;
+ X.forEach((v,i)=>{o+=chip(100+i*80,16,72,26,`x${i} · y=${Y[i]}`,'c-teal');o+=`<text class="tm" x="${136+i*80}" y="54" text-anchor="middle" dominant-baseline="central">[${fmt(v[0],1)}, ${fmt(v[1],1)}]</text>`;});
+ // loader order for this epoch
+ o+=`<text class="ts" x="20" y="89" dominant-baseline="central">loader</text>`;
+ if(p===0)o+=`<text class="ts" x="100" y="89" dominant-baseline="central" opacity="0.6">shuffles when the epoch starts</text>`;
+ else{
+  const slots=[...E.order,E.drop];
+  slots.forEach((v,j)=>{const bx=100+j*64+(j>=2?16:0)+(j>=4?16:0);let cls='c-gray',op=1,strike=false;
+   if(j===4){strike=true;op=0.5;}
+   else if(p>=2&&p<=7){const st=s.k*2;if(j<st)op=0.35;else if(j<st+2)cls='c-teal';}
+   else if(p===8)op=0.35;
+   o+=chip(bx,76,56,26,'x'+v,cls,{op,strike,fx:p===1});});
+  [['batch 0',100,120],['batch 1',244,120],['dropped',388,56]].forEach(([t,x,w])=>o+=`<text class="ts${p===1?' fx':''}" x="${x+w/2}" y="116" text-anchor="middle" dominant-baseline="central">${t}</text>`);
+ }
+ // GPU box
+ o+=`<rect class="box" x="20" y="136" width="640" height="230" rx="12" stroke-width="0.5"/>`;
+ o+=`<text class="th" x="36" y="156" dominant-baseline="central">cuda:0</text>`;
+ if(b&&p<=7)o+=`<text class="ts" x="644" y="156" text-anchor="end" dominant-baseline="central">epoch ${s.e+1}, batch ${s.k}</text>`;
+ // features
+ o+=`<text class="ts" x="72" y="178" text-anchor="middle" dominant-baseline="central">features</text>`;
+ if(b&&p>=2&&p<=7)b.idx.forEach((v,j)=>o+=chip(36,192+j*34,72,28,`x${v} · y=${Y[v]}`,'c-teal',{fx:p===2}));
+ else o+=`<text class="ts" x="72" y="224" text-anchor="middle" dominant-baseline="central" opacity="0.6">${p===8?'train_ds':'no batch'}</text>`;
+ // layers
+ const fwd=p===3||p===4,bwd=p===6,hasGrad=p===6||p===7;
+ LAYERS.forEach((L,i)=>{
+  o+=`<g class="c-purple${p===7&&L.lin?' fx':''}" opacity="${L.lin?1:0.85}"><rect x="${L.x}" y="190" width="${L.w}" height="64" rx="8" stroke-width="0.5"/><text class="${L.lin?'th':'ts'}" x="${L.x+L.w/2}" y="${L.lin?212:222}" text-anchor="middle" dominant-baseline="central">${L.n}</text>${L.d?`<text class="ts" x="${L.x+L.w/2}" y="234" text-anchor="middle" dominant-baseline="central">${L.d}</text>`:''}</g>`;
+  if(L.lin){
+   const gy=266;
+   if(p===5)o+=chip(L.x,gy,L.w,22,'grad: None','c-gray',{fx:1,op:0.8});
+   else if(hasGrad)o+=chip(L.x,gy,L.w,22,'.grad','c-amber',{fx:p===6});
+   else if(p>=2&&p<=4&&s.g>0)o+=chip(L.x,gy,L.w,22,'old .grad','c-amber',{op:0.45});
+   if(p===7)o+=`<text class="ts fx" x="${L.x+L.w/2}" y="302" text-anchor="middle" dominant-baseline="central">W −= 0.5·grad</text>`;
+  }
+ });
+ // logits + loss
+ o+=`<text class="ts" x="604" y="178" text-anchor="middle" dominant-baseline="central">logits</text>`;
+ if(b&&p>=3&&p<=7)b.logits.forEach((r,j)=>o+=chip(552,192+j*34,104,28,`[${fmt(r[0])}, ${fmt(r[1])}]`,'c-gray',{fx:p===3,tc:'tm'}));
+ if(b&&p>=4&&p<=7)o+=chip(552,266,104,30,`loss ${b.loss.toFixed(4)}`,'c-red',{fx:p===4});
+ // arrows
+ if(fwd){const pts=[[110,222,148],[236,222,242],[292,222,298],[386,222,392],[442,222,448],[536,222,550]];pts.forEach(([x1,y,x2])=>o+=arrow(x1,y,x2,y,'#0F6E56',p===3));
+  o+=`<text class="ts fx" x="342" y="178" text-anchor="middle" dominant-baseline="central" style="fill:#0F6E56">forward → autograd records the graph</text>`;}
+ if(bwd){o+=arrow(604,298,604,320,'#BA7517',1);o+=arrow(604,330,90,330,'#BA7517',1);
+  o+=`<text class="ts fx" x="342" y="346" text-anchor="middle" dominant-baseline="central" style="fill:#854F0B">← backward: chain rule, last layer first; ‖grad‖ = ${b.gn.toFixed(2)}</text>`;}
+ if(p===5)o+=`<text class="ts fx" x="342" y="320" text-anchor="middle" dominant-baseline="central">gradients cleared before the new backward pass</text>`;
+ if(p===7)o+=`<text class="ts fx" x="342" y="334" text-anchor="middle" dominant-baseline="central">SGD: same update rule for all 752 parameters</text>`;
+ if(p===8)o+=`<text class="th fx" x="604" y="224" text-anchor="middle" dominant-baseline="central">[0, 0, 0, 1, 1]</text>`;
+ // loss history
+ o+=`<text class="ts" x="20" y="400" dominant-baseline="central">loss per step</text>`;
+ const done=p===8?6:(b&&p>=4?s.g+1:(b?s.g:0));
+ LOSSES.forEach((l,j)=>{const x=120+j*90,h=Math.max(2,l/0.75*44),cur=b&&j===s.g&&p>=4;
+  o+=`<g class="${cur?'c-red':'c-gray'}" opacity="${j<done?1:0.25}"><rect x="${x}" y="${424-h}" width="40" height="${h}" rx="3" stroke-width="0.5"/></g>`;
+  o+=`<text class="tm" x="${x+20}" y="438" text-anchor="middle" dominant-baseline="central" opacity="${j<done?1:0.4}">${l.toFixed(2)}</text>`;});
+ o+='</svg>';
+ document.getElementById('stage').innerHTML=o;
+ document.getElementById('stitle').textContent=TITLES[p];
+ document.getElementById('status').textContent=(b?`Epoch ${s.e+1}/3, step ${s.g+1}/6 `:'')+`(${idx+1}/${seq.length})`;
+ document.getElementById('cap').textContent=caption(s);
+ document.getElementById('code').innerHTML=CODE.map((c,i)=>`<div class="cl${MAP[p].includes(i)?' on':''}">${c.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>`).join('');
+}
+function next(){if(idx<seq.length-1){idx++;render();}else stop();}
+function prev(){if(idx>0){idx--;render();}}
+function stop(){clearInterval(timer);timer=null;document.getElementById('playb').textContent='Play';}
+function togglePlay(){if(timer){stop();return;}if(idx>=seq.length-1){idx=0;render();}timer=setInterval(next,2300);document.getElementById('playb').textContent='Pause';}
+function restart(){stop();idx=0;render();}
+document.addEventListener('keydown',ev=>{if(ev.key==='ArrowRight')next();else if(ev.key==='ArrowLeft')prev();else if(ev.key===' '){ev.preventDefault();togglePlay();}});
+idx=Math.min(seq.length-1,Math.max(0,+new URLSearchParams(location.search).get('s')||0));
+render();
+</script>
+</body>
+</html>

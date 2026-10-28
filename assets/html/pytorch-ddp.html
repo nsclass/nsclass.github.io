@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PyTorch DDP training loop, step by step</title>
+<style>
+:root{
+  color-scheme: light;
+  --surface-0:#faf9f5;--surface-1:#f1efe8;--surface-2:#ffffff;
+  --text-primary:#1f1e1d;--text-secondary:#5f5e5a;--text-muted:#888780;--text-danger:#a32d2d;
+  --border:rgba(0,0,0,.10);--border-strong:rgba(0,0,0,.22);
+  --bg-accent:#E6F1FB;--text-accent:#185FA5;--border-accent:#378ADD;
+  --t:#5f5e5a;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);font-family:var(--sans);line-height:1.5}
+main{max-width:760px;margin:0 auto;padding:16px 16px 20px}
+h1{font-size:22px;font-weight:500;margin:0 0 4px}
+.sub{font-size:14px;color:var(--text-secondary);margin:0 0 20px}
+.sub a{color:var(--text-accent)}
+button{font:inherit;font-size:13px;padding:6px 12px;border:0.5px solid var(--border-strong);background:transparent;color:var(--text-primary);border-radius:8px;cursor:pointer}
+button:hover{background:var(--surface-1)}
+button:active{transform:scale(.98)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--border-accent);outline-offset:2px}
+.seg button.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+input[type=range]{accent-color:var(--border-accent)}
+.cl{padding:1px 8px;border-radius:4px;white-space:pre;color:var(--text-secondary)}
+.cl.on{background:var(--bg-accent);color:var(--text-accent)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px}
+svg text{font-family:var(--sans)}
+.t{font-size:14px;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.box{fill:var(--surface-1);stroke:var(--border-strong)}
+.c-teal{--f:#E1F5EE;--s:#0F6E56;--x:#085041}
+.c-gray{--f:#F1EFE8;--s:#5F5E5A;--x:#444441}
+.c-purple{--f:#EEEDFE;--s:#534AB7;--x:#3C3489}
+.c-amber{--f:#FAEEDA;--s:#854F0B;--x:#633806}
+.c-red{--f:#FCEBEB;--s:#A32D2D;--x:#791F1F}
+[class^="c-"]>rect{fill:var(--f);stroke:var(--s)}
+[class^="c-"]>text{fill:var(--x)}
+@media (prefers-reduced-motion: no-preference){.fx{animation:fx .55s ease-out}@keyframes fx{from{opacity:0}to{opacity:1}}}
+</style>
+</head>
+<body>
+<main>
+<p class="sub">Losses, gradients and the single weight W are illustrative. The shuffle orders are the real <code>torch.randperm(N)</code> orders <code>DistributedSampler</code> draws with its default <code>seed=0</code>, and sharding, padding, batching and step counts follow <code>DistributedSampler</code> and <code>DataLoader</code>. Keys: &larr; &rarr; step, space plays.</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px 18px;font-size:13px;color:var(--text-secondary);margin:0 0 10px">
+  <div style="display:flex;align-items:center;gap:8px">world_size<span class="seg" style="display:inline-flex;gap:4px"><button data-w="1" onclick="setW(1)">1</button><button data-w="2" class="on" onclick="setW(2)">2</button><button data-w="4" onclick="setW(4)">4</button><button data-w="8" onclick="setW(8)">8</button></span></div>
+  <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="dl" checked onchange="rebuild()">drop_last=True</label>
+  <label style="display:flex;align-items:center;gap:8px">dataset size<input type="range" id="n" min="5" max="16" step="1" value="5" style="flex:1" oninput="rebuild()"><span id="nv" style="min-width:18px;font-weight:500;color:var(--text-primary)"></span></label>
+  <label style="display:flex;align-items:center;gap:8px">batch_size<input type="range" id="b" min="1" max="4" step="1" value="2" style="flex:1" oninput="rebuild()"><span id="bv" style="min-width:18px;font-weight:500;color:var(--text-primary)"></span></label>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px">
+  <span id="summary" style="font-size:13px;color:var(--text-secondary);flex:1;min-width:220px"></span>
+  <button onclick="prev()" aria-label="Previous step">&larr;</button>
+  <button id="playb" onclick="togglePlay()">Play</button>
+  <button onclick="next()" aria-label="Next step">&rarr;</button>
+  <button onclick="restart()">Restart</button>
+</div>
+<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px;margin:0 0 4px"><span id="stitle" style="font-weight:500"></span><span id="status" style="color:var(--text-secondary);text-align:right"></span></div>
+<div id="cap" aria-live="polite" style="font-size:14px;line-height:1.6;color:var(--text-secondary);min-height:48px;margin:0 0 6px"></div>
+<div id="stage"></div>
+<div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--text-secondary);margin:6px 0 12px">
+  <span><span class="sw" style="background:#9FE1CB"></span> sample in current batch</span>
+  <span><span class="sw" style="background:#D3D1C7"></span> queued or used</span>
+  <span><span class="sw" style="background:#CECBF6"></span> model weights</span>
+  <span><span class="sw" style="background:#FAC775"></span> gradients</span>
+  <span>* padded repeat</span>
+</div>
+<div id="code" style="font-family:var(--mono);font-size:12px;line-height:1.7;background:var(--surface-1);border-radius:8px;padding:10px 6px;overflow-x:auto"></div>
+</main>
+<script>
+const EPOCHS=3,LR=0.5;
+let ws=2,N=5,B=2,DROP=true,seq=[],idx=0,timer=null,P={};
+const TITLES=['Launch processes','Replicate the model','Shuffle (same on all ranks)','Pad and shard by rank','Load per-GPU batches','Forward pass (independent)','Backward + all-reduce','Optimizer step (in sync)','Empty data loader'];
+const MAP=[[0,1],[2],[3],[4],[5,6],[7],[8],[9],[5]];
+function code(){return ['rank = int(os.environ["LOCAL_RANK"]); world_size = int(os.environ["WORLD_SIZE"])','init_process_group(backend="nccl", rank=rank, world_size=world_size)','model = DDP(model.to(rank), device_ids=[rank])','for epoch in range(num_epochs): train_loader.sampler.set_epoch(epoch)','sampler=DistributedSampler(train_ds)   # pad, then indices[rank::world_size]',`DataLoader(train_ds, batch_size=${B}, drop_last=${DROP?'True':'False'}, sampler=sampler)`,'for features, labels in train_loader: features = features.to(rank)','logits = model(features); loss = F.cross_entropy(logits, labels)','loss.backward()     # DDP all-reduces grads across ranks','optimizer.step()    # same averaged grad on every rank'];}
+function rng(seed){let s=(seed*9301+49297)%233280;return()=>{s=(s*9301+49297)%233280;return s/233280;}}
+// torch.randperm(N, generator=torch.Generator().manual_seed(seed + epoch)) with seed=0, as DistributedSampler draws it
+const PERMS={"5":[[4,0,1,3,2],[0,4,2,3,1],[3,4,1,0,2]],"6":[[2,5,3,0,1,4],[1,5,2,0,3,4],[0,3,1,2,4,5]],"7":[[4,0,5,3,2,6,1],[0,6,1,3,5,2,4],[2,4,3,0,6,1,5]],"8":[[4,0,7,3,2,5,1,6],[5,4,2,6,7,3,1,0],[0,4,7,2,6,5,1,3]],"9":[[8,0,2,3,7,1,4,5,6],[4,0,6,5,7,2,8,3,1],[0,8,6,3,7,1,2,5,4]],"10":[[4,1,7,5,3,9,0,8,6,2],[5,6,1,2,0,8,9,3,7,4],[8,7,1,5,6,9,0,4,2,3]],"11":[[10,0,4,3,5,8,2,1,9,7,6],[0,10,2,3,7,6,4,8,1,9,5],[3,8,10,0,1,4,5,2,7,6,9]],"12":[[8,0,5,9,7,4,2,10,3,1,11,6],[1,4,6,8,11,0,5,3,2,9,10,7],[0,9,3,2,10,5,6,7,8,1,4,11]],"13":[[3,4,0,2,11,8,12,5,10,6,9,1,7],[6,12,7,11,3,0,5,1,2,9,8,10,4],[5,4,7,2,12,8,1,0,3,6,10,9,11]],"14":[[4,3,7,6,2,11,9,10,1,12,5,13,8,0],[7,10,2,3,0,6,9,12,13,11,1,5,4,8],[2,10,7,13,12,8,5,4,1,6,0,9,3,11]],"15":[[14,4,3,2,12,0,13,5,1,8,11,6,9,7,10],[10,4,5,11,7,8,2,12,6,9,13,1,0,14,3],[3,4,10,0,1,14,6,2,12,8,7,9,5,11,13]],"16":[[12,10,9,6,11,8,13,5,2,14,15,0,4,3,7,1],[5,15,6,4,11,2,7,12,1,0,9,8,10,3,13,14],[8,13,1,9,6,7,0,11,4,2,10,12,15,14,5,3]]};
+function perm(e){return PERMS[N][e];}
+function shard(e){const p=perm(e),padded=p.concat(p.slice(0,P.total-N)).map((v,i)=>({v,pad:i>=N}));const per=[];for(let r=0;r<ws;r++)per.push(padded.filter((_,i)=>i%ws===r));return{p,padded,per};}
+function rebuild(){
+ N=+document.getElementById('n').value;B=+document.getElementById('b').value;DROP=document.getElementById('dl').checked;
+ document.getElementById('nv').textContent=N;document.getElementById('bv').textContent=B;
+ const total=Math.ceil(N/ws)*ws,m=total/ws,full=Math.floor(m/B),rem=m%B,steps=DROP?full:Math.ceil(m/B);
+ P={total,m,full,rem,steps,padN:total-N};
+ let W=0.5,g=0;seq=[{p:0,W},{p:1,W}];
+ for(let e=0;e<EPOCHS;e++){
+  seq.push({p:2,e,W},{p:3,e,W});
+  if(steps===0){seq.push({p:8,e,W});break;}
+  for(let k=0;k<steps;k++){
+   const bs=k<full?B:rem;const loss=[],grad=[];
+   for(let r=0;r<ws;r++){const q=rng(g*31+r*17+ws*5+N+B*3+11);q();loss.push(Math.max(0.02,0.7*Math.pow(0.82,g)*(0.75+0.5*q())));grad.push(0.4*Math.pow(0.8,g)*(0.55+0.9*q()));}
+   const avg=grad.reduce((a,c)=>a+c,0)/ws,W1=W-LR*avg;
+   for(const p of [4,5,6,7])seq.push({p,e,k,bs,loss,grad,avg,W,W1});
+   W=W1;g++;
+  }
+ }
+ document.getElementById('summary').textContent=`Per-GPU batch ${B}, global batch ${B} \u00d7 ${ws} = ${B*ws}, ${steps} step${steps===1?'':'s'} per epoch`;
+ restart();
+}
+function caption(s){
+ const {total,m,rem,steps,padN}=P;
+ switch(s.p){
+ case 0:return `torchrun launches ${ws} process${ws>1?'es':''}, one per GPU. Each reads its own RANK (0\u2013${ws-1}) and WORLD_SIZE=${ws}, then joins the NCCL process group.`;
+ case 1:return `Each process puts the model on cuda:rank. DDP() broadcasts rank 0\u2019s weights, so all replicas start identical.`;
+ case 2:return `Epoch ${s.e+1}: set_epoch(${s.e}) seeds the sampler, so every rank computes the same shuffled order of all ${N} samples, with no communication.`;
+ case 3:return (padN>0?`${N} isn\u2019t divisible by ${ws}, so the sampler repeats ${padN} sample${padN>1?'s':''} to reach ${total}. `:`${N} divides evenly by ${ws}, so there\u2019s no padding. `)+`Rank r takes indices[r::${ws}], a shard of ${m}. With batch_size=${B}, that\u2019s ${steps} step${steps===1?'':'s'} per epoch`+(DROP&&rem?`, and drop_last discards ${rem} per rank.`:'.');
+ case 4:return `Step ${s.k+1}/${steps}: each rank\u2019s DataLoader takes its next ${s.bs} index${s.bs>1?'es':''}. Per-GPU batch ${s.bs}, global batch ${s.bs} \u00d7 ${ws} = ${s.bs*ws}.`+(s.bs<B?' This last batch is smaller because drop_last=False.':'');
+ case 5:return `Forward pass runs on every GPU in parallel. Different data gives a different loss on each rank.`;
+ case 6:return ws===1?`loss.backward() computes gradients. With one process there is nothing to average.`:`loss.backward() computes local gradients from ${s.bs} sample${s.bs>1?'s':''} each. DDP all-reduces them, so every rank holds the mean over all ${s.bs*ws} samples.`;
+ case 7:return `optimizer.step() applies the same averaged gradient on every rank, so replicas stay identical.`+(s.k<steps-1?` Next: step ${s.k+2}.`:(s.e<EPOCHS-1?' Epoch done; the next epoch reshuffles.':' Training finished.'));
+ case 8:return `Each rank\u2019s shard (${m}) is smaller than batch_size=${B} and drop_last=True, so every loader is empty and nothing trains. This is the tutorial\u2019s ZeroDivisionError case.`;}
+}
+function chip(x,y,w,h,label,cls,o){o=o||{};let s=`<g class="${cls}${o.fx?' fx':''}" opacity="${o.op??1}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" stroke-width="0.5" ${o.dash?'stroke-dasharray="3 2"':''}/><text class="ts" x="${x+w/2}" y="${y+h/2}" text-anchor="middle" dominant-baseline="central">${label}</text></g>`;if(o.strike)s+=`<line x1="${x+3}" y1="${y+h-2}" x2="${x+w-3}" y2="${y+2}" style="stroke:var(--t)" stroke-width="1"/>`;return s;}
+function render(){
+ const s=seq[idx],p=s.p,e=s.e??0,sh=shard(e),{full,rem,steps}=P;
+ const colW=(640-(ws-1)*8)/ws,narrow=ws>=8;
+ let o=`<svg width="100%" viewBox="0 0 680 420" role="img"><title>DDP: ${TITLES[p]}</title><desc>${caption(s)}</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+ o+=`<text class="ts" x="20" y="29" dominant-baseline="central">train_ds</text>`;
+ for(let i=0;i<N;i++)o+=chip(100+i*32,16,28,26,'x'+i,'c-teal');
+ o+=`<text class="ts" x="20" y="79" dominant-baseline="central">sampler</text>`;
+ if(p<2)o+=`<text class="ts" x="100" y="79" dominant-baseline="central" opacity="0.6">waiting for set_epoch()</text>`;
+ else if(p===2)sh.p.forEach((v,i)=>o+=chip(100+i*32,66,28,26,'x'+v,'c-teal',{fx:1}));
+ else sh.padded.forEach((it,i)=>{o+=chip(100+i*32,66,28,26,'x'+it.v+(it.pad?'*':''),'c-gray',{dash:it.pad,fx:p===3});o+=`<text class="ts${p===3?' fx':''}" x="${114+i*32}" y="106" text-anchor="middle" dominant-baseline="central">r${i%ws}</text>`;});
+ for(let r=0;r<ws;r++){
+  const x=20+r*(colW+8),cx=x+colW/2;
+  o+=`<rect class="box" x="${x}" y="120" width="${colW}" height="232" rx="12" stroke-width="0.5"/>`;
+  o+=`<text class="th" x="${cx}" y="138" text-anchor="middle" dominant-baseline="central">${narrow?'rank '+r:'rank '+r+' \u00b7 cuda:'+r}</text>`;
+  if(p>=3){const q=sh.per[r],tw=q.length*29-3;let sx=cx-tw/2;
+   q.forEach((it,j)=>{const lab='x'+it.v+(it.pad?'*':'');let cls='c-gray',op=1,strike=false;
+    if(p>=4&&p<=7){const st=s.k*B;if(j<st)op=0.35;else if(j<st+s.bs)cls='c-teal';}
+    if(DROP&&j>=full*B&&rem){strike=true;op=0.5;}
+    if(p===8){strike=true;op=0.5;}
+    o+=chip(sx+j*29,152,26,20,lab,cls,{dash:it.pad,op,strike,fx:p===3});});}
+  if(p>=4&&p<=7){const bt=sh.per[r].slice(s.k*B,s.k*B+s.bs),tw=bt.length*32-4;let bx=cx-tw/2;
+   bt.forEach((it,j)=>o+=chip(bx+j*32,182,28,24,'x'+it.v+(it.pad?'*':''),'c-teal',{fx:p===4}));}
+  else if(p===8)o+=`<text class="ts fx" x="${cx}" y="194" text-anchor="middle" dominant-baseline="central">${narrow?'empty':'loader is empty'}</text>`;
+  else o+=`<text class="ts" x="${cx}" y="194" text-anchor="middle" dominant-baseline="central" opacity="0.6">${narrow?'\u2014':'no batch yet'}</text>`;
+  if(p===0)o+=`<text class="ts fx" x="${cx}" y="236" text-anchor="middle" dominant-baseline="central">${narrow?'joined':'joined process group'}</text>`;
+  else{const Wv=p===7?s.W1:s.W;o+=`<g class="c-purple${p===1||p===7?' fx':''}"><rect x="${x+8}" y="216" width="${colW-16}" height="40" rx="8" stroke-width="0.5"/><text class="${narrow?'ts':'th'}" x="${cx}" y="236" text-anchor="middle" dominant-baseline="central">${narrow?'W ':'W = '}${Wv.toFixed(3)}</text></g>`;}
+  if(p>=5&&p<=7)o+=`<text class="ts${p===5?' fx':''}" x="${cx}" y="272" text-anchor="middle" dominant-baseline="central">loss ${s.loss[r].toFixed(2)}</text>`;
+  if(p===6||p===7){const lab=p===6?(ws>=4?'g ':'local grad ')+s.grad[r].toFixed(3):(ws>=4?'avg ':'avg grad ')+s.avg.toFixed(3);
+   o+=`<g class="c-amber fx"><rect x="${x+8}" y="286" width="${colW-16}" height="24" rx="4" stroke-width="0.5"/><text class="ts" x="${cx}" y="298" text-anchor="middle" dominant-baseline="central">${lab}</text></g>`;}
+  if(p===6)o+=`<line class="fx" x1="${cx}" y1="312" x2="${cx}" y2="362" stroke="#BA7517" stroke-width="1.2" marker-end="url(#arrow)"/>`;
+  if(p===7)o+=`<text class="ts fx" x="${cx}" y="330" text-anchor="middle" dominant-baseline="central">${narrow?'W \u2212= lr\u00b7avg':'W \u2190 W \u2212 '+LR+'\u00b7avg'}</text>`;
+ }
+ if(p===6||p===7)o+=`<g class="c-amber fx"><rect x="20" y="366" width="640" height="36" rx="8" stroke-width="0.5"/><text class="th" x="340" y="384" text-anchor="middle" dominant-baseline="central">${ws===1?'world_size=1: all-reduce is a no-op':'all-reduce (NCCL): avg of '+ws+' local grads = '+s.avg.toFixed(3)}</text></g>`;
+ else if(p===8)o+=`<g class="c-red fx"><rect x="20" y="366" width="640" height="36" rx="8" stroke-width="0.5"/><text class="th" x="340" y="384" text-anchor="middle" dominant-baseline="central">0 batches per rank: the training loop body never runs</text></g>`;
+ else o+=`<rect class="box" x="20" y="366" width="640" height="36" rx="8" stroke-width="0.5" opacity="0.5"/><text class="ts" x="340" y="384" text-anchor="middle" dominant-baseline="central" opacity="0.6">gradient sync channel (used during backward)</text>`;
+ o+='</svg>';
+ document.getElementById('stage').innerHTML=o;
+ document.getElementById('stitle').textContent=TITLES[p];
+ let st=`${idx+1}/${seq.length}`;
+ if(p>=2)st=`Epoch ${e+1}/${EPOCHS}`+(p>=4&&p<=7?`, step ${s.k+1}/${steps}, global batch ${s.bs*ws}`:'')+` (${idx+1}/${seq.length})`;
+ document.getElementById('status').textContent=st;
+ document.getElementById('cap').textContent=caption(s);
+ document.getElementById('code').innerHTML=code().map((c,i)=>`<div class="cl${MAP[p].includes(i)?' on':''}">${c.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>`).join('');
+}
+function next(){if(idx<seq.length-1){idx++;render();}else stop();}
+function prev(){if(idx>0){idx--;render();}}
+function stop(){clearInterval(timer);timer=null;document.getElementById('playb').textContent='Play';}
+function togglePlay(){if(timer){stop();return;}if(idx>=seq.length-1){idx=0;render();}timer=setInterval(next,2300);document.getElementById('playb').textContent='Pause';}
+function restart(){stop();idx=0;render();}
+function setW(w){ws=w;document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',+b.dataset.w===w));rebuild();}
+document.addEventListener('keydown',ev=>{if(ev.target.tagName==='INPUT')return;if(ev.key==='ArrowRight')next();else if(ev.key==='ArrowLeft')prev();else if(ev.key===' '){ev.preventDefault();togglePlay();}});
+rebuild();
+</script>
+</body>
+</html>
