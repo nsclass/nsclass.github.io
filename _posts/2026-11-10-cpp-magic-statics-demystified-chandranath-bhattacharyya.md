@@ -167,6 +167,7 @@ A static whose initializer is a constant expression gets constant initialization
 | `std::vector<T>` | `std::array` returned as `std::span<const T>` | span keeps the size out of the signature |
 | `std::map` / `std::set` | sorted `std::array` (Chromium's `MakeFixedFlatMap`; `std::flat_map` is `constexpr` in C++26) | fixed contents |
 
+{% raw %}
 ```cpp
 #include <algorithm>
 #include <array>
@@ -215,6 +216,7 @@ int main() {
               GetDefaultValues().size(), GetErrorMessages().find(400)->data());
 }
 ```
+{% endraw %}
 
 The "before" versions of these three functions produce three `-Wexit-time-destructors` warnings, plus four `__cxa_guard_acquire` and four `__cxa_atexit` calls in the `-O2` assembly. This file has **zero of each**, and the `static_assert` shows the map lookup works at compile time. The same file compiles on GCC 15.1 and MSVC. Two details matter: a `static constexpr` local inside a `constexpr` function is legal only since C++23, and the return type is `auto` because the map's type includes `N`. The slides use the same tricks on user types: `std::string` members become `std::string_view`, and a `std::vector` member becomes `std::initializer_list`, which works only for file-local tables because it doesn't own its backing array.
 
