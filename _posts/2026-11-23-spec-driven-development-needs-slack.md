@@ -67,15 +67,27 @@ His prescription sounds a lot like slack. After each feature, stop and restore t
 
 This connects to an idea from his book *Tidy First?*: software is worth its features plus its options, the cheap ability to change it later. Spec-driven generation is very good at producing features. Left alone, it quietly spends the options. **A spec with no slack is a plan to use up the options as fast as the agent can type.**
 
+## Uncle Bob: the same warning, from experiments
+
+Robert C. Martin (Uncle Bob) reached the same conclusion by trying it, in a [live conversation with Matt Pocock](https://www.youtube.com/watch?v=zcLPGC-tvgk). He called the urge to specify everything up front "a very old temptation," the one that gave us waterfall. Agile was the answer to it, because what gets built never matches the plan.
+
+He said his own upfront plans for agents were a disaster. The agents couldn't follow plans that missed details, and they love writing plans that look good but fall apart at the end. So he went back to an agile loop: let the agents build a story or two, review the architecture, then adjust. With the cost of change close to zero, he asked, why plan heavily up front at all?
+
+That loop is "plan to redesign" in practice, and so is the rest of his setup. He designs the module boundaries himself and enforces them with a dependency-rules file the agents can't break. He also relies on deterministic checks after generation, such as mutation testing and complexity limits. Rules written into a prompt, he found, turn into loose guidelines that get lost in a long context.
+
+Matt Pocock pushed back on one point, and I think it is the most interesting part of the conversation. Pocock said "spec-driven" is vague, since any upfront alignment gets that label. The real test is whether you keep the spec and come back to it. Bob doesn't: his specs are temporary, and the finished code is the spec. Pocock also noted that only the building got faster. Planning and review take as long as they always did.
+
+I land between them. Throw every spec away and you lose the contract that callers and verifiers depend on. Keep every spec forever and you have waterfall with version control. Slack points to the middle: **keep the contract, and let the provisional parts be as disposable as Bob's specs.** ([Transcript summary](https://sozai.app/transcript/uncle-bob-software-fundamentals-ai/))
+
 ## Specs with slack built in
 
 None of this is an argument against specs. It is an argument for specs that expect to change. A few practices I'd suggest:
 
-1. **Layer the spec.** Mark which parts are the stable contract and which are provisional. The agent should treat the second group as free to change.
+1. **Layer the spec.** Mark which parts are the stable contract and which are provisional. Keep the contract next to the code and come back to it; treat the provisional parts as disposable.
 2. **Treat the first implementation as a probe.** Expect the generated code to teach you something, and plan to revise the spec from it. Spec and code evolve together; the loop goes both ways.
 3. **Add a change budget to every spec.** Three short answers: what is likely to be redesigned, who else might reuse this, and how it would be removed.
 4. **Tidy between features.** Before the agent starts the next feature, spend a pass restoring options: simplify, cut dead paths, clean up the seams.
-5. **Verify the contract, not the incidentals.** Put tests and formal verification on what callers truly rely on. Everything else stays free to move.
+5. **Verify the contract, not the incidentals.** Put tests, mutation testing and formal verification on what callers truly rely on, as deterministic checks rather than prompt rules. Everything else stays free to move.
 
 ## Closing thought
 
@@ -87,3 +99,4 @@ The fix is not fewer specs. It is specs that admit they will change: plan to red
 
 - Lisa Lippincott, [Cutting Some Slack for our Programs](https://www.youtube.com/watch?v=xwnRPyRK5h4), C++Now 2026
 - Kent Beck, [Software Engineering in the Age of AI](https://www.youtube.com/watch?v=F8fBgDCf2Y4), Prodacity 2026 ([notes on this blog](/2026/11/23/software-engineering-age-of-ai-kent-beck))
+- Robert C. Martin (Uncle Bob) with Matt Pocock, [Uncle Bob on Software Fundamentals in the Age of AI](https://www.youtube.com/watch?v=zcLPGC-tvgk), live stream, August 2026
