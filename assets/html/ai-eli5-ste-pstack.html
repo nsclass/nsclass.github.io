@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ELI5 vs STE checker</title>
+<style>
+:root{
+  color-scheme: light;
+  --surface-0:#faf9f5;--surface-1:#f1efe8;--surface-2:#ffffff;
+  --text-primary:#1f1e1d;--text-secondary:#5f5e5a;--text-muted:#888780;
+  --border:rgba(0,0,0,.10);--border-strong:rgba(0,0,0,.22);
+  --bg-accent:#E6F1FB;--text-accent:#185FA5;--border-accent:#378ADD;
+  --ok:#0F6E56;--ok-bg:#E1F5EE;--warn:#8a5a00;--warn-bg:#FCEFD4;--bad:#a32d2d;--bad-bg:#FBE4E4;
+  --pur:#534AB7;--pur-bg:#EEEDFE;--gray-bg:#ECEAE3;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);font-family:var(--sans);line-height:1.5}
+main{max-width:760px;margin:0 auto;padding:16px 16px 20px}
+h1{font-size:20px;font-weight:600;margin:0 0 4px}
+.sub{font-size:14px;color:var(--text-secondary);margin:0 0 14px}
+button{font:inherit;font-size:13px;padding:6px 12px;border:0.5px solid var(--border-strong);background:transparent;color:var(--text-primary);border-radius:8px;cursor:pointer}
+button:hover{background:var(--surface-1)}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--border-accent);outline-offset:2px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.seg button.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.who{font-size:13px;color:var(--text-secondary);margin:0 0 10px}
+.who code{font-family:var(--mono);font-size:12px;background:var(--surface-1);padding:1px 5px;border-radius:4px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--surface-1);border-radius:8px;padding:6px 8px}
+.stat b{display:block;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat span{font-size:11px;color:var(--text-secondary)}
+.stat.good b{color:var(--ok)} .stat.mid b{color:var(--warn)} .stat.bad b{color:var(--bad)}
+.rows{display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:start}
+.row.h .txt{font-weight:600}
+.meter{position:relative;height:18px;background:var(--surface-1);border-radius:4px;overflow:hidden;margin-top:3px}
+.meter i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.meter em{position:absolute;right:4px;top:0;font-size:11px;font-style:normal;line-height:18px;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.meter .tick{position:absolute;top:0;bottom:0;width:1px;background:var(--border-strong)}
+.txt{font-size:14.5px;overflow-wrap:anywhere;min-width:0}
+.who{overflow-wrap:anywhere}
+.txt code{font-family:var(--mono);font-size:12.5px;background:var(--surface-1);padding:0 4px;border-radius:4px}
+mark{background:none;color:inherit;border-bottom:2px solid;padding:0 1px;cursor:help;border-radius:2px}
+mark.vocab{border-color:var(--bad);background:var(--bad-bg)}
+mark.dash{border-color:var(--bad);background:var(--bad-bg)}
+mark.hedge{border-color:var(--warn);background:var(--warn-bg)}
+mark.filler{border-color:var(--warn);background:var(--warn-bg)}
+mark.chat{border-color:var(--pur);background:var(--pur-bg)}
+mark.report{border-color:var(--pur);background:var(--pur-bg)}
+mark.passive{border-color:var(--text-accent);background:var(--bg-accent)}
+mark.vague{border-color:var(--text-accent);background:var(--bg-accent)}
+mark.ing{border-color:var(--warn);background:var(--warn-bg)}
+mark.adverb{border-color:var(--warn);background:var(--warn-bg)}
+mark.semi{border-color:var(--bad);background:var(--bad-bg)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--text-secondary);margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;border-bottom:2px solid}
+.legend .n{font-variant-numeric:tabular-nums;color:var(--text-primary);font-weight:600}
+.legend .zero{opacity:.45}
+.lost{font-size:13.5px;margin:10px 0 0;padding:8px 10px;border-radius:8px;background:var(--bad-bg);color:#6b1f1f}
+.keep{font-size:13.5px;margin:10px 0 0;padding:8px 10px;border-radius:8px;background:var(--ok-bg);color:#08402f}
+details{margin-top:10px}
+summary{font-size:13px;color:var(--text-accent);cursor:pointer}
+textarea{width:100%;min-height:150px;margin-top:8px;font-family:var(--mono);font-size:12.5px;padding:8px;border:0.5px solid var(--border-strong);border-radius:8px;background:var(--surface-2);color:var(--text-primary);resize:vertical}
+.note{font-size:12px;color:var(--text-muted);margin:8px 0 0}
+/* layers */
+.pipe{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 12px}
+.pipe button{display:flex;flex-direction:column;align-items:center;padding:6px 10px;background:var(--surface-1);min-width:104px}
+.pipe button small{font-size:11px;color:var(--text-secondary)}
+.pipe button b{font-size:13px;font-weight:600}
+.pipe button.on{background:var(--bg-accent);border:1.5px solid var(--border-accent)}
+.pipe button.done{background:var(--ok-bg);border-color:var(--ok)}
+.pipe .ar{color:var(--text-muted);font-size:14px}
+.lh{font-size:16px;font-weight:600;margin:0 0 2px}
+.ls{font-size:13px;color:var(--text-secondary);margin:0 0 10px}
+.rules{margin:0 0 12px;padding-left:18px;font-size:13.5px}
+.rules li{margin:2px 0}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.ba div{font-size:13.5px;padding:8px 10px;border-radius:8px}
+.ba .b{background:var(--bad-bg)} .ba .a{background:var(--ok-bg)}
+.ba small{display:block;font-size:11px;color:var(--text-secondary);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.ba code{font-family:var(--mono);font-size:12px}
+.nav{display:flex;gap:8px;align-items:center;margin-top:10px}
+.nav .sp{flex:1}
+.why{font-size:13.5px;margin:4px 0 10px}
+@media (max-width:560px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .stats .stat:nth-child(n+4){display:none}
+  .row{grid-template-columns:1fr;gap:2px}
+  .ba{grid-template-columns:1fr}
+  .pipe .ar{display:none}
+  .pipe button{min-width:0;flex:1 1 30%}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+/* ---------- texts ---------- */
+var TEXTS = {
+  orig: {
+    label: "Agent's first reply",
+    who: "A typical agent reply to the pstack README prompt <code>repro first, then fix and verify</code>.",
+    text: [
+      "I've thoroughly investigated the scroll drift issue and identified the root cause — it's a crucial interplay between the ResizeObserver callback and the virtualized list's scroll anchoring logic, which leverages a 750ms polling interval in useStickyScroll to re-measure row heights, and since the measured heights are being rounded differently than the estimated heights, this causes a small delta to accumulate on each tick, ultimately resulting in the visible drift even when the user is idle. I've implemented a fix that ensures measurements are compared with a tolerance, and additionally removed the redundant polling since the ResizeObserver already handles it. It should be noted that this may potentially also affect the chat panel. Let me know if you'd like me to make any further changes!"
+    ].join("\n")
+  },
+  analogy: {
+    label: "Classic ELI5 (analogy)",
+    who: "What \"explain like I'm five\" often produces: a story instead of the mechanism.",
+    text: [
+      "Imagine two kids building a tower of blocks. One kid counts the blocks and the other kid guesses. Every so often they argue about how tall the tower is, and the tower wobbles a tiny bit. After a while, all the wobbles add up and the tower leans. So I told the kids to stop arguing about tiny differences!"
+    ].join("\n"),
+    lost: "Easy to read, but the reader loses the facts they need: which code, the 750 ms timer, that the timer was deleted, and that the chat panel is untested. \"Argue\" is not a mechanism."
+  },
+  bro: {
+    label: "/bro (plain ELI5)",
+    who: "pstack <code>/bro</code>: \"Restate your last message. Stop using jargon and speak coherently. State it more simply and concisely, like one human talking to another.\"",
+    text: [
+      "The list moves by itself because two parts of the code disagree about row height. Every 750 ms, one part measures each row and rounds the height to whole pixels. The other part uses an unrounded guess. The list shifts by the gap between the two numbers, and the shifts add up. I made the code ignore gaps smaller than 1 pixel. I also deleted the 750 ms timer, because `ResizeObserver` already reports size changes. The chat panel uses the same list, and I have not tested it yet."
+    ].join("\n"),
+    keep: "Same facts as the first reply, in everyday words. No analogy: pstack's teach skill says \"State the concrete mechanism, not a metaphor.\""
+  },
+  ste: {
+    label: "/technical-writing (STE)",
+    who: "pstack <code>/technical-writing</code>: Diátaxis, then Google developer style, then STE, then Global English, then unslop. Written as a PR body.",
+    text: [
+      "## Fix scroll drift in an idle list",
+      "The list scrolls by itself when the user does nothing. The cause is a rounding mismatch between two row heights.",
+      "- Every 750 ms, `useStickyScroll` calls `measureRow()` for each visible row.",
+      "- `measureRow()` rounds the measured height to whole pixels.",
+      "- `estimateRow()` returns the estimated height without rounding.",
+      "- `useStickyScroll` moves the scroll anchor by the difference. The differences add up on each tick.",
+      "This PR makes two changes:",
+      "1. `useStickyScroll` ignores a difference smaller than 1 px.",
+      "2. This PR removes the 750 ms timer. `ResizeObserver` already reports each size change.",
+      "Caution: `ChatPanel` uses the same list. Test scrolling in `ChatPanel` before you merge this PR."
+    ].join("\n"),
+    keep: "Every sentence carries one fact. Each thing has one name (\"measured height\", \"estimated height\"). The warning comes before the step it guards."
+  }
+};
+
+/* ---------- linter (pure) ---------- */
+var FLAGS = [
+  {id:"vocab", label:"AI vocabulary / leverage, utilize", src:"unslop 7, 31",
+   re:/\b(additionally|crucial|delve|enhance\w*|foster\w*|landscape|pivotal|showcas\w*|testament|underscor\w*|vibrant|leverag\w*|utiliz\w*)\b/gi},
+  {id:"dash", label:"em or en dash", src:"unslop 13, Global English", re:/\s?[—–]\s?|\s-\s/g},
+  {id:"semi", label:"semicolon", src:"Global English", re:/;/g},
+  {id:"hedge", label:"hedge", src:"unslop 24", re:/\b(might|could|potentially|possibly|perhaps|probably|likely|should)\b/gi},
+  {id:"filler", label:"filler", src:"unslop 23", re:/\b(in order to|it is important to note( that)?|it should be noted( that)?|due to the fact that|any further)\b/gi},
+  {id:"chat", label:"chatbot phrase", src:"unslop 20", re:/(let me know[^.!?]*|i hope this helps|happy to help|feel free to|great question)/gi},
+  {id:"report", label:"report about the work", src:"teach, poteto-mode reply", re:/\bI['’]?ve\s+(thoroughly\s+)?(investigated|implemented|identified|analy[sz]ed|completed|reviewed)\b/gi},
+  {id:"adverb", label:"empty adverb", src:"unslop 30, Google style", re:/\b(thoroughly|ultimately|simply|quickly|easily|really|very|actually|basically|just)\b/gi},
+  {id:"ing", label:"trailing -ing phrase", src:"unslop 3, STE", re:/,\s+(\w+ly\s+)?(resulting|ensuring|highlighting|leading|causing|making|allowing|enabling)\b/gi},
+  {id:"passive", label:"passive voice", src:"unslop 29, STE", re:/\b(is|are|was|were|be|been|being)\s+(\w+ed|done|made|shown|known|seen|given|taken|built|written)\b/gi},
+  {id:"vague", label:"vague this / it / which", src:"Global English", re:/(\bthis\s+(causes|is|means|makes|leads|results|was)\b|\bit['’]s\b|,\s*which\b|\bhandles it\b)/gi}
+];
+
+function maskCode(s){ return s.replace(/`[^`]*`/g, function(m){ return "\u0001".repeat(m.length); }); }
+function splitSentences(line){
+  var m = maskCode(line), out = [], start = 0, re = /[.!?]+(?=\s+[A-Z0-9`"(\u0001]|\s*$)/g, x;
+  while ((x = re.exec(m))){ var end = x.index + x[0].length; out.push(line.slice(start, end).trim()); start = end; }
+  if (start < line.length && line.slice(start).trim()) out.push(line.slice(start).trim());
+  return out;
+}
+function words(s){ return maskCode(s).split(/\s+/).filter(function(w){ return /[A-Za-z0-9\u0001]/.test(w); }); }
+function syllables(w){
+  if (/\u0001/.test(w)) return 2;
+  w = w.toLowerCase().replace(/[^a-z]/g, "");
+  if (!w) return 1;
+  if (w.length <= 3) return 1;
+  w = w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "").replace(/^y/, "");
+  var g = w.match(/[aeiouy]{1,2}/g);
+  return g ? g.length : 1;
+}
+function analyze(text){
+  var rows = [], totalW = 0, totalS = 0, totalSyl = 0, counts = {};
+  FLAGS.forEach(function(f){ counts[f.id] = 0; });
+  text.split(/\n+/).forEach(function(raw){
+    var line = raw.trim(); if (!line) return;
+    var isH = /^#{1,6}\s/.test(line);
+    line = line.replace(/^#{1,6}\s+/, "").replace(/^(?:[-*]|\d+\.)\s+/, "");
+    var sents = isH ? [line] : splitSentences(line);
+    sents.forEach(function(s){
+      var ws = words(s), masked = maskCode(s), hits = [];
+      FLAGS.forEach(function(f){
+        f.re.lastIndex = 0; var m;
+        while ((m = f.re.exec(masked))){
+          if (!m[0].length){ f.re.lastIndex++; continue; }
+          hits.push({a:m.index, b:m.index + m[0].length, f:f});
+        }
+      });
+      hits.sort(function(x, y){ return x.a - y.a || (y.b - y.a) - (x.b - x.a); });
+      var kept = [], last = -1;
+      hits.forEach(function(h){ if (h.a >= last){ kept.push(h); last = h.b; counts[h.f.id]++; } });
+      if (!isH){ totalW += ws.length; totalS++; ws.forEach(function(w){ totalSyl += syllables(w); }); }
+      rows.push({text:s, words:ws.length, hits:kept, h:isH});
+    });
+  });
+  var avg = totalS ? totalW / totalS : 0;
+  var grade = totalW ? 0.39 * avg + 11.8 * (totalSyl / totalW) - 15.59 : 0;
+  var longest = rows.reduce(function(m, r){ return r.h ? m : Math.max(m, r.words); }, 0);
+  var flagTotal = 0; for (var k in counts) flagTotal += counts[k];
+  return {rows:rows, sentences:totalS, words:totalW, avg:avg, longest:longest, grade:Math.max(0, grade), counts:counts, flags:flagTotal};
+}
+if (typeof module !== "undefined") module.exports = {analyze:analyze, TEXTS:TEXTS};
+
+/* ---------- DOM ---------- */
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function renderSentence(r){
+  var s = r.text, out = "", pos = 0;
+  r.hits.forEach(function(h){
+    out += esc(s.slice(pos, h.a));
+    out += '<mark class="' + h.f.id + '" title="' + esc(h.f.label + " (" + h.f.src + ")") + '">' + esc(s.slice(h.a, h.b)) + "</mark>";
+    pos = h.b;
+  });
+  out += esc(s.slice(pos));
+  return out.replace(/`([^`]*)`/g, "<code>$1</code>");
+}
+function lenColor(n){ return n > 25 ? "var(--bad)" : n > 20 ? "#d9a441" : "var(--ok)"; }
+function lenClass(v, good, mid){ return v <= good ? "good" : v <= mid ? "mid" : "bad"; }
+
+function viewChecker(app){
+  var keys = ["orig", "analogy", "bro", "ste"], cur = "orig", custom = null;
+  app.innerHTML =
+    '<h1>One reply, four ways to write it</h1>' +
+    '<p class="sub">Each bar is one sentence. Green is 20 words or fewer, amber is 21 to 25, red is over 25. ' +
+    'The ticks mark the STE limits: 20 words for an instruction, 25 for any other sentence. Hover a highlight to see the rule.</p>' +
+    '<div class="seg" id="tabs"></div>' +
+    '<div class="card"><p class="who" id="who"></p><div class="stats" id="stats"></div><div class="rows" id="rows"></div>' +
+    '<div id="extra"></div><div class="legend" id="legend"></div></div>' +
+    '<details><summary>Edit the text or paste your own</summary><textarea id="ta" spellcheck="false"></textarea>' +
+    '<p class="note">The checker uses regular expressions, so it misses some problems and flags some sentences that are fine. ' +
+    'Grade is the Flesch-Kincaid estimate with a rough syllable count. Code in backticks counts as one word.</p></details>';
+  var tabs = app.querySelector("#tabs"), ta = app.querySelector("#ta");
+  keys.forEach(function(k){
+    var b = document.createElement("button"); b.textContent = TEXTS[k].label; b.dataset.k = k;
+    b.onclick = function(){ cur = k; custom = null; ta.value = TEXTS[k].text; draw(); };
+    tabs.appendChild(b);
+  });
+  ta.value = TEXTS[cur].text;
+  ta.addEventListener("input", function(){ custom = ta.value; draw(); });
+  function draw(){
+    tabs.querySelectorAll("button").forEach(function(b){ b.classList.toggle("on", !custom && b.dataset.k === cur); });
+    var t = TEXTS[cur], res = analyze(custom != null ? custom : t.text);
+    app.querySelector("#who").innerHTML = custom != null ? "Your edited text." : t.who;
+    var st = [
+      [res.sentences, "sentences", ""],
+      [res.longest, "longest sentence", lenClass(res.longest, 20, 25)],
+      [res.avg.toFixed(1), "words per sentence", lenClass(res.avg, 15, 20)],
+      [res.flags, "flags", lenClass(res.flags, 0, 3)],
+      [res.grade.toFixed(1), "grade level (approx.)", lenClass(res.grade, 8, 12)]
+    ];
+    app.querySelector("#stats").innerHTML = st.map(function(s){ return '<div class="stat ' + s[2] + '"><b>' + s[0] + "</b><span>" + s[1] + "</span></div>"; }).join("");
+    var MAX = 90;
+    app.querySelector("#rows").innerHTML = res.rows.map(function(r){
+      var bar = r.h ? '<div class="meter" style="background:none"></div>' :
+        '<div class="meter"><i style="width:' + Math.min(100, r.words / MAX * 100) + "%;background:" + lenColor(r.words) + ';opacity:.8"></i>' +
+        '<span class="tick" style="left:' + (20 / MAX * 100) + '%"></span><span class="tick" style="left:' + (25 / MAX * 100) + '%"></span>' +
+        "<em>" + r.words + "</em></div>";
+      return '<div class="row' + (r.h ? " h" : "") + '">' + bar + '<div class="txt">' + renderSentence(r) + "</div></div>";
+    }).join("");
+    var extra = "";
+    if (custom == null && t.lost) extra = '<p class="lost">' + esc(t.lost) + "</p>";
+    if (custom == null && t.keep) extra = '<p class="keep">' + esc(t.keep) + "</p>";
+    app.querySelector("#extra").innerHTML = extra;
+    app.querySelector("#legend").innerHTML = FLAGS.map(function(f){
+      var n = res.counts[f.id];
+      return '<span class="' + (n ? "" : "zero") + '"><i class="' + f.id + '" style="' + markStyle(f.id) + '"></i>' + f.label + ' <span class="n">' + n + "</span></span>";
+    }).join("");
+  }
+  draw();
+}
+function markStyle(id){
+  var m = document.createElement("mark"); m.className = id; document.body.appendChild(m);
+  var cs = getComputedStyle(m), s = "background:" + cs.backgroundColor + ";border-bottom-color:" + cs.borderBottomColor;
+  m.remove(); return s;
+}
+
+var LAYERS = [
+  {name:"Diátaxis", short:"Pick the mode", src:"Diátaxis (Daniele Procida)",
+   why:"The first reply mixes a work report, an explanation, and an offer. A PR body has one job: explain the change to a reviewer.",
+   rules:["One document, one mode. Don't mix modes. Split and link instead.",
+          "Explanation: understanding and why. One bounded topic."],
+   ba:[["I've thoroughly investigated the scroll drift issue and identified the root cause ... Let me know if you'd like me to make any further changes!",
+        "## Fix scroll drift in an idle list<br>Cause, then the two changes, then the risk."]]},
+  {name:"Google style", short:"Talk to the reader", src:"Google developer documentation style guide",
+   why:"Say who does what, in the present tense. Name the real symbol instead of a description of it.",
+   rules:["Say who does what. Passive is fine only when the actor is unknown or beside the point.",
+          "Write the real symbol, file, flag, or command name, not a synonym or a description of it.",
+          "Headings carry the point, in sentence case."],
+   ba:[["the measured heights are being rounded differently than the estimated heights",
+        "<code>measureRow()</code> rounds the measured height to whole pixels."],
+       ["the virtualized list's scroll anchoring logic", "<code>useStickyScroll</code> moves the scroll anchor"]]},
+  {name:"STE", short:"One thought each", src:"ASD-STE100 Simplified Technical English",
+   why:"The longest sentence in the first reply has 74 words and six facts. STE splits it so each sentence loads one fact.",
+   rules:["One instruction per sentence. One thought per sentence everywhere else.",
+          "Split instructions longer than about 20 words and other sentences longer than about 25.",
+          "Put the warning or condition before the step it guards.",
+          "Write procedures as direct commands, never as narration and never in the passive."],
+   ba:[["... which leverages a 750ms polling interval in useStickyScroll to re-measure row heights, and since the measured heights are being rounded ... (74 words)",
+        "Every 750 ms, <code>useStickyScroll</code> calls <code>measureRow()</code> for each visible row. (11 words)"],
+       ["It should be noted that this may potentially also affect the chat panel.",
+        "Caution: <code>ChatPanel</code> uses the same list. Test scrolling in <code>ChatPanel</code> before you merge this PR."]]},
+  {name:"Global English", short:"Only one reading", src:"Global English (Kohl, The Global English Style Guide)",
+   why:"A reader who uses a translator, or a second agent, must find one meaning. \"It\", \"this\", and \"which\" must point at one thing.",
+   rules:["Make every \"it\", \"they\", and \"this\" point at one obvious thing. Never use \"this\" or \"which\" to point at a whole clause.",
+          "Use periods, not semicolons or em dashes.",
+          "Call each thing by one name, everywhere."],
+   ba:[["this causes a small delta to accumulate", "The differences add up on each tick."],
+       ["row heights / measured heights / measurements / delta", "measured height, estimated height, difference"]]},
+  {name:"unslop", short:"Cut AI tells", src:"pstack unslop skill",
+   why:"The last pass removes words that tell the reader a model wrote the text, and that carry no fact.",
+   rules:["7. No AI vocabulary: additionally, crucial, delve, enhance, ...",
+          "20. No chatbot phrases (\"Let me know if...\").",
+          "24. One hedge at most: \"may\".",
+          "3. No trailing \"-ing\" phrases that add no fact."],
+   ba:[["a crucial interplay ... which leverages", "a rounding mismatch between two row heights"],
+       ["ultimately resulting in the visible drift", "The differences add up on each tick."],
+       ["may potentially also affect", "uses the same list"]]}
+];
+
+function viewLayers(app){
+  var i = 0;
+  app.innerHTML = '<h1>The five layers of pstack <code style="font-size:16px">technical-writing</code></h1>' +
+    '<p class="sub">Each layer fixes a different kind of problem. Click a layer, or step through them in order.</p>' +
+    '<div class="pipe" id="pipe"></div>' +
+    '<div class="card" id="card"></div>';
+  var pipe = app.querySelector("#pipe");
+  pipe.innerHTML = LAYERS.map(function(L, k){
+    return (k ? '<span class="ar" aria-hidden="true">&rarr;</span>' : "") +
+      '<button data-k="' + k + '"><small>' + (k + 1) + ". " + L.short + "</small><b>" + L.name + "</b></button>";
+  }).join("");
+  pipe.querySelectorAll("button").forEach(function(btn){ btn.addEventListener("click", function(){ i = +btn.dataset.k; draw(); }); });
+  function draw(){
+    pipe.querySelectorAll("button").forEach(function(btn){ var k = +btn.dataset.k; btn.className = k === i ? "on" : k < i ? "done" : ""; });
+    var L = LAYERS[i];
+    app.querySelector("#card").innerHTML =
+      '<p class="lh">' + (i + 1) + ". " + L.name + ": " + L.short.toLowerCase() + "</p>" +
+      '<p class="ls">Source: ' + esc(L.src) + "</p>" +
+      '<p class="why">' + esc(L.why) + "</p>" +
+      '<ul class="rules">' + L.rules.map(function(r){ return "<li>" + esc(r) + "</li>"; }).join("") + "</ul>" +
+      L.ba.map(function(p){ return '<div class="ba"><div class="b"><small>Before</small>' + esc(p[0]) + '</div><div class="a"><small>After</small>' + p[1] + "</div></div>"; }).join("") +
+      '<div class="nav"><button id="prev">Previous</button><span class="sp"></span><span class="ls" style="margin:0">' + (i + 1) + " of " + LAYERS.length + '</span><span class="sp"></span><button id="next">Next</button></div>';
+    var p = app.querySelector("#prev"), n = app.querySelector("#next");
+    p.disabled = i === 0; n.disabled = i === LAYERS.length - 1;
+    p.style.opacity = p.disabled ? .4 : 1; n.style.opacity = n.disabled ? .4 : 1;
+    p.onclick = function(){ if (i > 0){ i--; draw(); } };
+    n.onclick = function(){ if (i < LAYERS.length - 1){ i++; draw(); } };
+  }
+  draw();
+}
+
+if (typeof document !== "undefined"){
+  var app = document.getElementById("app");
+  var view = (location.search.match(/view=(\w+)/) || [])[1];
+  if (view === "layers") viewLayers(app); else viewChecker(app);
+}
+</script>
+</body>
+</html>
